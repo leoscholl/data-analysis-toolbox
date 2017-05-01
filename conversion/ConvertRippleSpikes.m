@@ -1,12 +1,16 @@
-function ConvertRippleSpikes(DataDir, AnimalID, WhichUnits, WhichFiles)
+function ConvertRippleSpikes(dataDir, animalID, whichUnits, whichFiles, ...
+    saveWaveforms)
 
 if nargin < 4
-    WhichFiles = [];
+    whichFiles = [];
 end
-if ~isnumeric(WhichUnits)
+if nargin < 5 || isempty(saveWaveforms)
+    saveWaveforms = true;
+end
+if ~isnumeric(whichUnits)
     error('WhichUnits accepts only unit numbers');
 end
-if ~isnumeric(WhichFiles)
+if ~isnumeric(whichFiles)
     error('WhichFiles accepts only file numbers');
 end
 
@@ -43,34 +47,37 @@ if exist('hFile', 'var')
     ns_CloseFile(hFile); %#ok<*NODEF>
 end
 
-for UnitNo = WhichUnits
+for unitNo = whichUnits
     
-    Unit = ['Unit', deblank(num2str(UnitNo))];
-    DataPath = fullfile(DataDir, AnimalID, Unit, filesep);
-    disp(DataPath);
+    unit = ['Unit', deblank(num2str(unitNo))];
+    dataPath = fullfile(dataDir, animalID, unit, filesep);
+    disp(dataPath);
     
-    Files = FindFiles(DataDir, AnimalID, Unit, '*].nev', WhichFiles); % Choosing all files
+    files = FindFiles(dataDir, animalID, unit, '*].nev', whichFiles); % Choosing all files
 
-    if isempty(Files)
+    if isempty(files)
         disp('No files found...');
         continue;
     end
     
-    for fi = 1:length(Files(:,1))
+    for fi = 1:length(files(:,1))
         
         clear nsEntityInfo SpikeTimesAll WaveformsAll
         
-        [~, FileName, ~] = fileparts(Files(fi,:));
-        disp(FileName);
+        [~, fileName, ~] = fileparts(files(fi,:));
+        disp(fileName);
 
-        %% get file handle (hFile)
-        [ns_RESULT, hFile] = ns_OpenFile([DataPath,FileName,'.nev'],'single');
+        % get file handle (hFile)
+        [ns_RESULT, hFile] = ns_OpenFile([dataPath,fileName,'.nev'],'single');
 
         if ~strcmp(ns_RESULT, 'ns_OK')
             fprintf(2, 'Failed to open NEV data\n');
             continue;
         end
         
+        % open a matlab file to export into
+        mFile = matfile([dataPath,fileName,'-export.mat'],'Writable', true);
+            
         % get file info structure. This is necessary particularly for getting the
         % EntityCount or the number of Entities in the data set. After getting the
         % number of Entities, we get all of the EntityInfo Structures for each
@@ -97,11 +104,8 @@ for UnitNo = WhichUnits
             [~, nsEntityInfo(i,1)] = ns_GetEntityInfo(hFile, i);
         end
         
-        %% get Event/Analog/Segment EntityIDs
-        EventEntityID = find([nsEntityInfo.EntityType]==1);
-        AnalogEntityID = find([nsEntityInfo.EntityType]==2);
+        % get Event/Analog/Segment EntityIDs
         SegmentEntityID = find([nsEntityInfo.EntityType]==3);
-        
         SMA1 = ...
             find(~cellfun('isempty', strfind({nsEntityInfo.EntityLabel}, 'SMA 1')));
         SMA2 = ...
@@ -110,41 +114,37 @@ for UnitNo = WhichUnits
             find(~cellfun('isempty', strfind({nsEntityInfo.EntityLabel}, 'SMA 3')));
         SMA4 = ...
             find(~cellfun('isempty', strfind({nsEntityInfo.EntityLabel}, 'SMA 4')));
-        Parallel = ...
+        parallel = ...
             find(~cellfun('isempty', strfind({nsEntityInfo.EntityLabel}, ...
             'Parallel Input')));
         
-        %% get Event/Analog/Segment EntityLabels
-        EventLabel   = {nsEntityInfo(EventEntityID).EntityLabel}; %#ok<*FNDSB>
-        AnalogLabel  = {nsEntityInfo(AnalogEntityID).EntityLabel};
         SegmentLabel = {nsEntityInfo(SegmentEntityID).EntityLabel};
-        
-        %% Organize item counts by entity type
-        EventItemCounts   = [nsEntityInfo(EventEntityID).ItemCount];
-        AnalogItemCounts  = [nsEntityInfo(AnalogEntityID).ItemCount];
         SegmentItemCounts = [nsEntityInfo(SegmentEntityID).ItemCount];
 
-        %% Extract Spike Times from Ripple Neuroshare Data Files
+        % Extract Spike Times from Ripple Neuroshare Data Files
         disp([num2str(length(SegmentEntityID)), ' electrodes with ', ...
             mat2str(SegmentItemCounts), ' events']);
         
-        SpikeTimesAll_Ripple = [];
-        WaveformsAll_Ripple = [];
-        ElectrodeNames_Ripple = [];
-        lastCount = 0;
-        
-        for Electrode = 1:length(SegmentEntityID)
+        number = nan(length(SegmentEntityID),1);
+        name = cell(length(SegmentEntityID),1);
+        for i = 1:length(SegmentEntityID)
             
-            %% Load electrode name
-            Elec = SegmentLabel{Electrode};
-            ElecNo = str2num(char(regexp(Elec, '\d{2}', 'match')));
+            % Load electrode names
+            label = SegmentLabel{i};
+            elecNo = str2num(char(regexp(label, '\d{2}', 'match')));
   
-            ElectrodeNames_Ripple{Electrode} = ['elec',num2str(ElecNo)]; %#ok<*AGROW>
-            %     SpikeTimes{Electrode,2} = SegmentLabel{Electrode}; %#ok<*AGROW>
-            fprintf('%s...', ElectrodeNames_Ripple{Electrode});
-            
-            %% Load spike data
-            [ns_RESULT, entityInfo] = ns_GetEntityInfo(hFile, SegmentEntityID(Electrode));
+            number(i) = elecNo;
+            name{i} = ['elec',num2str(elecNo)];    
+        end
+        
+        electrodes = table(number, name);
+        nElectrodes = size(electrodes,1);
+        spikes = cell(nElectrodes, 1);
+        waveforms = cell(nElectrodes, 1);
+        parfor i = 1:nElectrodes
+                        
+            % Load spike data
+            [ns_RESULT, entityInfo] = ns_GetEntityInfo(hFile, SegmentEntityID(i));
             
             tsData = struct('ts', 0.0, 'unit', -1);
             timestamps = repmat(tsData, entityInfo.ItemCount, 1);
@@ -153,107 +153,104 @@ for UnitNo = WhichUnits
             % Iterate through all items and fill wanted timestamps
             for iItem=1:entityInfo.ItemCount
                 
-                [ns_RESULT, ts, data, sample_count, unit_id] = ...
-                    ns_GetSegmentData(hFile, SegmentEntityID(Electrode), iItem); %#ok<*ASGLU>
+                if saveWaveforms
+                    [ns_RESULT, ts, data, sample_count, unit_id] = ...
+                        ns_GetSegmentData(hFile, SegmentEntityID(i), iItem);
+                else
+                    [ns_RESULT, ts, sample_count, unit_id] = ...
+                        ns_GetSegmentDataFast(hFile, SegmentEntityID(i), iItem);
+                    data = [];
+                end
 
                 count = count+1;
                 timestamps(count).ts = (ts);
                 timestamps(count).unit = (unit_id);
                 timestamps(count).data = data;
+                 
             end
+            
             timestamps = timestamps([timestamps(:).unit]~=-1);
             timestamps = timestamps([timestamps(:).ts]~=0);
-            count = size(timestamps,1);
             
-            SpikeTimesAll_Ripple(lastCount+1:lastCount+count,:) = ...
-                [repmat(Electrode,count,1), ...
-                [timestamps.ts]', ...
-                double([timestamps.unit])'];
-            WaveformsAll_Ripple(lastCount+1:lastCount+count,:) = ...
-                [repmat(Electrode,count,1), ...
-                double([timestamps.unit])', ...
-                double([timestamps.data])'];
-            
-%             SpikeTimesAll{Electrode,1} = spikes; %#ok<*AGROW>
-%             Units = unique(spikes(:,2));
-%             for i = 1:length(Units)
-%                 SpikeTempNo = find(spikes(:,2)==Units(i));
-%                 WaveformsAll{Electrode, i} = waveforms(SpikeTempNo,:);
-%             end
-%             
-            lastCount = lastCount + count;
+            spikes{i} = [[timestamps.ts]', double([timestamps.unit])'];
+            waveforms{i} = [double([timestamps.unit])', double([timestamps.data])'];
 
         end
         
+        if ~saveWaveforms
+            waveforms = [];
+        end
+        
         %% Collect stim times and parallel port information
-        StimTimesParallel = [];
-        StimTimesPhotodiode = [];
-        StartTime = [];
-        EndTime = [];
-        ParallelInput = [];
+        stimTimesParallel = [];
+        stimTimesPhotodiode = [];
+        startTime = [];
+        endTime = [];
+        parallelInput = [];
     
         % stim times from parallel port (SMA 1)
         if ~isempty(SMA1)
-            EventItemCounts = nsEntityInfo(SMA1).ItemCount;
-            for i = 1:EventItemCounts
+            eventItemCounts = nsEntityInfo(SMA1).ItemCount;
+            for i = 1:eventItemCounts
                 [~, EventTimes(i), ~, ~] = ...
                     ns_GetEventData(hFile, SMA1, i);
             end
-            StimTimesParallel = EventTimes(1:EventItemCounts)';
+            stimTimesParallel = EventTimes(1:eventItemCounts)';
         end
     
         % photodiode (SMA 2)
         if ~isempty(SMA2)
-            EventItemCounts = nsEntityInfo(SMA2).ItemCount;
-            for i = 1:EventItemCounts
+            eventItemCounts = nsEntityInfo(SMA2).ItemCount;
+            for i = 1:eventItemCounts
                 [~, EventTimes(i), ~, ~] = ...
                     ns_GetEventData(hFile, SMA2, i);
             end
-            StimTimesPhotodiode = EventTimes(1:EventItemCounts)';
+            stimTimesPhotodiode = EventTimes(1:eventItemCounts)';
         end
         
         % start (SMA 3)
         if ~isempty(SMA3)
-            EventItemCounts = nsEntityInfo(SMA3).ItemCount;
-            for i = 1:EventItemCounts
+            eventItemCounts = nsEntityInfo(SMA3).ItemCount;
+            for i = 1:eventItemCounts
                 [~, EventTimes(i), ~, ~] = ...
                     ns_GetEventData(hFile, SMA3, i);
             end
-            StartTime = EventTimes(1);
+            startTime = EventTimes(1);
         end
         
         % stop (SMA 4)
         if ~isempty(SMA4)
-            EventItemCounts = nsEntityInfo(SMA4).ItemCount;
-            for i = 1:EventItemCounts
+            eventItemCounts = nsEntityInfo(SMA4).ItemCount;
+            for i = 1:eventItemCounts
                 [~, EventTimes(i), ~, ~] = ...
                     ns_GetEventData(hFile, SMA4, i);
             end
-            EndTime = EventTimes(1);
+            endTime = EventTimes(1);
         end
         
         % parallel input (Parallel In)
-        if ~isempty(Parallel)
-            EventItemCounts = nsEntityInfo(Parallel).ItemCount;
-            for i = 1:EventItemCounts
+        if ~isempty(parallel)
+            eventItemCounts = nsEntityInfo(parallel).ItemCount;
+            for i = 1:eventItemCounts
                 [~, EventTimes(i), Events(i), EventSizes(i)] = ...
-                    ns_GetEventData(hFile, Parallel, i);
+                    ns_GetEventData(hFile, parallel, i);
             end
-            ParallelInput = [EventTimes(1:EventItemCounts)' ...
-                Events(1:EventItemCounts)'];
+            parallelInput = [EventTimes(1:eventItemCounts)' ...
+                Events(1:eventItemCounts)'];
         end
         
-        if ~exist([DataPath,FileName,'-export.mat'],'file')
-            save([DataPath,FileName,'-export.mat'],'SpikeTimesAll_Ripple',...
-            'WaveformsAll_Ripple','ElectrodeNames_Ripple',...
-            'StimTimesParallel','StimTimesPhotodiode', 'StartTime', ...
-            'EndTime', 'ParallelInput')
-        else
-            save([DataPath,FileName,'-export.mat'],'SpikeTimesAll_Ripple',...
-                'WaveformsAll_Ripple','ElectrodeNames_Ripple',...
-                'StimTimesParallel','StimTimesPhotodiode', 'StartTime', ...
-                'EndTime', 'ParallelInput','-append')
-        end
+        Ripple = [];
+        Ripple.spikeTimes = spikes;
+        Ripple.waveforms = waveforms;
+        Ripple.electrodes = electrodes;
+        Ripple.stimTimesParallel = stimTimesParallel;
+        Ripple.stimTimesPhotodiode = stimTimesPhotodiode;
+        Ripple.startTime = startTime;
+        Ripple.endTime = endTime;
+        Ripple.parallelInput = parallelInput;
+        
+        % save to mFile
+        mFile.Ripple = Ripple;
         
         ns_CloseFile(hFile);
         
