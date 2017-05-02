@@ -19,7 +19,6 @@ end
 
 stimTimesCorrected = [];
 stimOffTimesCorrected = [];
-source = '';
 
 % Collect times from params structure
 stimTimesPTB = []; stimOffTimesPTB = []; 
@@ -120,7 +119,7 @@ if ~isempty(stimTimesParallel)
         fprintf(2, 'At least one pair of StimTimesParallel are too close together.\n');
     elseif any(stimOffTimes - stimTimes + 0.1 < Params.Data.StimDuration)
         % on times ok, but off times are not
-        fprintf(2, 'Parallel port stim off times are inaccurate\n');
+        fprintf(2, 'Parallel port stim off times are inaccurate');
         stimTimesParallelCorrected = stimTimes;
     else % everything ok
         stimTimesParallelCorrected = stimTimes;
@@ -129,8 +128,6 @@ if ~isempty(stimTimesParallel)
     
 end
 
-latency = NaN;
-variation = NaN;
 if ~isempty(stimTimesPhotodiode)
     stimTimes = stimTimesPhotodiode(1:2:end); % assume it always catches pairs
     stimOffTimes = stimTimesPhotodiode(2:2:end);
@@ -153,11 +150,8 @@ if ~isempty(stimTimesPhotodiode)
         fprintf(2, 'At least one pair of StimTimesPhotodiode are too close together.\n');
     elseif any(stimOffTimes - stimTimes + 0.1 < Params.Data.StimDuration)
         % on times ok, but off times are not
-        fprintf(2, 'photodiode stim off times are inaccurate\n');
-        fprintf('using photodiode stim times\n');
-        source = 'photodiode';
+        fprintf(2, 'photodiode stim off times are inaccurate');
         stimTimesCorrected = stimTimes;
-        stimOffTimesCorrected = stimTimes + Params.Data.StimDuration;
     else % everything ok
         fprintf('Using photodiode timestamps\n');
         source = 'photodiode';
@@ -166,7 +160,7 @@ if ~isempty(stimTimesPhotodiode)
     end
 
     % Calculate latency to the PTB stim times
-    stimTimesInterp = stimTimeInterpolate(nStims, stimTimes);
+    stimTimesInterp = StimTimeInterpolate(nStims, stimTimes);
     if length(stimTimesInterp) == nStims
         difference = stimTimesInterp - stimTimesPTB;
         latency = mean(difference);
@@ -199,7 +193,7 @@ if ~isempty(stimTimesPhotodiode)
     elseif isempty(stimTimesCorrected)
         % Use PTB times
         fprintf('Using matlab timestamps (corrected with photodiode)\n');
-        source = 'matlab';
+        source = 'parallel';
         stimTimesCorrected = stimTimesPTB + latency;
         stimOffTimesCorrected = stimOffTimesPTB + latency;
     end
@@ -208,7 +202,6 @@ end
 % Finally, check if there is a corrected stim time available
 if isempty(stimTimesCorrected) && ~isempty(stimTimesLegacy)
     fprintf('Using matlab timestamps (corrected with 0.141)\n');
-    source = 'matlab';
     stimTimesCorrected = stimTimesLegacy;
     stimOffTimesCorrected = stimOffTimesLegacy;
 end

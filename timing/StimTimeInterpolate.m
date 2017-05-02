@@ -1,4 +1,4 @@
-function [ StimTimes ] = StimTimeInterpolate( nStims, StimTimes )
+function [ StimTimes ] = stimTimeInterpolate( nStims, StimTimes )
 %StimTimeInterpolate Try to interpolate missing stim times
 
     if std(diff(StimTimes)) > 10 % nonlinear

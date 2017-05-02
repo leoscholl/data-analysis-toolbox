@@ -86,7 +86,7 @@ for unt = 1:length(units(:,1))
             % Load experiment
             disp('Loading experiment files...');
             [Electrodes, Params, StimTimes, LFP] = ...
-                loadExperiment(dataDir, animalID, unit, fileName);
+                LoadExperiment(dataDir, animalID, unit, fileName);
             
             % Plot waveforms?
 %             if plotWaveforms && ~isempty(Waveforms)
@@ -108,31 +108,31 @@ for unt = 1:length(units(:,1))
                 case {'LatencyTest', 'LaserON', 'LaserGratings', ...
                         'NaturalImages', 'NaturalVideos'}
                     plotMaps = 0;
-                    plotTCs = 0;
-                    plotBars = 1;
-                    plotRasters = 1;
+                    PlotTCs = 0;
+                    PlotBars = 1;
+                    PlotRasters = 1;
                 case {'RFmap', 'CatRFdetailed', 'CatRFfast', 'CatRFfast10x10'}
-                    plotMaps = 1;
-                    plotTCs = 0;
-                    plotBars = 0;
-                    plotRasters = 1;
+                    PlotMaps = 1;
+                    PlotTCs = 0;
+                    PlotBars = 0;
+                    PlotRasters = 1;
                 otherwise
-                    plotMaps = 0;
-                    plotTCs = 1;
-                    plotBars = 0;
-                    plotRasters = 1;
+                    PlotMaps = 0;
+                    PlotTCs = 1;
+                    PlotBars = 0;
+                    PlotRasters = 1;
             end
                     
             
             % Do the analysis / plotting
-            switch Params.StimType
+            switch StimType
                 case {'OriLowHighTwoApertures', 'CenterNearSurround'}
                     fprintf(2, 'Center surround not yet implemented.\n');
                 otherwise
                     disp('plotting...');
-                    plotResults(resultsPath, fileName, Params.StimType, ...
-                        Params, StimTimes, Electrodes, ...
-                        plotTCs, plotBars, plotRasters, plotMaps, ...
+                    PlotResults(resultsPath, fileName, StimType, ...
+                        Params, StimTimes, SpikeTimesAll, ElectrodeNames, ...
+                        PlotTCs, PlotBars, PlotRasters, PlotMaps, ...
                         summaryFig, plotLFP, showFigures)
             end
             

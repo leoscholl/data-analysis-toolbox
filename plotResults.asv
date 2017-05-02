@@ -98,10 +98,9 @@ fprintf('%d electrodes\n', Params.NoOfElectrodes);
 for el = 1:Params.NoOfElectrodes
     
     % Collect spike times for this electrode
-    elecNo = Electrodes.number(i);
-    SpikeTimes = Electrodes.spikes{elecNo};
+    SpikeTimes = SpikeTimesAll(SpikeTimesAll(:,1) == el,2:end);
     
-    ElectrodeName = Electrodes.name{elecNo};
+    ElectrodeName = ElectrodeNames{el};
     fprintf('%s',ElectrodeName);
     
     if isempty(SpikeTimes)
@@ -147,7 +146,6 @@ for el = 1:Params.NoOfElectrodes
                 
                 % Raster plots, histograms and ISIs
                 StimTime = Stimuli.StimTime(t);
-                StimOffTime = Stimuli.StimOffTime(t);
                 Spikes = SpikeTimes(SpikeTimes(:,2) == Unit & ...
                     SpikeTimes(:,1) >= StimTime-Condition.TimeFrom & ...
                     SpikeTimes(:,1) < StimTime+Condition.StimDiffTime);
@@ -464,7 +462,7 @@ for el = 1:Params.NoOfElectrodes
     end % Units loop
     
     % Save everything
-    Results(el).Electrodes = Electrodes;
+    Results(el).ElectrodeName = ElectrodeName;
     Results(el).SpikeData = SpikeDataAll;
     Results(el).Statistics = Statistics;
 
@@ -494,4 +492,12 @@ end
 
 disp('...done');
 
+end
+
+function c = myand(a,b)
+if nargin < 2
+    c = a;
+else
+    c = a & b;
+end
 end

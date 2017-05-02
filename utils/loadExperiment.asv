@@ -1,4 +1,4 @@
-function [Electrodes, Params, StimTimes, LFP] ...
+function [Electrodes, Params, Events, LFP] ...
     = loadExperiment(dataDir, animalID, unit, fileName, fileType)
 
 if nargin < 5 || isempty(fileType)
@@ -16,7 +16,7 @@ dataExport( dataDir, [], animalID, unitNo, fileNo);
 
 % Load the file
 if ~exist(filePath)
-    error(['No data for ', fileName]);
+    error(['No data for ', fileName);
 end
 load(filePath);
 
@@ -50,29 +50,21 @@ if ~exist('Params', 'var')
 end
 
 % Check LFP
-if ~exist('Ripple', 'var') || ~isfield(Ripple,'LFP')
+if ~exist('LFP', 'var')
     % Attempt to convert from ripple
     error(['No LFP for ', fileName]);
-else
-    LFP = Ripple.LFP;
 end
 
 % Check Events
-if ~exist('Ripple', 'var') || ~isfield(Ripple,'Events')
-    error(['No digital events for ', fileName]);
-else
-    Events = Ripple.Events;
+if ~exist('Events', 'var') || ~isfield(StimTimes, 'StimTimes') || ~isfield(; 
+    StimTimesPhotodiode = []; 
+end
+if ~exist('Events', 'var') || ~isfield(StimTimes, 'parallel'); 
+    StimTimesParallel = []; 
 end
 
 % Adjust StimTimes
 Params.UnitNo = unitNo;
-[StimOnTimes, StimOffTimes, source, latency, variation] = ...
-    adjustStimTimes(Params, Events);
-StimTimes = [];
-StimTimes.on = StimOnTimes;
-StimTimes.off = StimOffTimes;
-StimTimes.latency = latency;
-StimTimes.variation = variation;
-StimTimes.source = source;
+StimTimes = AdjustStimTimes(Params, StimTimesPhotodiode, StimTimesParallel);
 
 end
