@@ -98,7 +98,7 @@ fprintf('%d electrodes\n', Params.NoOfElectrodes);
 for el = 1:Params.NoOfElectrodes
     
     % Collect spike times for this electrode
-    elecNo = Electrodes.number(i);
+    elecNo = Electrodes.number(el);
     SpikeTimes = Electrodes.spikes{elecNo};
     
     ElectrodeName = Electrodes.name{elecNo};
