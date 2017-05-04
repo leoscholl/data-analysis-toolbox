@@ -2,14 +2,19 @@ function Events = loadRippleEvents(dataPath, fileName)
 
 narginchk(2,2);
 
-
+Events = [];
 
 % Check that neuroshare exists
 assertNeuroshare();
 
 % get file handle (hFile)
+filePath = fullfile(dataPath,[fileName,'.nev']);
+if ~exist(filePath,'file')
+    warning(['No NEV file for ', fileName]);
+    return
+end
 [ns_RESULT, hFile] = ...
-    ns_OpenFile(fullfile(dataPath,[fileName,'.nev']),'single');
+    ns_OpenFile(filePath,'single');
 
 if ~strcmp(ns_RESULT, 'ns_OK')
     error('Failed to open NEV data\n');

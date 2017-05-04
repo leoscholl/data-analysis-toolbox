@@ -37,8 +37,8 @@ end
 % Collect start and end times if they exist
 startTimeRipple = -Inf;
 endTimeRipple = Inf;
-if isfield(Params, 'startTimeRipple'); startTimeRipple = Params.startTimeRipple; end
-if isfield(Params, 'endTimeRipple'); endTimeRipple = Params.endTimeRipple; end
+if isfield(Params, 'startTimeRipple'); startTimeRipple = Params.StartTimeRipple; end
+if isfield(Params, 'endTimeRipple'); endTimeRipple = Params.EndTimeRipple; end
 if isfield(Events, 'startTime') && ~isempty(Events.startTime)
     startTimeRipple = Events.startTime; 
 end

@@ -1,4 +1,4 @@
-function [Electrodes, Params, StimTimes, LFP] ...
+function [Electrodes, Params, StimTimes, LFP, AnalogIn] ...
     = loadExperiment(dataDir, animalID, unit, fileName, fileType)
 
 if nargin < 5 || isempty(fileType)
@@ -12,7 +12,7 @@ dataPath = fullfile(dataDir, animalID, unit, filesep);
 filePath = fullfile(dataPath,[fileName,'-export.mat']);
 
 % Reload the data?
-overwrite = 1; % if needed for testing
+overwrite = 0; % if needed for testing
 
 % Export the file to make sure everything is in place
 dataExport( dataDir, [], animalID, unitNo, fileNo, overwrite);
@@ -60,6 +60,14 @@ else
     LFP = Ripple.LFP;
 end
 
+% Check Analog
+if ~exist('Ripple', 'var') || ~isfield(Ripple,'AnalogIn')
+    % Attempt to convert from ripple
+    error(['No AnalogIn for ', fileName]);
+else
+    AnalogIn = Ripple.AnalogIn;
+end
+
 % Check Events
 if ~exist('Ripple', 'var') || ~isfield(Ripple,'Events')
     error(['No digital events for ', fileName]);
@@ -68,12 +76,12 @@ else
 end
 
 % Adjust StimTimes
-Params.UnitNo = unitNo;
-[StimOnTimes, StimOffTimes, source, latency, variation] = ...
+Params.unitNo = unitNo;
+[stimOnTimes, stimOffTimes, source, latency, variation] = ...
     adjustStimTimes(Params, Events);
 StimTimes = [];
-StimTimes.on = StimOnTimes;
-StimTimes.off = StimOffTimes;
+StimTimes.on = stimOnTimes;
+StimTimes.off = stimOffTimes;
 StimTimes.latency = latency;
 StimTimes.variation = variation;
 StimTimes.source = source;

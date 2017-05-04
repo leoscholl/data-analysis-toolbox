@@ -48,7 +48,7 @@ for c = 1:length(colors)
 end
 
 % Go through each electrode
-parfor i = 1:length(whichElectrodes)
+for i = 1:length(whichElectrodes)
     elecNo = whichElectrodes(i);
 
     SpikeData = SpikeDataAll{elecNo};

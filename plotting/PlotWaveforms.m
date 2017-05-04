@@ -34,9 +34,9 @@ for ch = 1:size(Electrodes,1)
     legend({num2str(units)});
     title([fileName,' El', ElecNo],'FontSize',6);
     axis tight;
-    FigureName = fullfile(resultsPath,elecDir,[fileName, '_','El', ElecNo,'-waveforms']);
-    print(fig1,FigureName,'-dpng');
-    hgsave(fig1,FigureName);
+    figureName = fullfile(resultsPath,elecDir,[fileName, '_','El', elecNo,'-waveforms']);
+    print(fig1,figureName,'-dpng');
+    hgsave(fig1,figureName);
     close;
     disp(['Waveforms saved for ch ', ElecNo]);
 end

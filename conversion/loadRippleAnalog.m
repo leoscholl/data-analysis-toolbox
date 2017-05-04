@@ -6,12 +6,19 @@ if nargin < 3
     dataType = 'lfp';
 end
 
+Analog = [];
+
 % Check that neuroshare exists
 assertNeuroshare();
 
 % get file handle (hFile)
+filePath = fullfile(dataPath,[fileName,'.ns2']);
+if ~exist(filePath,'file')
+    warning(['No NS2 file for ', fileName]);
+    return
+end
 [ns_RESULT, hFile] = ...
-    ns_OpenFile(fullfile(dataPath,[fileName,'.ns2']),'single');
+    ns_OpenFile(filePath,'single');
 
 if ~strcmp(ns_RESULT, 'ns_OK')
     error('Failed to open NEV data\n');
@@ -86,7 +93,6 @@ if ~strcmp(ns_RESULT, 'ns_OK')
     error(2, '%s error\n', ns_RESULT);
 end
 
-Analog = [];
 Analog.sampleRate = analogInfo.SampleRate;
 Analog.endTime = itemCounts/Analog.sampleRate; % Recording duration in 's'
 Analog.Channels = table(data, name, number);

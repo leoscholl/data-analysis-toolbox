@@ -92,7 +92,7 @@ for unt = 1:length(units(:,1))
 %             
             % Load experiment
             disp('Loading experiment files...');
-            [Electrodes, Params, StimTimes, LFP] = ...
+            [Electrodes, Params, StimTimes, LFP, AnalogIn] = ...
                 loadExperiment(dataDir, animalID, unit, fileName);
             
             % Plot waveforms?
@@ -104,16 +104,16 @@ for unt = 1:length(units(:,1))
             end
             
             % Number of bins or size of bins?
-            switch Params.StimType
+            switch Params.stimType
                 case {'VelocityConstantCycles', 'VelocityConstantCyclesBar',...
                         'Looming', 'ConstantCycles'}
-                    Params.BinType = 'number'; % constant number of bins
+                    Params.binType = 'number'; % constant number of bins
                 otherwise
-                    Params.BinType = 'size'; % constant size of bins (for F1)
+                    Params.binType = 'size'; % constant size of bins (for F1)
             end
             
             % What to plot?
-            switch Params.StimType
+            switch Params.stimType
                 case {'LatencyTest', 'LaserON', 'LaserGratings', ...
                         'NaturalImages', 'NaturalVideos'}
                     plotMaps = 0;
@@ -134,7 +134,7 @@ for unt = 1:length(units(:,1))
                     
             
             % Do the analysis / plotting
-            switch Params.StimType
+            switch Params.stimType
                 case {'OriLowHighTwoApertures', 'CenterNearSurround'}
                     fprintf(2, 'Center surround not yet implemented.\n');
                 otherwise

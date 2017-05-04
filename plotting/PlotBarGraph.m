@@ -3,14 +3,14 @@ function [ handle ] = plotBarGraph(Statistics, ...
 %PlotTCurve opens and draws a tuning curve figure
 % returns the handle to the tuning curve figure
 
-conditions = Params.Conditions.Cond;
-conditionNo = Params.Conditions.CondNo;
+conditions = Params.Conditions.condition;
+conditionNo = Params.Conditions.conditionNo;
 
 % Sort conditions properly
-tCurve = Statistics.TCurve(Statistics.CondNo);
-tCurveSEM = Statistics.TCurveSEM(Statistics.CondNo);
-blank = Statistics.Blank(Statistics.CondNo);
-blankSEM = Statistics.BlankSEM(Statistics.CondNo);
+tCurve = Statistics.tCurve(Statistics.conditionNo);
+tCurveSEM = Statistics.tCurveSEM(Statistics.conditionNo);
+blank = Statistics.blank(Statistics.conditionNo);
+blankSEM = Statistics.blankSEM(Statistics.conditionNo);
 
 % Open a figure
 handle = figure;
@@ -51,10 +51,10 @@ if length(conditions) == 1
 end
 
 % Add SEMs
-numgroups = size(data, 1);
-numbars = size(data, 2);
-groupwidth = min(0.8, numbars/(numbars+1.5));
-for i = 1:numbars
+numGroups = size(data, 1);
+numBars = size(data, 2);
+groupWidth = min(0.8, numBars/(numBars+1.5));
+for i = 1:numBars
     
     % Set the color properly
     h(i).FaceColor = colors(:,i);
@@ -62,10 +62,10 @@ for i = 1:numbars
     
     % Based on barweb.m by Bolu Ajiboye from MATLAB File Exchange
     if length(conditions) > 1
-        x = (1:numgroups) - groupwidth/2 + (2*i-1) * groupwidth / (2*numbars);
+        x = (1:numGroups) - groupWidth/2 + (2*i-1) * groupWidth / (2*numBars);
     else
-        groupwidth_ = 0.65 + groupwidth;
-        x = 0.5 + (1:numgroups) - groupwidth_/2 + (2*i-1) * groupwidth_ / (2*numbars); 
+        groupWidth_ = 0.65 + groupWidth;
+        x = 0.5 + (1:numGroups) - groupWidth_/2 + (2*i-1) * groupWidth_ / (2*numBars); 
     end
     errorbar(x, data(:,i), errorNeg(:,i), errorPos(:,i), ...
         'Color', colors(:,i), 'linestyle', 'none');
@@ -75,9 +75,9 @@ end
 ylim auto;
 
 % Set the title, legends, etc.
-titleStr = makeTitle(Params, Params.ElecNo, Params.Unit);
+titleStr = makeTitle(Params, Params.elecNo, Params.unit);
 title(titleStr, 'FontSize', 16);
-xlabel(Params.StimType);
+xlabel(Params.stimType);
 ylabel('Rate [spikes/s]');
 set(gca,'FontSize',6);
 if length(conditions) > 1

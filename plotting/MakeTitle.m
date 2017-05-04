@@ -5,27 +5,34 @@ if nargin < 10
     DI = [];
 end
 
-titleStr = sprintf('%d [%s] Cell %d   Elec %d\n ', Params.ExpNo, Params.StimType, ...
+line1 = sprintf('%d [%s] Cell %d   Elec %d', Params.expNo, Params.stimType, ...
     unit, elecNo);
+line2 = '';
 
-% if isfield(Params,'SF')
-%     Title = sprintf('%sSF=%.3f ', Title, mean(Params.SF));
-% end
-% if isfield(Params,'TF')
-%     Title = sprintf('%sTF=%.1f ', Title, mean(Params.TF));
-% end
-% if isfield(Params,'Apt')
-%     Title = sprintf('%sApt=%d ', Title, mean(Params.Apt));
-% end
-% if isfield(Params,'C')
-%     Title = sprintf('%sCon=%d ', Title, mean(Params.C));
-% end
-% if isfield(Params,'Ori')
-%     Title = sprintf('%sOri=%.2f ', Title, mean(Params.Ori));
-% end
+if isfield(Params,'sf') && ~strfind(Params.stimType, 'Spatial')
+    line2 = sprintf('%sSF=%.3f ', line2, mean(Params.sf));
+end
+if isfield(Params,'tf') && ~strfind(Params.stimType, 'Temporal')
+    line2 = sprintf('%sTF=%.1f ', line2, mean(Params.tf));
+end
+if isfield(Params,'apt') && ~strfind(Params.stimType, 'Aperture')
+    line2 = sprintf('%sApt=%d ', line2, mean(Params.apterture));
+end
+if isfield(Params,'contrast') && ~strfind(Params.stimType, 'Contrast')
+    line2 = sprintf('%sCon=%d ', line2, mean(Params.contrast));
+end
+if isfield(Params,'ori') && ~strfind(Params.stimType, 'Ori')
+    line2 = sprintf('%sOri=%.2f ', line2, mean(Params.ori));
+end
 if ~isempty(OSI)
-    titleStr = sprintf('%sOSI=%.2f ', titleStr, OSI);
+    line2 = sprintf('%sOSI=%.2f ', line2, OSI);
 end
 if ~isempty(DI)
-    titleStr = sprintf('%sDI=%.2f ', titleStr, DI);
+    line2 = sprintf('%sDI=%.2f ', line2, DI);
+end
+
+if isempty(line2)
+    titleStr = line1;
+else
+    titleStr = {line1,line2};
 end

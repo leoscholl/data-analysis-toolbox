@@ -97,19 +97,24 @@ if size(data,2) >= 7
 end
 if strcmp(stimType,'MouseSpatial') && sf(1)<0.01
     load(fullfile(altSeqDir,'MouseSpatial_StimSequence'));
+    stimSequence = StimSequence;
 end
 if strcmp(stimType,'MouseTemporal') ...
         && length(tf) ~= length(stimSequence(:,1,1))
     load(fullfile(altSeqDir,'MouseTemporal_StimSequence'));
+    stimSequence = StimSequence;
 end
 if strcmp(stimType,'contrast') && con(1) == 0
     load(fullfile(altSeqDir,'Contrast_StimSequence'));
+    stimSequence = StimSequence;
 end
 if strcmp(stimType,'MouseAperture') && apt(2) == 2
     load(fullfile(altSeqDir,'MouseAperture_StimSequence'));
+    stimSequence = StimSequence;
 end
 if strcmp(stimType,'MouseAperture') && apt(2) == 3
     load(fullfile(altSeqDir,'MouseAperture2_StimSequence'));
+    stimSequence = StimSequence;
 end
 
 % Fill out Data table
@@ -272,7 +277,7 @@ if ~ismember('conditionNo', Data.Properties.VariableNames) || ...
 end
 if ~ismember('stimInterval', Data.Properties.VariableNames) || ...
         isempty(Data.stimInterval)
-    Data.stimInterval = stimInterval*ones(size(data,1),1);
+    Data.stimInterval = StimInterval*ones(size(data,1),1);
 end
 
 % Data goes into params, too

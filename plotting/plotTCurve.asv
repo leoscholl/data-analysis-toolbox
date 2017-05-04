@@ -3,25 +3,25 @@ function [ handle, OSI, DI ] = plotTCurve(Statistics, Params, ShowFigure)
 % returns the handle to the tuning curve figure
 
 OSI = []; DI = [];
-conditions = Params.Conditions.condition;
-conditionNo = Params.Conditions.conditionNo;
+conditions = Params.Conditions.Cond;
+conditionNo = Params.Conditions.CondNo;
 
-fontSize = 5;
+FontSize = 5;
 
 % Sort conditions properly
-tCurve = Statistics.tCurve(Statistics.conditionNo);
-tCurveSEM = Statistics.tCurveSEM(Statistics.conditionNo);
-blank = Statistics.blank(Statistics.conditionNo);
-blankSEM = Statistics.blankSEM(Statistics.conditionNo);
-tCurveCorr = Statistics.tCurveCorr(Statistics.conditionNo);
-tCurveCorrSEM = Statistics.tCurveCorrSEM(Statistics.conditionNo);
+tCurve = Statistics.tCurve(Statistics.CondNo);
+tCurveSEM = Statistics.tCurveSEM(Statistics.CondNo);
+blank = Statistics.blank(Statistics.CondNo);
+blankSEM = Statistics.blankSEM(Statistics.condNo);
+tCurveCorr = Statistics.tCurveCorr(Statistics.condNo);
+tCurveCorrSEM = Statistics.tCurveCorrSEM(Statistics.condNo);
 if ~isempty(Statistics.f1Rep) && ~isempty(Statistics.f1RepSD)
-    f1Rep = Statistics.f1Rep(Statistics.conditionNo);
-    f1RepSD = Statistics.f1RepSD(Statistics.conditionNo);
+    f1Rep = Statistics.f1Rep(Statistics.condNo);
+    f1RepSD = Statistics.f1RepSD(Statistics.condNo);
 end
 
 % Adding 360 deg to Ori tunning
-if strcmp(Params.stimType,'Ori')
+if strcmp(Params.StimType,'Ori')
     f1Rep(end+1) = f1Rep(1); f1RepSD(end+1) = f1RepSD(1);
     blank(end+1) = blank(1); blankSEM(end+1) = blankSEM(1);
     tCurveCorr(end+1) = tCurveCorr(1);
@@ -60,16 +60,16 @@ else
     legend({'avg bg';'Mean FR';'F1';'bg';'FR-bg'},'Location','NorthEast');
 end
 legend('boxoff');
-titleStr = makeTitle(Params, Params.elecNo, Params.unit);
+titleStr = makeTitle(Params, Params.ElecNo, Params.Unit);
     
-xlabel(Params.stimType);
+xlabel(Params.StimType);
 ylabel('Rate [spikes/s]');
-set(gca,'FontSize',fontSize);
+set(gca,'FontSize',FontSize);
 set(gca,'XTick',conditions);
 box off;
 
 % Orientation Selectivity Index
-if strcmp(Params.stimType,'Ori')==1
+if strcmp(Params.StimType,'Ori')==1
     R = tCurve - baseline; % subtract baseline
     [RPref, RPrefInd] = max(tCurve); % take the maximum value
     Opref = conditions(RPrefInd);
@@ -88,7 +88,7 @@ if strcmp(Params.stimType,'Ori')==1
     OSI = max([OSI1,OSI2]);
     DI = abs(sum(R.*exp(1i.*deg2rad(conditions(:)))))/sum(abs(R));
     
-    titleStr = makeTitle(Params, Params.elecNo, Params.unit, OSI, DI);
+    titleStr = makeTitle(Params, Params.ElecNo, Params.Unit, OSI, DI);
 end
 
 % Change the title

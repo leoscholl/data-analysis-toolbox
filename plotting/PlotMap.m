@@ -2,8 +2,8 @@ function [ handle ] = plotMap(tCurve, Params, showFigure)
 %PlotMaps Function plotting RF maps
 
 % Get conditions from parameters
-conditions = Params.Conditions.Cond;
-conditionNo = Params.Conditions.CondNo;
+conditions = Params.Conditions.condition;
+conditionNo = Params.Conditions.conditionNo;
 X = unique(conditions(:,1));
 Y = unique(conditions(:,2));
 
@@ -41,7 +41,7 @@ xticks(X);
 yticks(Y);
 
 colorbar;
-titleStr = makeTitle(Params, Params.ElecNo, Params.Unit);
+titleStr = makeTitle(Params, Params.elecNo, Params.unit);
 title(titleStr, 'FontSize', 16);
 
 box off;

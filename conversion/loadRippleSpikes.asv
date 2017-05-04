@@ -15,14 +15,8 @@ end
 assertNeuroshare();
 
 % get file handle (hFile)
-filePath = fullfile(dataPath,[fileName,'.nev']);
-if ~exist(filePath,'file')
-    warning(['No NEV file for ', fileName]);
-    return
-end
-
 [ns_RESULT, hFile] = ...
-    ns_OpenFile(filePath,'single');
+    ns_OpenFile(filePah,'single');
 
 if ~strcmp(ns_RESULT, 'ns_OK')
     error('Failed to open NEV data\n');
