@@ -39,8 +39,12 @@ startTimeRipple = -Inf;
 endTimeRipple = Inf;
 if isfield(Params, 'startTimeRipple'); startTimeRipple = Params.StartTimeRipple; end
 if isfield(Params, 'endTimeRipple'); endTimeRipple = Params.EndTimeRipple; end
-if isfield(Events, 'startTime'); startTimeRipple = Events.startTime; end
-if isfield(Events, 'endTime'); endTimeRipple = Events.endTime; end
+if isfield(Events, 'startTime') && ~isempty(Events.startTime)
+    startTimeRipple = Events.startTime; 
+end
+if isfield(Events, 'endTime') && ~isempty(Events.endTime) 
+    endTimeRipple = Events.endTime; 
+end
 
 % Replace old 'toc' StimTimes with 'GetSecs' PTB StimTimes if they exist
 if ismember('StimOffTimePTB', Params.Data.Properties.VariableNames) && ...
@@ -220,7 +224,7 @@ if stimTimesCorrected(1) < startTimeRipple || ...
     fprintf(2, 'StimTimes fall outside of the possible range. Aborting');
     stimTimesCorrected = [];
     stimOffTimesCorrected = [];
-elseif sum([diff(stimTimes); NaN] + 0.1 < ...
+elseif sum([diff(stimTimesCorrected); NaN] + 0.1 < ...
         Params.Data.StimDuration + Params.Data.StimInterval)    
     fprintf(2, 'At least one pair of triggers are too close together.\n');
     stimTimesCorrected = [];

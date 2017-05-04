@@ -1,11 +1,11 @@
-function Electrodes = loadRippleSpikes(dataPath, fileName, Electrodes, ...
+function Electrodes = loadRippleWaveforms(dataPath, fileName, Electrodes, ...
     whichElectrodes)
 
 narginchk(2,4);
 
 if nargin < 3
-    Electrodes = table(cell(0),cell(0),cell(0),[]);
-    Electrodes.Properties.VariableNames = {'spikes','waveforms','name','number'};
+    Electrodes = table(cell(0),cell(0),[]);
+    Electrodes.Properties.VariableNames = {'spikes','name','number'};
 end
 if nargin < 4
     whichElectrodes = [];
@@ -78,7 +78,7 @@ nElectrodes = length(number);
 
 % fill the spikes array
 spikesTmp = cell(length(number),1);
-parfor i = 1:length(number)
+for i = 1:length(number)
     
     thisID = SegmentEntityID(i);
     
@@ -92,29 +92,27 @@ parfor i = 1:length(number)
     % Iterate through all items and fill wanted timestamps
     for iItem=1:entityInfo.ItemCount
         
-        [ns_RESULT, ts, unit_id] = ...
-            ns_GetSegmentDataFast(hFile, thisID, iItem);
+        [ns_RESULT, ts, data, sample_count, unit_id] = ...
+            ns_GetSegmentData(hFile, thisID, iItem);
         
         count = count+1;
         timestamps(count).ts = (ts);
-        timestamps(count).unit = (unit_id);        
+        timestamps(count).unit = (unit_id);   
+        timestamps(count).data = data;
     end
     
     timestamps = timestamps([timestamps(:).unit]~=-1);
     timestamps = timestamps([timestamps(:).ts]~=0);
     
     spikesTmp{i} = [[timestamps.ts]', double([timestamps.unit])'];
+    wavesTmp{i} = [[timestamps.ts]', double([timestamps.unit])', ...
+        [timestamps.data]'];
     
 end
 
 % fill the Electrode table
 for i = 1:length(number)
-    waveforms = {[]};
-    try
-        waveforms = Electrodes.waveforms{number(i)};
-    catch
-    end
-    Electrodes(number(i),:) = {spikesTmp(i), waveforms, name(i), number(i)};
+    Electrodes(number(i),:) = {spikesTmp(i), wavesTmp(i), name(i), number(i)};
 end
 
 % close the file handle

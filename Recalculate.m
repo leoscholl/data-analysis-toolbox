@@ -1,5 +1,5 @@
 function recalculate(dataDir, resultsDir, animalID, whichUnits, whichFiles, ...
-    showFigures, plotWaveforms, plotLFP, summaryFig)
+    whichElectrodes, showFigures, plotWaveforms, plotLFP, summaryFig)
 %recalculate and replot all data
 % whichUnits is an array of unit numbers to calculate
 % whichFiles is an array of file numbers to calculate
@@ -22,13 +22,16 @@ end
 if nargin < 6 || isempty(showFigures)
     showFigures = 0;
 end
-if nargin < 7 || isempty(plotWaveforms)
+if nargin < 7
+    whichElectrodes = [];
+end
+if nargin < 8 || isempty(plotWaveforms)
     plotWaveforms = 0;
 end
-if nargin < 8 || isempty(plotLFP)
+if nargin < 9 || isempty(plotLFP)
     plotLFP = 0;
 end
-if nargin < 9 || isempty(summaryFig)
+if nargin < 10 || isempty(summaryFig)
     summaryFig = 0;
 end
 
@@ -60,6 +63,10 @@ fprintf('There are %d files to be recalculated.\n', nFiles);
 fprintf('Time remaining: %d minutes and %d seconds\n\n', ...
     floor(timeRemaining/60), floor(rem(timeRemaining,60)));
 
+if nFiles < 1
+    return;
+end
+
 % Do the recalculation
 for unt = 1:length(units(:,1))
     
@@ -81,18 +88,20 @@ for unt = 1:length(units(:,1))
         [~, fileName, ~] = fileparts(deblank(files(f,:)));
         disp(fileName);
         
-        try
-            
+%         try
+%             
             % Load experiment
             disp('Loading experiment files...');
             [Electrodes, Params, StimTimes, LFP] = ...
                 loadExperiment(dataDir, animalID, unit, fileName);
             
             % Plot waveforms?
-%             if plotWaveforms && ~isempty(Waveforms)
-%                 disp('Plotting waveforms...');
-%                 plotWaveforms(resultsPath, fileName, Waveforms, ElectrodeNames);
-%             end
+            if plotWaveforms && ~isempty(Waveforms)
+                disp('Loading waveforms...');
+                Electrodes = loadRippleWaveforms(dataPath, fileName, Electrodes);
+                disp('Plotting waveforms...');
+                plotWaveforms(resultsPath, fileName, Electrodes);
+            end
             
             % Number of bins or size of bins?
             switch Params.StimType
@@ -129,17 +138,19 @@ for unt = 1:length(units(:,1))
                 case {'OriLowHighTwoApertures', 'CenterNearSurround'}
                     fprintf(2, 'Center surround not yet implemented.\n');
                 otherwise
+                    disp('analyzing...');
+                    [Params, Results] = analyze(resultsPath, fileName, ...
+                        Params, StimTimes, Electrodes, whichElectrodes);
                     disp('plotting...');
-                    plotResults(resultsPath, fileName, Params.StimType, ...
-                        Params, StimTimes, Electrodes, ...
-                        plotTCs, plotBars, plotRasters, plotMaps, ...
-                        summaryFig, plotLFP, showFigures)
+                    plotAllResults(resultsPath, fileName, Params, Results, ...
+                        whichElectrodes, plotTCs, plotBars, plotRasters, ...
+                        plotMaps, summaryFig, plotLFP, showFigures);
             end
             
-        catch e
-            disp(['This file didnt work ',fileName])
-            warning(getReport(e,'extended','hyperlinks','off'),'Error');
-        end
+%         catch e
+%             disp(['This file didnt work ',fileName])
+%             warning(getReport(e,'extended','hyperlinks','off'),'Error');
+%         end
         close all;
         
         % Update duration log

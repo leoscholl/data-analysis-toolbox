@@ -32,45 +32,45 @@ else
     StimDuration = 0.5; % probably wrong...
 end
 load(filePath, vars{:});
-[AnimalID, ExpNo, StimType] = ParseFile(fileName);
-Params.ExpNo = ExpNo;
-Params.AnimalID = AnimalID;
-Params.StimType = StimType;
+[animalID, expNo, stimType] = ParseFile(fileName);
+Params.expNo = expNo;
+Params.animalID = animalID;
+Params.stimType = stimType;
 pathParts = strsplit(dataPath,filesep);
-Params.Unit = char(pathParts{end});
+Params.unit = char(pathParts{end});
 
 % Monitor resolution, size, PPD, etc.
 if exist('MonRes','var')
-    MonRes = cellfun(@str2num,regexp(MonRes,'\d+','match'));
+    monRes = cellfun(@str2num,regexp(MonRes,'\d+','match'));
 else
-    MonRes = [1920 1080];
+    monRes = [1920 1080];
 end
 if exist('PPD', 'var')
-    Params.PPD = PPD;
-    Params.MonitorSize = NaN;
+    Params.ppd = PPD;
+    Params.monitorSize = NaN;
 elseif ischar(MonSize)
-    Params.MonitorSize = MonSize; % needs fixing
+    Params.monitorSize = MonSize; % needs fixing
 else
-    Params.MonitorSize = MonSize;
-    Resolution.width = MonRes(2);
-    Resolution.height = MonRes(1);
-    Params.PPD = monitorPPD(Resolution, MonSize, MonitorDistance);
+    Params.monitorSize = MonSize;
+    Resolution.width = monRes(2);
+    Resolution.height = monRes(1);
+    Params.ppd = monitorPPD(Resolution, MonSize, MonitorDistance);
 end
-Params.GridSize = GridSize;
-Params.MonitorDistance = MonitorDistance;
-Params.MonitorResolution = MonRes;
+Params.gridSize = GridSize;
+Params.monitorDistance = MonitorDistance;
+Params.monitorResolution = monRes;
 
 % RF position
 if exist('Xposition','var') && exist('Yposition','var')
-    RFposition = [Xposition,Yposition];
+    rfPosition = [Xposition,Yposition];
 elseif ~exist('RFposition','var')
-    RFposition = [0,0];
+    rfPosition = [0,0];
 end
-Params.RFposition = RFposition;
+Params.rfPosition = RFposition;
 
 % Stim Parameters
-Params.StimDuration = StimDuration;
-Params.StimInterval = StimInterval;
+Params.stimDuration = StimDuration;
+Params.stimInterval = StimInterval;
 
 % Check for empty data matrices
 if isempty(data)
@@ -82,155 +82,155 @@ end
 
 % Loading stim sequence
 try
-    StimSequence = LoadStimSequence(StimType, seqDir);
+    stimSequence = LoadStimSequence(stimType, seqDir);
 catch e
-    disp(['Sequence not loaded for ',StimType]);
-    StimSequence = [];
+    disp(['Sequence not loaded for ',stimType]);
+    stimSequence = [];
 end
 
 % Fix new sequences
-SF = unique(data(:,3));
-TF = unique(data(:,4));
-Apt = unique(data(:,5));
+sf = unique(data(:,3));
+tf = unique(data(:,4));
+apt = unique(data(:,5));
 if size(data,2) >= 7
-    C = unique(data(:,7));
+    con = unique(data(:,7));
 end
-if strcmp(StimType,'MouseSpatial') && SF(1)<0.01
+if strcmp(stimType,'MouseSpatial') && sf(1)<0.01
     load(fullfile(altSeqDir,'MouseSpatial_StimSequence'));
 end
-if strcmp(StimType,'MouseTemporal') ...
-        && length(TF) ~= length(StimSequence(:,1,1))
+if strcmp(stimType,'MouseTemporal') ...
+        && length(tf) ~= length(stimSequence(:,1,1))
     load(fullfile(altSeqDir,'MouseTemporal_StimSequence'));
 end
-if strcmp(StimType,'Contrast') && C(1) == 0
+if strcmp(stimType,'contrast') && con(1) == 0
     load(fullfile(altSeqDir,'Contrast_StimSequence'));
 end
-if strcmp(StimType,'MouseAperture') && Apt(2) == 2
+if strcmp(stimType,'MouseAperture') && apt(2) == 2
     load(fullfile(altSeqDir,'MouseAperture_StimSequence'));
 end
-if strcmp(StimType,'MouseAperture') && Apt(2) == 3
+if strcmp(stimType,'MouseAperture') && apt(2) == 3
     load(fullfile(altSeqDir,'MouseAperture2_StimSequence'));
 end
 
 % Fill out Data table
 Data = table;
-switch StimType
-    case {'Velocity', 'VelocityConstantCycles', ...
+switch stimType
+    case {'velocity', 'VelocityConstantCycles', ...
             'VelocityConstantCyclesBar'}
-        Data.StimNo = data(:,1);
-        Data.StimTime = data(:,2);
-        Data.Velocity = data(:,3);
+        Data.stimNo = data(:,1);
+        Data.stimTime = data(:,2);
+        Data.velocity = data(:,3);
         Data.nDots = data(:,4);
-        Data.Aperture = data(:,5);
-        Data.Ori = data(:,6);
-        Data.Contrast = data(:,7);
-        Data.StimDuration = data(:,8);
-        Data.TrialNo = data(:,9);
-        Data.ConditionNo = data(:,10);
+        Data.aperture = data(:,5);
+        Data.ori = data(:,6);
+        Data.contrast = data(:,7);
+        Data.stimDuration = data(:,8);
+        Data.trialNo = data(:,9);
+        Data.conditionNo = data(:,10);
     case 'Looming'
-        Data.StimNo = data(:,1);
-        Data.StimTime = data(:,2);
-        Data.Velocity = data(:,3);
-        Data.Contrast = data(:,4);
-        Data.StimDuration = data(:,5);
-        Data.TrialNo = data(:,6);
-        Data.ConditionNo = data(:,7);
-        Data.Condition = data(:,3);
+        Data.stimNo = data(:,1);
+        Data.stimTime = data(:,2);
+        Data.velocity = data(:,3);
+        Data.contrast = data(:,4);
+        Data.stimDuration = data(:,5);
+        Data.trialNo = data(:,6);
+        Data.conditionNo = data(:,7);
+        Data.condition = data(:,3);
     case 'LatencyTest'
-        Data.StimNo = (1:size(data,1))';
-        Data.StimTime = data(:,1);
-        Data.StimDuration = data(:,2);
-        Data.TrialNo = data(:,3);
-        Data.StimOffTime = data(:,4);
-        Data.StimInterval = data(:,5);
-        Data.ConditionNo = ones(size(data,1),1);
-        StimSequence = ones(1,2,size(data,1));
+        Data.stimNo = (1:size(data,1))';
+        Data.stimTime = data(:,1);
+        Data.stimDuration = data(:,2);
+        Data.trialNo = data(:,3);
+        Data.stimOffTime = data(:,4);
+        Data.stimInterval = data(:,5);
+        Data.conditionNo = ones(size(data,1),1);
+        stimSequence = ones(1,2,size(data,1));
     case 'LaserGratings'
-        Data.StimNo = (1:size(data,1))';
-        Data.StimTime = data(:,1);
-        Data.StimDuration = data(:,2);
-        Data.ISI = data(:,3);
-        Data.TrialNo = data(:,4);
-        Data.ConditionNo = data(:,5);
-        StimSequence = ones(1,2,size(data,1));
+        Data.stimNo = (1:size(data,1))';
+        Data.stimTime = data(:,1);
+        Data.stimDuration = data(:,2);
+        Data.isi = data(:,3);
+        Data.trialNo = data(:,4);
+        Data.conditionNo = data(:,5);
+        stimSequence = ones(1,2,size(data,1));
     case 'LaserON'
-        Data.StimNo = (1:size(data,1))';
-        Data.StimTime = data(:,1);
-        Data.StimDuration = data(:,2);
-        Data.StimInterval = data(:,3);
-        Data.TrialNo = data(:,4);
-        Data.ConditionNo = ones(size(data,1),1);
-        StimSequence = ones(1,2,size(data,1));
+        Data.stimNo = (1:size(data,1))';
+        Data.stimTime = data(:,1);
+        Data.stimDuration = data(:,2);
+        Data.stimInterval = data(:,3);
+        Data.trialNo = data(:,4);
+        Data.conditionNo = ones(size(data,1),1);
+        stimSequence = ones(1,2,size(data,1));
     case 'PatternMotion'
-        Data.StimTime = data(:,1);
-        Data.StimNo = (1:size(data,1))';
-        Data.SF = data(:,3);
-        Data.TF = data(:,4);
-        Data.Aperture = data(:,5);
-        Data.Ori = data(:,6);
-        Data.Contrast = data(:,7);
-        Data.StimDuration = data(:,8);
-        Data.TrialNo = data(:,9);
-        Data.Velocity = data(:,10);
-        Data.ConditionNo = data(:,11);
+        Data.stimTime = data(:,1);
+        Data.stimNo = (1:size(data,1))';
+        Data.sf = data(:,3);
+        Data.tf = data(:,4);
+        Data.aperture = data(:,5);
+        Data.ori = data(:,6);
+        Data.contrast = data(:,7);
+        Data.stimDuration = data(:,8);
+        Data.trialNo = data(:,9);
+        Data.velocity = data(:,10);
+        Data.conditionNo = data(:,11);
     case 'RFmap'
-        Data.StimNo = (1:size(data,1))';
-        Data.StimTime = data(:,1);
-        Data.ConditionNo = data(:,2);
-        Data.XPosition = data(:,3);
-        Data.YPosition = data(:,4);
-        Data.Aperture = data(:,5);
+        Data.stimNo = (1:size(data,1))';
+        Data.stimTime = data(:,1);
+        Data.conditionNo = data(:,2);
+        Data.xPosition = data(:,3);
+        Data.yPosition = data(:,4);
+        Data.aperture = data(:,5);
     case 'CatRFdetailed'
-        Data.StimNo = (1:size(data,1))';
-        Data.StimTime = data(:,1);
-        Data.ConditionNo = data(:,2);
-        Data.Color = data(:,3);
-        Data.XPosition = data(:,4);
-        Data.YPosition = data(:,5);
-        Data.Condition = [Data.XPosition Data.YPosition];
+        Data.stimNo = (1:size(data,1))';
+        Data.stimTime = data(:,1);
+        Data.conditionNo = data(:,2);
+        Data.color = data(:,3);
+        Data.xPosition = data(:,4);
+        Data.yPosition = data(:,5);
+        Data.condition = [Data.xPosition Data.yPosition];
     case {'CatRFfast','CatRFfast10x10'}
-        Data.StimNo = (1:size(data,1))';
-        Data.StimTime = data(:,1);
-        Data.ConditionNo = data(:,2);
-        Data.Color = data(:,3);
-        Data.XPosition = data(:,4);
-        Data.YPosition = data(:,5);
-        Data.StimDuration = data(:,6);
-        Data.TrialNo = data(:,7);
-        Data.SF = data(:,8);
-        Data.TF = data(:,9);
-        Data.Ori = data(:,10);
-        Data.RFposition = data(:,11);
-        Data.Condition = [Data.XPosition Data.YPosition];
+        Data.stimNo = (1:size(data,1))';
+        Data.stimTime = data(:,1);
+        Data.conditionNo = data(:,2);
+        Data.color = data(:,3);
+        Data.xPosition = data(:,4);
+        Data.yPosition = data(:,5);
+        Data.stimDuration = data(:,6);
+        Data.trialNo = data(:,7);
+        Data.sf = data(:,8);
+        Data.tf = data(:,9);
+        Data.ori = data(:,10);
+        Data.rfPosition = data(:,11);
+        Data.condition = [Data.xPosition Data.yPosition];
     case {'NaturalImages', 'NaturalVideos'}
-        Data.StimNo = (1:size(data,1))';
-        Data.StimTime = data(:,1);
-        Data.ConditionNo = data(:,2);
-        Data.Condition = Data.ConditionNo;
-        Data.StimDuration = data(:,4);
-        Data.StimInterval = data(:,5);
-        Data.TrialNo = data(:,6);
+        Data.stimNo = (1:size(data,1))';
+        Data.stimTime = data(:,1);
+        Data.conditionNo = data(:,2);
+        Data.condition = Data.conditionNo;
+        Data.stimDuration = data(:,4);
+        Data.stimInterval = data(:,5);
+        Data.trialNo = data(:,6);
     otherwise
-        if isempty(StimSequence)
+        if isempty(stimSequence)
             warning(['Unsupported filetype. Skipping ', FileName]);
             return;
         end
-        Params.nConds = length(unique(StimSequence(:,1)));
+        Params.nConds = length(unique(stimSequence(:,1)));
         Params.nTrials = ceil(size(data,1)/Params.nConds);
-        CondNo = reshape(StimSequence(1:Params.nConds,1,1:Params.nTrials),...
+        CondNo = reshape(stimSequence(1:Params.nConds,1,1:Params.nTrials),...
             Params.nConds*Params.nTrials,1);
-        Data.ConditionNo = CondNo(1:size(data,1));
+        Data.conditionNo = CondNo(1:size(data,1));
         
-        % condition, StimTime, sf, tf, apt, ori, c, dur
+        % condition, stimTime, sf, tf, apt, ori, c, dur
         if size(data,2) >= 8
-            Data.StimNo = (1:size(data,1))';
-            Data.StimTime = data(:,2);
-            Data.SF = data(:,3);
-            Data.TF = data(:,4);
-            Data.Aperture = data(:,5);
-            Data.Ori = data(:,6);
-            Data.Contrast = data(:,7);
-            Data.StimDuration = data(:,8);
+            Data.stimNo = (1:size(data,1))';
+            Data.stimTime = data(:,2);
+            Data.sf = data(:,3);
+            Data.tf = data(:,4);
+            Data.aperture = data(:,5);
+            Data.ori = data(:,6);
+            Data.contrast = data(:,7);
+            Data.stimDuration = data(:,8);
         else
             warning(['Unsupported log matrix. Skipping ', FileName]);
             return;
@@ -238,41 +238,41 @@ switch StimType
         
         % trial no
         if size(data,2) >= 9
-            Data.TrialNo = data(:,9);
+            Data.trialNo = data(:,9);
         else
-            Data.TrialNo = NaN(1:size(data,1));
+            Data.trialNo = NaN(1:size(data,1));
         end
         
         % velocity
         if size(data,2) >= 10
-            Data.Velocity = data(:,10);
+            Data.velocity = data(:,10);
         else
-            Data.Velocity = data(:,4)./data(:,3);
+            Data.velocity = data(:,4)./data(:,3);
         end
 end
 
-Params.nConds = length(unique(Data.ConditionNo));
+Params.nConds = length(unique(Data.conditionNo));
 Params.nTrials = floor(size(data,1)/Params.nConds);
 
 
-% Transfer StimSequence to Data.Condition and Data.ConditionNo
-if ~isempty(StimSequence)
-    StimSequence = StimSequence(:,:,1:ceil(size(data,1)/Params.nConds));
+% Transfer StimSequence to Data.condition and Data.conditionNo
+if ~isempty(stimSequence)
+    stimSequence = stimSequence(:,:,1:ceil(size(data,1)/Params.nConds));
 end
-Params.StimSequence = StimSequence;
-Stim = num2cell(StimSequence, [1 2]);
-Stim = vertcat(Stim{:}); % condition number, condition
-if ~ismember('Condition', Data.Properties.VariableNames) || ...
-        isempty(Data.Condition)
-    Data.Condition = Stim(1:size(data,1),2);
+Params.StimSequence = stimSequence;
+stim = num2cell(stimSequence, [1 2]);
+stim = vertcat(stim{:}); % condition number, condition
+if ~ismember('condition', Data.Properties.VariableNames) || ...
+        isempty(Data.condition)
+    Data.condition = stim(1:size(data,1),2);
 end
-if ~ismember('ConditionNo', Data.Properties.VariableNames) || ...
-        isempty(Data.ConditionNo)
-    Data.ConditionNo = Stim(1:size(data,1),1);
+if ~ismember('conditionNo', Data.Properties.VariableNames) || ...
+        isempty(Data.conditionNo)
+    Data.conditionNo = stim(1:size(data,1),1);
 end
-if ~ismember('StimInterval', Data.Properties.VariableNames) || ...
-        isempty(Data.StimInterval)
-    Data.StimInterval = StimInterval*ones(size(data,1),1);
+if ~ismember('stimInterval', Data.Properties.VariableNames) || ...
+        isempty(Data.stimInterval)
+    Data.stimInterval = stimInterval*ones(size(data,1),1);
 end
 
 % Data goes into params, too

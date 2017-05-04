@@ -11,8 +11,11 @@ unitNo = str2num(unit(5:end));
 dataPath = fullfile(dataDir, animalID, unit, filesep);
 filePath = fullfile(dataPath,[fileName,'-export.mat']);
 
+% Reload the data?
+overwrite = 1; % if needed for testing
+
 % Export the file to make sure everything is in place
-dataExport( dataDir, [], animalID, unitNo, fileNo);
+dataExport( dataDir, [], animalID, unitNo, fileNo, overwrite);
 
 % Load the file
 if ~exist(filePath)

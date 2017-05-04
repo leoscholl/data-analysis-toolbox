@@ -1,34 +1,40 @@
-function PlotWaveforms(ResultsPath, FileName, Waveforms, ElectrodeNames)
+function plotWaveforms(resultsPath, fileName, Electrodes)
 %PlotWaveforms plots mean waveform for each unit
 
-for ch = 1:length(ElectrodeNames)
+for ch = 1:size(Electrodes,1)
     
-    Elec = ElectrodeNames{ch};
-    ElecNo = Elec(strfind(Elec,'c')+1:end);
-    ElecDir = ['Ch',ElecNo'];
+    elecNo = Electrodes.number(ch);
+    elecDir = sprintf('Ch%02d', elecNo);
        
     % Waveforms could be empty for this channel
-    wf_ch =  Waveforms(Waveforms(:,1) == ch, :);
-    if isempty(wf_ch)
-        disp(['No waveforms in ch ',ElecNo]);
+    wf = Electrodes.waveforms{ch};
+    if isempty(wf)
+        disp(['No waveforms in ch ',elecNo]);
     end
     
-    Temps = unique(wf_ch(:,2));
+    units = unique(wf(:,2));
     
-    colors = hsv(max(10,length(Temps)));
+    colors = hsv(max(10,length(units)));
     fig1 = figure(10);hold on;
     set(gcf,'Visible','off');
-    for t = 1:length(Temps)
-        wf = wf_ch(wf_ch(:,1) == ch & wf_ch(:,2) == Temps(t),3:end);
-        plot(1/30000:1/30000:(1/30000)*size(wf,2),mean(wf),...
+    for t = 1:length(units)
+        wf_unit = wf(wf(:,2) == units(t),3:end);
+        wf_mean = mean(wf_unit);
+        wf_std = std(wf_unit);
+        plot(1/30000:1/30000:(1/30000)*size(wf_unit,2),wf_mean,...
             'Color',colors(t,:),'LineWidth',1.5);
+        plot(1/30000:1/30000:(1/30000)*size(wf_unit,2),wf_mean+wf_std,...
+            'LineSpec','--','Color',colors(t,:),'LineWidth',1);
+        plot(1/30000:1/30000:(1/30000)*size(wf_unit,2),wf_mean-wf_std,...
+            'LineSpec','--','Color',colors(t,:),'LineWidth',1);
     end
-    if ~isdir([ResultsPath,'Ch',ElecNo])
-        mkdir([ResultsPath,'Ch',ElecNo]);
+    if ~isdir([resultsPath,'Ch',ElecNo])
+        mkdir([resultsPath,'Ch',ElecNo]);
     end
-    legend({num2str(Temps)});
-    title([FileName,' El', ElecNo],'FontSize',6);axis tight;
-    FigureName = fullfile(ResultsPath,ElecDir,[FileName, '_','El', ElecNo,'-waveforms']);
+    legend({num2str(units)});
+    title([fileName,' El', ElecNo],'FontSize',6);
+    axis tight;
+    FigureName = fullfile(resultsPath,elecDir,[fileName, '_','El', ElecNo,'-waveforms']);
     print(fig1,FigureName,'-dpng');
     hgsave(fig1,FigureName);
     close;
