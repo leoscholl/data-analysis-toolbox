@@ -1,6 +1,10 @@
-function LFP = loadRippleLFP(dataPath, fileName)
+function Analog = loadRippleAnalog(dataPath, fileName, dataType)
 
-narginchk(2,2);
+narginchk(2,3);
+
+if nargin < 3
+    dataType = 'lfp';
+end
 
 % Check that neuroshare exists
 assertNeuroshare();
@@ -40,54 +44,52 @@ end
 
 
 % get Analog EntityID
-LFPEntityID = ...
-    find(~cellfun('isempty', strfind({nsEntityInfo.EntityLabel}, '1 kS/s')));
-if isempty(LFPEntityID)
-    LFPEntityID = ...
-        find(~cellfun('isempty', strfind({nsEntityInfo.EntityLabel}, 'lfp')));
-end
+analogEntityID = ...
+    find(~cellfun('isempty', strfind({nsEntityInfo.EntityLabel}, dataType)));
 
-label = {nsEntityInfo(LFPEntityID).EntityLabel};
-itemCounts = [nsEntityInfo(LFPEntityID).ItemCount];
-disp([num2str(length(LFPEntityID)), ' electrodes with ', ...
-    num2str(itemCounts(1)/1000), ' seconds of LFP data']);
+
+label = {nsEntityInfo(analogEntityID).EntityLabel};
+itemCounts = [nsEntityInfo(analogEntityID).ItemCount];
+disp([num2str(length(analogEntityID)), ' electrodes with ', ...
+    num2str(itemCounts(1)/1000), ' seconds of analog data']);
         
 % Check item counts
 if any(itemCounts ~= mean(itemCounts))
-    fprintf(2, 'Error: Different number of samples in each electrode\n');
+    fprintf(2, ['Error: Different number of samples in each channel.'...
+        'Truncating.\n']);
 end
 
 % Collect the raw data for all channels simultaneously
 [ns_RESULT, dataTmp] = ...
-    ns_GetAnalogDataBlock(hFile, LFPEntityID, 1, max(itemCounts));
+    ns_GetAnalogDataBlock(hFile, analogEntityID, 1, min(itemCounts));
 if ~strcmp(ns_RESULT, 'ns_OK')
     error(2, '%s error\n', ns_RESULT);
 end
 
 % Put data into a cell array
-nElectrodes = length(LFPEntityID);
-data = cell(nElectrodes,1);
-for i=1:nElectrodes
+nChannels = length(analogEntityID);
+data = cell(nChannels,1);
+for i=1:nChannels
     data{i} = dataTmp(:,i);
 end
 
 % load electrode names
-number = nan(length(LFPEntityID),1);
-name = cell(length(LFPEntityID),1);
-for i = 1:length(LFPEntityID)
+number = nan(length(analogEntityID),1);
+name = cell(length(analogEntityID),1);
+for i = 1:length(analogEntityID)
     name{i} = label{i};
     number(i) = i;
 end
 
-[ns_RESULT, analogInfo] = ns_GetAnalogInfo(hFile, LFPEntityID(1));
+[ns_RESULT, analogInfo] = ns_GetAnalogInfo(hFile, analogEntityID(1));
 if ~strcmp(ns_RESULT, 'ns_OK')
     error(2, '%s error\n', ns_RESULT);
 end
 
-LFP = [];
-LFP.sampleRate = analogInfo.SampleRate;
-LFP.endTime = itemCounts/LFP.sampleRate; % Recording duration in 's'
-LFP.Electrodes = table(data, name, number);
+Analog = [];
+Analog.sampleRate = analogInfo.SampleRate;
+Analog.endTime = itemCounts/Analog.sampleRate; % Recording duration in 's'
+Analog.Channels = table(data, name, number);
 
 ns_CloseFile(hFile);
 end

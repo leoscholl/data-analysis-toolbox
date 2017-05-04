@@ -56,7 +56,6 @@ parfor i = 1:length(whichElectrodes)
     Units = unique(SpikeData.u);
     
     % Plotting Figures
-    fprintf('elec%d.',elecNo);
     elecDir = sprintf('Ch%02d',elecNo);
     if ~isdir(fullfile(resultsPath,elecDir))
         mkdir(fullfile(resultsPath,elecDir))
@@ -267,8 +266,6 @@ parfor i = 1:length(whichElectrodes)
             close(hMap);
             
         end
-        
-        fprintf('.'); % status update
         
     end % Units loop
 end; % Electrodes loop

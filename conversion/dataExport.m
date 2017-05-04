@@ -37,7 +37,7 @@ for i=1:size(fileNames,1)
         % Spikes, LFP, and Events
         Ripple = [];
         Ripple.Electrodes = loadRippleSpikes(dataPath,fileName);
-        Ripple.LFP = loadRippleLFP(dataPath, fileName);
+        Ripple.LFP = loadRippleAnalog(dataPath, fileName, 'lfp');
         Ripple.Events = loadRippleEvents(dataPath,fileName);
         m.Ripple = Ripple;
     elseif ~isfield(m.Ripple, 'Events')
@@ -45,7 +45,9 @@ for i=1:size(fileNames,1)
     elseif ~isfield(m.Ripple, 'Electrodes')
         m.Ripple.Electrodes = loadRippleSpikes(dataPath,fileName);
     elseif ~isfield(m.Ripple, 'LFP')
-        m.Ripple.LFP = loadRippleLFP(dataPath,fileName);
+        m.Ripple.LFP = loadRippleAnalog(dataPath, fileName, 'lfp');
+    elseif ~isfield(m.Ripple, 'AnalogIn')
+        m.Ripple.Analogin = loadRippleAnalog(dataPath, fileName, 'analog');
     end
     
     if isempty(whos(m,'Params'))

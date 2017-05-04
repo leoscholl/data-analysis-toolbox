@@ -89,9 +89,9 @@ end
 clear StimDiffTime StimDuration StimInterval TimeFrom Time Centers ...
     numbins binsize
 
-% All electrodes
+% All electrodes.C = cellfun(@(x) strrep(x,'a','b'),A,'Un',0)
 fprintf('%d electrodes with %s units\n', Params.NoOfElectrodes, ...
-    mat2str(cellfun(@(x) length(unique(x(:,2))), Electrodes.spikes)'));
+    mat2str(arrayfun(length,cellfun(@(x) unique, Electrodes.spikes))));
 for i = 1:length(whichElectrodes)
     elecNo = whichElectrodes(i);
     
