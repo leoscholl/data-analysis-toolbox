@@ -13,15 +13,14 @@ if nargin < 4
     whichUnits = [];
 end
 
-[fileNames, fileUnits] = ...
-    FindFiles(dataDir, animalID, whichUnits, '*.nev', whichFiles);
+[~, ~, Files] = ...
+    findFiles(dataDir, animalID, whichUnits, '*.nev', whichFiles);
 
-for i=1:size(fileNames,1)
-    [~, fileName, ~] = fileparts(deblank(fileNames(i,:)));
-    unitNo = fileUnits(i,:);
-    [animalID, fileNo, ~] = ParseFile(fileName);
-    dataPath = fullfile(dataDir, animalID, ['Unit',num2str(unitNo)]);
-    destPath = fullfile(copyDir, animalID, ['Unit',num2str(unitNo)]);
+for i=1:size(Files,1)
+    fileName = Files.fileName{i};
+    unit = Files.unit{i};
+    dataPath = fullfile(dataDir, animalID, unit);
+    destPath = fullfile(copyDir, animalID, unit);
     exportFile = fullfile(dataPath, [fileName, '-export.mat']);
       
     disp(['exporting ', fileName]);

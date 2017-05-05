@@ -6,7 +6,7 @@ if nargin < 5 || isempty(fileType)
 end
 
 [~, fileName, ~] = fileparts(fileName);
-[~, fileNo, ~] = ParseFile(fileName);
+[~, fileNo, ~] = parseFileName(fileName);
 unitNo = str2num(unit(5:end));
 dataPath = fullfile(dataDir, animalID, unit, filesep);
 filePath = fullfile(dataPath,[fileName,'-export.mat']);

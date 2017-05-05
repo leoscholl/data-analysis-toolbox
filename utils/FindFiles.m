@@ -1,4 +1,5 @@
-function [FileNames, FileUnits] = FindFiles(Dir, AnimalID, Unit, FileString, WhichFiles)
+function [fileNames, fileUnits, Files] = findFiles(baseDir, animalID, whichUnits, ...
+    fileString, whichFiles)
 %FindFiles
 %
 % Unit is optional, can be number or string
@@ -12,52 +13,47 @@ function [FileNames, FileUnits] = FindFiles(Dir, AnimalID, Unit, FileString, Whi
 narginchk(2,5);
 
 if nargin < 5
-    WhichFiles = [];
+    whichFiles = [];
 end
 if nargin < 4
-    FileString = '';
+    fileString = '';
 end
 if nargin < 3
-    Unit = [];
+    whichUnits = [];
 end
 
-if isnumeric(Unit)
-    Unit = FindUnits(Dir, AnimalID, Unit);
+if ~isnumeric(whichUnits) || ~isnumeric(whichFiles)
+    error('whichFiles only accepts numeric input');
 end
 
-FileNames = [];
-FileUnits = [];
-Padding = 100;
-for i = 1:size(Unit,1)
-    DataPath = fullfile(Dir,AnimalID,Unit(i,:),filesep);
-    NewFiles = ls([DataPath,FileString]);
-    FileNames = [FileNames; NewFiles ...
-        repmat(' ', size(NewFiles,1), Padding-size(NewFiles,2))];
-    FileUnits = [FileUnits; repmat(str2num(Unit(i,5:end)), size(NewFiles,1), 1)];
+whichUnits = findUnits(baseDir, animalID, whichUnits);
+fileNames = {};
+for i = 1:size(whichUnits,1)
+    dataPath = fullfile(baseDir,animalID,whichUnits{i},filesep);
+    newFiles = dir([dataPath,fileString]);
+    newFiles = newFiles(~vertcat(newFiles.isdir)); % just for good measure
+    [~, newFiles, ~] = cellfun(@fileparts, {newFiles.name}, 'UniformOutput', false);
+    [~, newFileNos, newStimTypes] = cellfun(@parseFileName, newFiles, 'UniformOutput', false);
+    fileNames = [fileNames; newFiles', newFileNos', newStimTypes', ...
+        repmat(whichUnits(i),length(newFiles),1), ...
+        repmat({str2num(whichUnits{i}(5:end))},length(newFiles),1)];
 end
 
-if isempty(FileNames)
+if isempty(fileNames)
     warning('No files found');
 end
 
-if ~isempty(FileNames) && ~isempty(WhichFiles)
+if ~isempty(fileNames) && ~isempty(whichFiles)
     
     % Remove files that aren't in WhichFiles
-    FileNo = [];
-    for i = 1:size(FileNames,1)
-        [~, FileNo(i), ~] = ParseFile(FileNames(i,:));
-    end
-    FileNames = FileNames(ismember(FileNo, WhichFiles),:);
-    FileUnits = FileUnits(ismember(FileNo, WhichFiles),:);
+    fileNames = fileNames(ismember(vertcat(fileNames{:,2}), whichFiles),:);
 end
 
 % Sort files
-FileNo = [];
-for i = 1:size(FileNames,1)
-    [~, FileNo(i), ~] = ParseFile(FileNames(i,:));
-end
-[~,IX] = sort(FileNo);
-FileNames = FileNames(IX,:);
-FileUnits = FileUnits(IX,:);
+[~,IX] = sort(vertcat(fileNames{:,2}));
+Files = cell2table(fileNames(IX,:));
+Files.Properties.VariableNames = {'fileName','fileNo','stimType','unit','unitNo'};
+fileUnits = fileNames(IX,4);
+fileNames = fileNames(IX,1);
 
 end

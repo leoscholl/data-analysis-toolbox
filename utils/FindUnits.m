@@ -1,31 +1,31 @@
-function Units = FindUnits(Dir, AnimalID, WhichUnits)
+function units = findUnits(baseDir, animalID, whichUnits)
+%findUnits returns a cell array of units
 
 narginchk(2,3);
 
 if nargin < 3
-    WhichUnits = [];
+    whichUnits = [];
 end
 
-if ~isnumeric(WhichUnits)
-    error('WhichUnits only accepts numeric input');
+if ~isnumeric(whichUnits)
+    error('whichUnits only accepts numeric input');
 end
 
-Units = dir(fullfile(Dir,AnimalID,'Unit*'));
-Units = Units(find(vertcat(Units.isdir)));
-Units = char(Units.name);
+units = dir(fullfile(baseDir,animalID,'Unit*'));
+units = units(find(vertcat(units.isdir)));
+units = {units.name};
+unitNos = cellfun(@(x) str2double(x(5:end)), units);
 
 % WhichUnits = [1:length(Units(:,1))];
 % WhichUnits = [1,2,5,6,7,8,9,10];
-if ~isempty(WhichUnits)
-    UnitsStr = cellstr(Units);
-    WhichUnitsStr = strcat(cellstr(repmat('Unit',length(WhichUnits),1)),cellfun(@strtrim,cellstr(num2str(WhichUnits')),'UniformOutput',0));
-    UnitsStr = UnitsStr(ismember(UnitsStr,WhichUnitsStr));
-    Units = char(UnitsStr);
+if ~isempty(whichUnits)
+    whichUnits = ismember(unitNos, whichUnits);
+    units = units(whichUnits);
+    unitNos = unitNos(whichUnits);
 end
 
 % Sort units
-UnitsNo = str2num(deblank(Units(:,5:end)));
-[~, UnID] = sort(UnitsNo);
-Units = Units(UnID,:);
+[~, idx] = sort(unitNos);
+units = {units{idx}};
 
 end

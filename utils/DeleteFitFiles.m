@@ -1,30 +1,30 @@
-function DeleteFitFiles(Dir, AnimalID, WhichUnits)
+function deleteFitFiles(dir, animalID, whichUnits)
 
-disp(['deleting figures for ', AnimalID, ' units ', mat2str(WhichUnits)]);
+disp(['deleting figures for ', animalID, ' units ', mat2str(whichUnits)]);
 
-Units = FindUnits(Dir, AnimalID, WhichUnits);
+units = FindUnits(dir, animalID, whichUnits);
 
-if isempty(Units)
+if isempty(units)
     return
 end
 
-for unt = 1:length(Units(:,1))
+for unt = 1:length(units(:,1))
     
     % delete for the unit
-    DataPath = fullfile(Dir, AnimalID, deblank(Units(unt,:)));
-    delete(fullfile(DataPath, '*.png'), fullfile(DataPath, '*.fig'));
+    dataPath = fullfile(dir, animalID, deblank(units(unt,:)));
+    delete(fullfile(dataPath, '*.png'), fullfile(dataPath, '*.fig'));
 
     % delete for all channels
-    DataPath = fullfile(Dir,AnimalID,deblank(Units(unt,:)));
-    Channels = dir(fullfile(DataPath,'Ch*'));
-    if isempty(Channels)
+    dataPath = fullfile(dir,animalID,deblank(units(unt,:)));
+    channels = dir(fullfile(dataPath,'Ch*'));
+    if isempty(channels)
         fprintf('nothing to delete for unit %d...\n', unt);
         continue;
     end
-    Channels = vertcat(Channels(vertcat(Channels.isdir)).name);
-    for ch = 1:length(Channels(:,1))
-        rmdir(fullfile(DataPath,Channels(ch,:)),'s');
+    channels = vertcat(channels(vertcat(channels.isdir)).name);
+    for ch = 1:length(channels(:,1))
+        rmdir(fullfile(dataPath,channels(ch,:)),'s');
     end
 end
 
-disp(['...done deleting for ', AnimalID]);
+disp(['...done deleting for ', animalID]);
