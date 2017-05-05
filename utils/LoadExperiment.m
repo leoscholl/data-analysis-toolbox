@@ -77,7 +77,7 @@ end
 
 % Adjust StimTimes
 Params.unitNo = unitNo;
-[stimOnTimes, stimOffTimes, source, latency, variation] = ...
+[stimOnTimes, stimOffTimes, source, latency, variation, hasError] = ...
     adjustStimTimes(Params, Events);
 StimTimes = [];
 StimTimes.on = stimOnTimes;
@@ -85,5 +85,9 @@ StimTimes.off = stimOffTimes;
 StimTimes.latency = latency;
 StimTimes.variation = variation;
 StimTimes.source = source;
+
+if hasError
+    plotStimTimes(dataPath, fileName);
+end
 
 end

@@ -1,5 +1,5 @@
 function [stimTimesCorrected, stimOffTimesCorrected, source, ...
-    latency, variation] = adjustStimTimes( Params, Events )
+    latency, variation, hasError] = adjustStimTimes( Params, Events )
 %AdjustStimTimes Adjust stim times to pick the most accurate ones
 
 animalID = Params.animalID;
@@ -63,6 +63,9 @@ else
     error('No stim times in data file');
 end
 
+% Keep track of any errors
+hasError = 0;
+
 % Adjust old param stim times
 stimTimesLegacy = [];
 stimOffTimesLegacy = [];
@@ -112,15 +115,19 @@ if ~isempty(stimTimesParallel)
     if length(stimTimes) ~= nStims || length(stimOffTimes) ~= nStims
         fprintf(2, 'Parallel port caught %d out of %d StimTimes\n', ...
             length(stimTimes) + length(stimOffTimes), nStims*2);
+        hasError = 1;
     elseif min(stimTimes) + 0.5 < min(stimTimesPTB) || ...
         (~isempty(stimTimesPhotodiode) && ...
         min(stimTimes) + 0.5 < min(stimTimesPhotodiode))
         fprintf(2, 'StimTimesParallel are too small.\n');
+        hasError = 1;
     elseif min(stimTimes) > 1000
         fprintf(2, 'StimTimesParallel are too big.\n');
+        hasError = 1;
     elseif sum([diff(stimTimes); NaN] + 0.1 < ...
             Params.Data.stimDuration + Params.Data.stimInterval)
         fprintf(2, 'At least one pair of StimTimesParallel are too close together.\n');
+        hasError = 1;
     elseif any(stimOffTimes - stimTimes + 0.1 < Params.Data.stimDuration)
         % on times ok, but off times are not
         fprintf(2, 'Parallel port stim off times are inaccurate\n');
@@ -144,16 +151,20 @@ if ~isempty(stimTimesPhotodiode)
     if length(stimTimes) ~= nStims || length(stimOffTimes) ~= nStims
         fprintf(2, 'Photodiode caught %d out of %d StimTimes\n', ...
             length(stimTimes) + length(stimOffTimes), nStims*2);
+        hasError = 1;
     elseif min(stimTimes) + 0.5 < min(stimTimesPTB) || ...
         (~isempty(stimTimesParallel) && ...
         min(stimTimes) + 0.5 < min(stimTimesParallel))
         fprintf(2, 'StimTimesPhotodiode are too small.\n');
+        hasError = 1;
     elseif min(stimTimes) > 1000
         fprintf(2, 'StimTimesPhotodiode are too big.\n');
+        hasError = 1;
     elseif sum([diff(stimTimes); NaN] + 0.1 < ...
             Params.Data.stimDuration + Params.Data.stimInterval)
         stimTimes = stimTimesLegacy;
         fprintf(2, 'At least one pair of StimTimesPhotodiode are too close together.\n');
+        hasError = 1;
     elseif any(stimOffTimes - stimTimes + 0.1 < Params.Data.stimDuration)
         % on times ok, but off times are not
         fprintf(2, 'photodiode stim off times are inaccurate\n');
@@ -223,11 +234,13 @@ if stimTimesCorrected(1) < startTimeRipple || ...
     fprintf(2, 'StimTimes fall outside of the possible range. Aborting');
     stimTimesCorrected = [];
     stimOffTimesCorrected = [];
+    hasError = 1;
 elseif sum([diff(stimTimesCorrected); NaN] + 0.1 < ...
         Params.Data.stimDuration + Params.Data.stimInterval)    
     fprintf(2, 'At least one pair of triggers are too close together.\n');
     stimTimesCorrected = [];
     stimOffTimesCorrected = [];
+    hasError = 1;
 end
 
 end

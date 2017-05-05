@@ -87,7 +87,7 @@ for i = 1:length(conditionNo)
 %         set(ax2, 'XTickLabel', []);
     end
     title(ax, sprintf('%s = %.3f', Params.stimType, conditions(c)), ...
-        'FontSize',16,'FontWeight','Normal');
+        'FontSize',fontSize,'FontWeight','Normal');
     ylabel(ax, 'Trial');
     
 end
@@ -166,7 +166,7 @@ for i = 1:length(conditions)
 %         set(ax2, 'XTickLabel', []);
     end
     title(ax, sprintf('%s = %.3f', Params.stimType, conditions(c)), ...
-        'FontSize',16,'FontWeight','Normal');
+        'FontSize',fontSize,'FontWeight','Normal');
     ylabel(ax, 'spikes/s');
     
 end

@@ -241,6 +241,7 @@ for i = 1:length(whichElectrodes)
     Results.Electrodes = Electrodes;
     Results.SpikeDataAll{elecNo} = SpikeData;
     Results.StatisticsAll{elecNo} = Statistics;
+    Results.StimTimes = StimTimes;
 
 end; % Electrodes loop
 
