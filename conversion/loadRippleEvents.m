@@ -127,5 +127,4 @@ Events.parallelInput = parallelInput;
 
 ns_CloseFile(hFile);
 
-disp('done.')
 end

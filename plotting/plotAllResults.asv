@@ -274,16 +274,18 @@ parfor i = 1:length(whichElectrodes)
                 maps = cell(size(histograms,2),1);
                 for k = 1:length(latencies)
                     lat = latencies(k);
+                    maxPad = ceil(lat/binSize);
+                    
                     for dir=1:length(directions)
                         
                         % How many bins to shift
                         shift = ceil(lat/binSize*cosd(directions(dir))); 
                         
-                        % Shift each histogram
+                        % Shift and add padding
                         if shift < 0
-                            data(dir,:) = [histograms(dir,shift:end), zeros(1,shift)];
+                            data(dir,:) = [histograms(dir,shift:end), zeros(1,maxPad+shift)];
                         else
-                            data(dir,:) = [zeros(1,shift), histograms(dir,1:end-shift)];
+                            data(dir,:) = [zeros(1,shift), histograms(dir,:)];
                         end
                     end
                     maps{k} = back_project(data, directions);

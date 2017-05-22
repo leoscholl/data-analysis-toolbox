@@ -6,7 +6,8 @@ if nargin < 5 || isempty(fileType)
 end
 
 [~, fileName, ~] = fileparts(fileName);
-[~, fileNo, ~] = parseFileName(fileName);
+[~, fileNo, stimType] = parseFileName(fileName);
+fileName = createFileName(animalID, fileNo, stimType);
 unitNo = str2num(unit(5:end));
 dataPath = fullfile(dataDir, animalID, unit, filesep);
 filePath = fullfile(dataPath,[fileName,'-export.mat']);
@@ -48,7 +49,7 @@ switch fileType
 end
 
 % Check params
-if ~exist('Params', 'var') 
+if ~exist('Params', 'var')  || ~isfield(Params,'Data')
     error(['Missing Params for ', fileName]);
 end
 

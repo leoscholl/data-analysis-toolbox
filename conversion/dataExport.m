@@ -14,7 +14,7 @@ if nargin < 4
 end
 
 [~, ~, Files] = ...
-    findFiles(dataDir, animalID, whichUnits, '*.nev', whichFiles);
+    findFiles(dataDir, animalID, whichUnits, '*]*', whichFiles);
 
 for i=1:size(Files,1)
     fileName = Files.fileName{i};
@@ -65,6 +65,6 @@ for i=1:size(Files,1)
     
     % Finally, copy anything that exists
     if ~isempty(copyDir)
-        CopyFiles ([fileName,'-export.mat'], dataPath, destPath);
+        copyFiles ([fileName,'-export.mat'], dataPath, destPath);
     end
 end

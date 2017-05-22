@@ -91,8 +91,8 @@ clear stimDiffTime stimDuration stimInterval TimeFrom Time Centers ...
 
 % All electrodes
 nUnits = cellfun(@(x) length(unique(x(:,2))), Electrodes.spikes)';
-fprintf('%d electrodes with %s units\n', Params.nElectrodes, ...
-    mat2str(nUnits));
+fprintf('%d electrodes with %s units (analyzing %d)\n', Params.nElectrodes, ...
+    mat2str(nUnits), length(whichElectrodes));
 for i = 1:length(whichElectrodes)
     elecNo = whichElectrodes(i);
     

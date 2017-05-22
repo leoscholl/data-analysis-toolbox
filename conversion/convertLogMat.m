@@ -32,7 +32,7 @@ else
     StimDuration = 0.5; % probably wrong...
 end
 load(filePath, vars{:});
-[animalID, expNo, stimType] = ParseFile(fileName);
+[animalID, expNo, stimType] = parseFileName(fileName);
 Params.expNo = expNo;
 Params.animalID = animalID;
 Params.stimType = stimType;

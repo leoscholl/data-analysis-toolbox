@@ -1,22 +1,11 @@
-function [ handle ] = plotMap(tCurve, Params, showFigure)
+function [ handle ] = plotBackProjection(map, Params, showFigure)
 %PlotMaps Function plotting RF maps
 
 % Get conditions from parameters
-conditions = Params.Conditions.condition;
-conditionNo = Params.Conditions.conditionNo;
-X = unique(conditions(:,1));
-Y = unique(conditions(:,2));
-
-% Sort conditions properly
-for i = 1:length(conditionNo)
-    c = conditionNo(i);
-    x = conditions(i,1);
-    y = conditions(i,2);
-    ix = find(X == x);
-    iy = find(Y == y);
-    map(iy,ix) = tCurve(c);
-    idx(iy,ix) = i; % for testing
-end
+screenSize = Params.screenRect/Params.ppd;
+n = length(map);
+X = 1:screenSize(3)/n:screenSize(3);
+Y = 1:screenSize(4)/n:screenSize(4);
 
 % Open a figure
 handle = figure;
@@ -26,17 +15,17 @@ hold on;
 
 % Plot data depending on matlab version
 if verLessThan('matlab', '8.3') % < 2014
-    contourf(X,Y,map,20);
+    contourf(1:n,1:n,map,20);
     shading(gca,'flat');
 else % >= 2014
-    surf(X,Y,map,'FaceColor','interp');
+    surf(1:n,1:n,map,'FaceColor','interp');
     view(0,90);
     colormap('jet');
 end
 
 % Set the title, legends, etc.
 xlabel('X [deg]');ylabel('Y [deg]');
-axis tight;
+axis([X(1) X(end) Y(1) Y(end)]);
 xticks(X);
 yticks(Y);
 
