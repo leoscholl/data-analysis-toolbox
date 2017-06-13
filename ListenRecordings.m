@@ -98,6 +98,9 @@ while 1
             end
             continue;
         end     
+        
+        % Export data to matlab format
+        dataExport( dataDir, [], animalID, unitNo, fileNo, 0);
                 
         % Do the calculation
         Recalculate(DataDir, ResultsDir, AnimalID, Unit, FileNo, ...

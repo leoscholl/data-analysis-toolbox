@@ -41,10 +41,16 @@ SpikeDataAll = Results.SpikeDataAll;
 StatisticsAll = Results.StatisticsAll;
 
 % Set up colors
-colors = ['k';'b';'g';'c';'r'];
-for c = 1:length(colors)
-    unitColors(c,:) = rem(floor((strfind('kbgcrmyw', colors(c)) - 1) * ...
-        [0.25 0.5 1]), 2);
+nUnits = cellfun(@(x) length(unique(x.u)), SpikeDataAll);
+unitColors = makeDefaultColors(nUnits);
+
+% Close any open figures
+close all
+
+% If summary figures are requested, then cannot run in parallel
+if summaryFig
+    poolobj = gcp('nocreate');
+    delete(poolobj);
 end
 
 % Go through each electrode
@@ -111,7 +117,7 @@ parfor i = 1:length(whichElectrodes)
                         unique(tmpParams.Data.conditionNo(tmpParams.Data.velocity == ...
                         velConditions(k))); % should only be one!
                 end
-                velParams.Conditions.cond = velConditions;
+                velParams.Conditions.condition = velConditions;
                 velParams.Conditions.conditionNo = velConditionNo;
                 StatsUnit.conditionNo = velConditionNo;
                 
@@ -156,7 +162,11 @@ parfor i = 1:length(whichElectrodes)
                 titleStr = sprintf('Ch%d', tmpParams.elecNo);
                 title(titleStr,'FontSize',3,'FontWeight','Normal');
                 set(sub,'FontSize',3);
-                set(sub,'XTick',tmpParams.Conditions);
+                if strfind(tmpParams.stimType, 'Ori')
+                    set(sub,'XTick',[tmpParams.Conditions.condition; 360]);
+                else
+                    set(sub,'XTick',tmpParams.Conditions.condition);
+                end
                 box off;
                 axis tight;
                 
@@ -178,7 +188,7 @@ parfor i = 1:length(whichElectrodes)
             
             % Basic tuning curve
             barFig = plotBarGraph(StatsUnit, ...
-                tmpParams, showFigures);
+                tmpParams, unitColors(j,:), showFigures);
             
             % File saving
 %             export_fig(fullfile(ResultsPath,ElecDir,[FigBaseName,'_bar']),...
@@ -191,7 +201,7 @@ parfor i = 1:length(whichElectrodes)
         if plotRasters && size(Params.Conditions,1) <= 20
             
             [hRaster, hPSTH] = plotRastergrams( SpikeDataUnit, tmpParams, ...
-                [unitColors; hsv(length(units) - 5)], showFigures );
+                unitColors(j,:), showFigures );
             
 %             export_fig(fullfile(ResultsPath,ElecDir,[FigBaseName,'_raster']),...
 %                 '-png', '-m3', '-p0.05', hRaster);
@@ -219,7 +229,7 @@ parfor i = 1:length(whichElectrodes)
             
             rParams.Conditions = ...
                 tmpParams.Conditions(find(tmpParams.Conditions.numBins == minSize,1),:);
-            rParams.Conditions.cond = NaN;
+            rParams.Conditions.condition = NaN;
             rParams.Conditions.conditionNo = 1;
             
             rSpikeData.c = ones(size(rSpikeData,1),1);
@@ -228,7 +238,7 @@ parfor i = 1:length(whichElectrodes)
             rSpikeData = rSpikeData(ix,:);
             
             [hRaster, hPSTH] = plotRastergrams( rSpikeData, rParams, ...
-                [unitColors; hsv(length(units) - 5)], showFigures );
+                unitColors(j,:), showFigures );
             
             % draw lines between the condition boundaries
             rcondNo = SpikeDataUnit(ix,:).c;
@@ -274,6 +284,7 @@ parfor i = 1:length(whichElectrodes)
                 maps = cell(size(histograms,2),1);
                 for k = 1:length(latencies)
                     lat = latencies(k);
+                    data = [];
                     for dir=1:length(directions)
                         
                         % How many bins to shift
@@ -318,10 +329,10 @@ if summaryFig
     end
     sumFigs = findall(0,'type','figure'); % hopefully they are the only open ones...
     for u = 1:length(sumFigs)
-        unit = u - 1;
+        unit = sumFigs(u).Number - 100;
         figBaseName = [fileName,'_',num2str(unit)];
         
-        set(0,'CurrentFigure',100+u);
+        set(0,'CurrentFigure',100+unit);
         suptitle(sprintf('%d[%s] C %d summary', Params.expNo,...
             Params.stimType, unit));
 %         export_fig(fullfile(ResultsPath,SummaryDir,[FigBaseName,'_summary']),...

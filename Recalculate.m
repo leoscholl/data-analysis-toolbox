@@ -1,5 +1,5 @@
 function recalculate(dataDir, resultsDir, animalID, whichUnits, whichFiles, ...
-    whichElectrodes, showFigures, plotWaveforms, plotLFP, summaryFig)
+    whichElectrodes, showFigures, plotLFP, summaryFig)
 %recalculate and replot all data
 % whichUnits is an array of unit numbers to calculate
 % whichFiles is an array of file numbers to calculate
@@ -25,31 +25,28 @@ end
 if nargin < 7
     whichElectrodes = [];
 end
-if nargin < 8 || isempty(plotWaveforms)
-    plotWaveforms = 0;
-end
-if nargin < 9 || isempty(plotLFP)
+if nargin < 8 || isempty(plotLFP)
     plotLFP = 0;
 end
-if nargin < 10 || isempty(summaryFig)
+if nargin < 9 || isempty(summaryFig)
     summaryFig = 0;
 end
 
 % Duration log file
 DurationLogFile = 'duration_log.mat';
-if ~exist('AvgDur')
+if ~exist('avgDur')
     avgDur = 30; % assume 30 seconds per file
 end
 if exist(DurationLogFile,'file')
     load(DurationLogFile);
 else
-    save(DurationLogFile, 'AvgDur');
+    save(DurationLogFile, 'avgDur');
 end
-smoothing = 0.05;
+smoothing = 0.2;
 
 % Figure out which files need to be recalculated
 [~, ~, Files] = ...
-    findFiles(dataDir, animalID, whichUnits, '*.nev', whichFiles);
+    findFiles(dataDir, animalID, whichUnits, '*].mat', whichFiles);
 
 % Display some info about duration
 nFiles = size(Files,1);
@@ -74,25 +71,26 @@ for f = 1:size(Files,1)
     dataPath = fullfile(dataDir,animalID,unit,filesep);
     resultsPath = fullfile(resultsDir,animalID,unit,filesep);
     
-    clear SpikeTimesMat StimTimes Waveforms StimType Params
+    clear hasError Electrodes Paams StimTimes LFP AnalogIn
     fileName = Files.fileName{f};
     disp(fileName);
-    
+%     
 %     try
-        
+%         
         % Load experiment
         disp('Loading experiment files...');
-        [Electrodes, Params, StimTimes, LFP, AnalogIn] = ...
+        [hasError, Electrodes, Params, StimTimes, LFP, AnalogIn] = ...
             loadExperiment(dataDir, animalID, unit, fileName);
         
-        % Plot waveforms?
-        if plotWaveforms && ~isempty(Waveforms)
-            disp('Loading waveforms...');
-            Electrodes = loadRippleWaveforms(dataPath, fileName, Electrodes);
-            disp('Plotting waveforms...');
-            plotWaveforms(resultsPath, fileName, Electrodes);
+        if hasError
+            plotStimTimes(dataPath, resultsPath, fileName);
         end
         
+        if hasError > 1
+            warning('Loading experiment failed. Skipping.');
+            continue;
+        end
+
         % Number of bins or size of bins?
         switch Params.stimType
             case {'VelocityConstantCycles', 'VelocityConstantCyclesBar',...
@@ -110,16 +108,22 @@ for f = 1:size(Files,1)
                 plotTCs = 0;
                 plotBars = 1;
                 plotRasters = 1;
+                plotWFs = 1;
+                plotISI = 1;
             case {'RFmap', 'CatRFdetailed', 'CatRFfast', 'CatRFfast10x10'}
                 plotMaps = 1;
                 plotTCs = 0;
                 plotBars = 0;
                 plotRasters = 1;
+                plotWFs = 0;
+                plotISI = 0;
             otherwise
                 plotMaps = 0;
                 plotTCs = 1;
                 plotBars = 0;
                 plotRasters = 1;
+                plotWFs = 0;
+                plotISI = 0;
         end
         
         
@@ -128,20 +132,40 @@ for f = 1:size(Files,1)
             case {'OriLowHighTwoApertures', 'CenterNearSurround'}
                 fprintf(2, 'Center surround not yet implemented.\n');
             otherwise
+                
+                if ~summaryFig && isempty(gcp('nocreate'))
+                    parpool; % start the parallel pool
+                end
+                
+                % Binning and making rastergrams
                 disp('analyzing...');
                 [Params, Results] = analyze(resultsPath, fileName, ...
                     Params, StimTimes, Electrodes, whichElectrodes);
+                
+                % Plotting tuning curves and maps
                 disp('plotting...');
                 plotAllResults(resultsPath, fileName, Params, Results, ...
                     whichElectrodes, plotTCs, plotBars, plotRasters, ...
                     plotMaps, summaryFig, plotLFP, showFigures);
+                
+                % Plot waveforms?
+                if plotWFs
+                    disp('Plotting waveforms...');
+                    plotWaveforms(dataPath, resultsPath, fileName, Electrodes);
+                end
+                
+                % Plot ISIs?
+                if plotISI && ~isempty(Results)
+                    disp('Plotting ISIs...');
+                    plotISIs(resultsPath, fileName, Results);
+                end
         end
         
 %     catch e
 %         disp(['This file didnt work ',fileName])
 %         warning(getReport(e,'extended','hyperlinks','off'),'Error');
 %     end
-    
+%     
     close all;
     
     % Update duration log
@@ -149,7 +173,7 @@ for f = 1:size(Files,1)
     progress = progress + 1;
     elapsedTime = elapsedTime + fileDuration;
     avgDur = smoothing * fileDuration + (1 - smoothing) * avgDur;
-    save(DurationLogFile, 'AvgDur', '-append');
+    save(DurationLogFile, 'avgDur');
     
     % Display time remaining
     fprintf('This file took %d minutes and %d seconds\n', ...

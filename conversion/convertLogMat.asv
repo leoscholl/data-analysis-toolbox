@@ -28,6 +28,8 @@ if ismember('PPD',fileVars)
 end
 if ismember('StimInterval',fileVars)
     vars{end+1} = 'StimInterval';
+else
+    warning('No stim interval found in log file')
 end
 if ismember('StimDuration',fileVars)
     vars{end+1} = 'StimDuration';
@@ -204,7 +206,7 @@ switch stimType
         Data.xPosition = data(:,4);
         Data.yPosition = data(:,5);
         Data.condition = [Data.xPosition Data.yPosition];
-    case {'CatRFfast10x10'}
+    case {'CatRFfast','CatRFfast10x10'}
         Data.stimNo = (1:size(data,1))';
         Data.stimTime = data(:,1);
         Data.conditionNo = data(:,2);
@@ -218,9 +220,6 @@ switch stimType
         Data.ori = data(:,10);
         Data.rfPosition = data(:,11);
         Data.condition = [Data.xPosition Data.yPosition];
-    case {'CatRFfast'} % 'CatRFfast' is broken, condition numbers are wrong
-        warning(['Unsupported filetype. Skipping ', fileName]);
-        return;
     case {'NaturalImages', 'NaturalVideos'}
         Data.stimNo = (1:size(data,1))';
         Data.stimTime = data(:,1);
@@ -291,7 +290,7 @@ if ~ismember('conditionNo', Data.Properties.VariableNames) || ...
 end
 if ~ismember('stimInterval', Data.Properties.VariableNames) || ...
         isempty(Data.stimInterval)
-    Data.stimInterval = Params.stimInterval*ones(size(data,1),1);
+    Data.stimInterval = StimInterval*ones(size(data,1),1);
 end
 
 % Data goes into params, too

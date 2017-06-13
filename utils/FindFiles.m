@@ -33,6 +33,7 @@ for i = 1:length(whichUnits)
     newFiles = dir([dataPath,fileString]);
     newFiles = newFiles(~vertcat(newFiles.isdir)); % just for good measure
     newFiles = cellfun(@stripFileName, {newFiles.name}, 'UniformOutput', false);
+    newFiles = unique(newFiles);
     [~, newFileNos, newStimTypes] = cellfun(@parseFileName, newFiles, 'UniformOutput', false);
     fileNames = [fileNames; newFiles', newFileNos', newStimTypes', ...
         repmat(whichUnits(i),length(newFiles),1), ...

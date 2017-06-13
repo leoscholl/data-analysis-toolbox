@@ -1,0 +1,865 @@
+
+=================
+05-Jun-2017 17:15:13
+=================
+Preparing run...
+R1518	[1 2 3 4 5]
+R1520	[1 2 3 4 5 6 7 8 10 11 12 13 14 15 16]
+R1521	[1 2 4 5 6 7 10 11 12]
+R1522	[1 2 3 4 5]
+R1524	[4 5 6 7 8 9 10 11 12]
+R1525	[2 3]
+R1526	[7 8 9 11 12 13 14 15 16 17 18 19 20]
+R1527	3
+R1528	[3 4 5 6 7 8 9]
+R1536	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19]
+R1601	[1 2 3 4 5 6 7]
+R1603	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16]
+R1604	[1 2 3 4 5 6 7 8 9 10 11 12 13]
+R1605	[1 2 3 4 5 6 7 8 9]
+R1629	[1 2 3 4 5 6 7 8 9 10 11 12 13]
+R1701	[2 3 4 5 6 7 8 9 10 11]
+R1702	[1 2 3 4 5 6 7 8 9]
+------------------
+Run #1: R1518
+------------------
+Running units [1 2 3 4 5]...
+No sorting. Just recalculate...
+
+
+Error using load
+Number of columns on line 3 of ASCII file I:\Data\R1518\Unit3\R1518#15[WholeScreenMapLP] must be the same as previous lines.
+
+Error in convertLogMat (line 39)
+load(filePath, vars{:});
+
+Error in loadParams (line 12)
+    Params = convertLogMat( dataPath, fileName );
+
+Error in dataExport (line 63)
+        m.Params = loadParams(dataPath, fileName);
+
+Error in loadExperiment (line 19)
+dataExport( dataDir, [], animalID, unitNo, fileNo, overwrite);
+
+Error in recalculate (line 83)
+            loadExperiment(dataDir, animalID, unit, fileName);
+
+Error in workflow (line 146)
+        recalculate(dataDir, resultsDir, animalID, whichUnits, [], ...
+End of run
+------------------
+Run #2: R1520
+------------------
+Running units [1 2 3 4 5 6 7 8 10 11 12 13 14 15 16]...
+No sorting. Just recalculate...
+
+
+In an assignment  A(:) = B, the number of elements in A and B must be the same.
+
+Error in analyze (line 49)
+    conditionNo(i) = unique(Params.Data.conditionNo(sum(Params.Data.condition == ...
+
+Error in recalculate (line 142)
+                [Params, Results] = analyze(resultsPath, fileName, ...
+
+Error in workflow (line 146)
+        recalculate(dataDir, resultsDir, animalID, whichUnits, [], ...
+End of run
+------------------
+Run #3: R1521
+------------------
+Running units [1 2 4 5 6 7 10 11 12]...
+No sorting. Just recalculate...
+
+
+Index exceeds matrix dimensions.
+
+Error in analyze>@(x)length(unique(x(:,2))) (line 100)
+nUnits = cellfun(@(x) length(unique(x(:,2))), Electrodes.spikes)';
+
+Error in analyze (line 100)
+nUnits = cellfun(@(x) length(unique(x(:,2))), Electrodes.spikes)';
+
+Error in recalculate (line 142)
+                [Params, Results] = analyze(resultsPath, fileName, ...
+
+Error in workflow (line 146)
+        recalculate(dataDir, resultsDir, animalID, whichUnits, [], ...
+End of run
+------------------
+Run #4: R1522
+------------------
+Running units [1 2 3 4 5]...
+No sorting. Just recalculate...
+And recalculated all files for R1522
+End of run
+------------------
+Run #5: R1524
+------------------
+Running units [4 5 6 7 8 9 10 11 12]...
+No sorting. Just recalculate...
+And recalculated all files for R1524
+End of run
+------------------
+Run #6: R1525
+------------------
+Running units [2 3]...
+No sorting. Just recalculate...
+And recalculated all files for R1525
+End of run
+------------------
+Run #7: R1526
+------------------
+Running units [7 8 9 11 12 13 14 15 16 17 18 19 20]...
+No sorting. Just recalculate...
+
+
+Error using adjustStimTimes (line 34)
+Unrecognized variable name 'stimDuration'.
+
+Error in loadExperiment (line 105)
+    adjustStimTimes(Params, Events);
+
+Error in recalculate (line 83)
+            loadExperiment(dataDir, animalID, unit, fileName);
+
+Error in workflow (line 146)
+        recalculate(dataDir, resultsDir, animalID, whichUnits, [], ...
+End of run
+------------------
+Run #8: R1527
+------------------
+Running units 3...
+No sorting. Just recalculate...
+And recalculated all files for R1527
+End of run
+------------------
+Run #9: R1528
+------------------
+Running units [3 4 5 6 7 8 9]...
+No sorting. Just recalculate...
+
+
+Index exceeds matrix dimensions.
+
+Error in analyze>@(x)length(unique(x(:,2))) (line 100)
+nUnits = cellfun(@(x) length(unique(x(:,2))), Electrodes.spikes)';
+
+Error in analyze (line 100)
+nUnits = cellfun(@(x) length(unique(x(:,2))), Electrodes.spikes)';
+
+Error in recalculate (line 142)
+                [Params, Results] = analyze(resultsPath, fileName, ...
+
+Error in workflow (line 146)
+        recalculate(dataDir, resultsDir, animalID, whichUnits, [], ...
+End of run
+------------------
+Run #10: R1536
+------------------
+Running units [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19]...
+No sorting. Just recalculate...
+
+
+Index exceeds matrix dimensions.
+
+Error in analyze>@(x)length(unique(x(:,2))) (line 100)
+nUnits = cellfun(@(x) length(unique(x(:,2))), Electrodes.spikes)';
+
+Error in analyze (line 100)
+nUnits = cellfun(@(x) length(unique(x(:,2))), Electrodes.spikes)';
+
+Error in recalculate (line 142)
+                [Params, Results] = analyze(resultsPath, fileName, ...
+
+Error in workflow (line 146)
+        recalculate(dataDir, resultsDir, animalID, whichUnits, [], ...
+End of run
+------------------
+Run #11: R1601
+------------------
+Running units [1 2 3 4 5 6 7]...
+No sorting. Just recalculate...
+And recalculated all files for R1601
+End of run
+------------------
+Run #12: R1603
+------------------
+Running units [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16]...
+No sorting. Just recalculate...
+And recalculated all files for R1603
+End of run
+------------------
+Run #13: R1604
+------------------
+Running units [1 2 3 4 5 6 7 8 9 10 11 12 13]...
+No sorting. Just recalculate...
+And recalculated all files for R1604
+End of run
+------------------
+Run #14: R1605
+------------------
+Running units [1 2 3 4 5 6 7 8 9]...
+No sorting. Just recalculate...
+And recalculated all files for R1605
+End of run
+------------------
+Run #15: R1629
+------------------
+Running units [1 2 3 4 5 6 7 8 9 10 11 12 13]...
+No sorting. Just recalculate...
+
+
+Error using loadRippleSpikes (line 123)
+Subscripted assignment dimension mismatch for table variable 'waveforms'.
+
+Error in dataExport (line 38)
+        Ripple.Electrodes = loadRippleSpikes(dataPath,fileName);
+
+Error in loadExperiment (line 19)
+dataExport( dataDir, [], animalID, unitNo, fileNo, overwrite);
+
+Error in recalculate (line 83)
+            loadExperiment(dataDir, animalID, unit, fileName);
+
+Error in workflow (line 146)
+        recalculate(dataDir, resultsDir, animalID, whichUnits, [], ...
+End of run
+------------------
+Run #16: R1701
+------------------
+Running units [2 3 4 5 6 7 8 9 10 11]...
+No sorting. Just recalculate...
+
+
+Assignment has more non-singleton rhs dimensions than non-singleton subscripts
+
+Error in analyze (line 230)
+                f1RepAll(j,k) = mean(f1);
+
+Error in recalculate (line 142)
+                [Params, Results] = analyze(resultsPath, fileName, ...
+
+Error in workflow (line 146)
+        recalculate(dataDir, resultsDir, animalID, whichUnits, [], ...
+End of run
+------------------
+Run #17: R1702
+------------------
+Running units [1 2 3 4 5 6 7 8 9]...
+No sorting. Just recalculate...
+
+
+Index exceeds matrix dimensions.
+
+Error in findFiles (line 54)
+[~,IX] = sort(vertcat(fileNames{:,2}));
+
+Error in recalculate (line 49)
+    findFiles(dataDir, animalID, whichUnits, '*.nev', whichFiles);
+
+Error in workflow (line 146)
+        recalculate(dataDir, resultsDir, animalID, whichUnits, [], ...
+End of run
+End of all runs
+
+
+=================
+09-Jun-2017 13:11:35
+=================
+Preparing run...
+R1518	[1 2 3 4 5]
+R1520	[1 2 3 4 5 6 7 8 10 11 12 13 14 15 16]
+R1521	[1 2 4 5 6 7 10 11 12]
+R1522	[1 2 3 4 5]
+R1524	[4 5 6 7 8 9 10 11 12]
+R1525	[2 3]
+R1526	[7 8 9 11 12 13 14 15 16 17 18 19 20]
+R1527	3
+R1528	[3 4 5 6 7 8 9]
+R1536	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19]
+R1601	[1 2 3 4 5 6 7]
+R1603	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16]
+R1604	[1 2 3 4 5 6 7 8 9 10 11 12 13]
+R1605	[1 2 3 4 5 6 7 8 9]
+R1629	[1 2 3 4 5 6 7 8 9 10 11 12 13]
+R1701	[2 3 4 5 6 7 8 9 10 11]
+R1702	[1 2 3 4 5 6 7 8 9]
+------------------
+Run #1: R1518
+------------------
+Running units [1 2 3 4 5]...
+No sorting. Just recalculate...
+
+
+Undefined function or variable 'whichFiles'.
+
+Error in workflow (line 126)
+                dataExport( dataDir, [], animalID, whichUnits, whichFiles, 0);
+End of run
+------------------
+Run #2: R1520
+------------------
+Running units [1 2 3 4 5 6 7 8 10 11 12 13 14 15 16]...
+No sorting. Just recalculate...
+
+
+Undefined function or variable 'whichFiles'.
+
+Error in workflow (line 126)
+                dataExport( dataDir, [], animalID, whichUnits, whichFiles, 0);
+End of run
+------------------
+Run #3: R1521
+------------------
+Running units [1 2 4 5 6 7 10 11 12]...
+No sorting. Just recalculate...
+
+
+Undefined function or variable 'whichFiles'.
+
+Error in workflow (line 126)
+                dataExport( dataDir, [], animalID, whichUnits, whichFiles, 0);
+End of run
+------------------
+Run #4: R1522
+------------------
+Running units [1 2 3 4 5]...
+No sorting. Just recalculate...
+
+
+Undefined function or variable 'whichFiles'.
+
+Error in workflow (line 126)
+                dataExport( dataDir, [], animalID, whichUnits, whichFiles, 0);
+End of run
+------------------
+Run #5: R1524
+------------------
+Running units [4 5 6 7 8 9 10 11 12]...
+No sorting. Just recalculate...
+
+
+Undefined function or variable 'whichFiles'.
+
+Error in workflow (line 126)
+                dataExport( dataDir, [], animalID, whichUnits, whichFiles, 0);
+End of run
+------------------
+Run #6: R1525
+------------------
+Running units [2 3]...
+No sorting. Just recalculate...
+
+
+Undefined function or variable 'whichFiles'.
+
+Error in workflow (line 126)
+                dataExport( dataDir, [], animalID, whichUnits, whichFiles, 0);
+End of run
+------------------
+Run #7: R1526
+------------------
+Running units [7 8 9 11 12 13 14 15 16 17 18 19 20]...
+No sorting. Just recalculate...
+
+
+Undefined function or variable 'whichFiles'.
+
+Error in workflow (line 126)
+                dataExport( dataDir, [], animalID, whichUnits, whichFiles, 0);
+End of run
+------------------
+Run #8: R1527
+------------------
+Running units 3...
+No sorting. Just recalculate...
+
+
+Undefined function or variable 'whichFiles'.
+
+Error in workflow (line 126)
+                dataExport( dataDir, [], animalID, whichUnits, whichFiles, 0);
+End of run
+------------------
+Run #9: R1528
+------------------
+Running units [3 4 5 6 7 8 9]...
+No sorting. Just recalculate...
+
+
+Undefined function or variable 'whichFiles'.
+
+Error in workflow (line 126)
+                dataExport( dataDir, [], animalID, whichUnits, whichFiles, 0);
+End of run
+------------------
+Run #10: R1536
+------------------
+Running units [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19]...
+No sorting. Just recalculate...
+
+
+Undefined function or variable 'whichFiles'.
+
+Error in workflow (line 126)
+                dataExport( dataDir, [], animalID, whichUnits, whichFiles, 0);
+End of run
+------------------
+Run #11: R1601
+------------------
+Running units [1 2 3 4 5 6 7]...
+No sorting. Just recalculate...
+
+
+Undefined function or variable 'whichFiles'.
+
+Error in workflow (line 126)
+                dataExport( dataDir, [], animalID, whichUnits, whichFiles, 0);
+End of run
+------------------
+Run #12: R1603
+------------------
+Running units [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16]...
+No sorting. Just recalculate...
+
+
+Undefined function or variable 'whichFiles'.
+
+Error in workflow (line 126)
+                dataExport( dataDir, [], animalID, whichUnits, whichFiles, 0);
+End of run
+------------------
+Run #13: R1604
+------------------
+Running units [1 2 3 4 5 6 7 8 9 10 11 12 13]...
+No sorting. Just recalculate...
+
+
+Undefined function or variable 'whichFiles'.
+
+Error in workflow (line 126)
+                dataExport( dataDir, [], animalID, whichUnits, whichFiles, 0);
+End of run
+------------------
+Run #14: R1605
+------------------
+Running units [1 2 3 4 5 6 7 8 9]...
+No sorting. Just recalculate...
+
+
+Undefined function or variable 'whichFiles'.
+
+Error in workflow (line 126)
+                dataExport( dataDir, [], animalID, whichUnits, whichFiles, 0);
+End of run
+------------------
+Run #15: R1629
+------------------
+Running units [1 2 3 4 5 6 7 8 9 10 11 12 13]...
+No sorting. Just recalculate...
+
+
+Undefined function or variable 'whichFiles'.
+
+Error in workflow (line 126)
+                dataExport( dataDir, [], animalID, whichUnits, whichFiles, 0);
+End of run
+------------------
+Run #16: R1701
+------------------
+Running units [2 3 4 5 6 7 8 9 10 11]...
+No sorting. Just recalculate...
+
+
+Undefined function or variable 'whichFiles'.
+
+Error in workflow (line 126)
+                dataExport( dataDir, [], animalID, whichUnits, whichFiles, 0);
+End of run
+------------------
+Run #17: R1702
+------------------
+Running units [1 2 3 4 5 6 7 8 9]...
+No sorting. Just recalculate...
+
+
+Undefined function or variable 'whichFiles'.
+
+Error in workflow (line 126)
+                dataExport( dataDir, [], animalID, whichUnits, whichFiles, 0);
+End of run
+End of all runs
+
+
+=================
+09-Jun-2017 13:11:48
+=================
+Preparing run...
+R1518	[1 2 3 4 5]
+R1520	[1 2 3 4 5 6 7 8 10 11 12 13 14 15 16]
+R1521	[1 2 4 5 6 7 10 11 12]
+R1522	[1 2 3 4 5]
+R1524	[4 5 6 7 8 9 10 11 12]
+R1525	[2 3]
+R1526	[7 8 9 11 12 13 14 15 16 17 18 19 20]
+R1527	3
+R1528	[3 4 5 6 7 8 9]
+R1536	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19]
+R1601	[1 2 3 4 5 6 7]
+R1603	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16]
+R1604	[1 2 3 4 5 6 7 8 9 10 11 12 13]
+R1605	[1 2 3 4 5 6 7 8 9]
+R1629	[1 2 3 4 5 6 7 8 9 10 11 12 13]
+R1701	[2 3 4 5 6 7 8 9 10 11]
+R1702	[1 2 3 4 5 6 7 8 9]
+------------------
+Run #1: R1518
+------------------
+Running units [1 2 3 4 5]...
+No sorting. Just recalculate...
+
+=================
+09-Jun-2017 13:14:45
+=================
+Preparing run...
+R1518	[1 2 3 4 5]
+R1520	[1 2 3 4 5 6 7 8 10 11 12 13 14 15 16]
+R1521	[1 2 4 5 6 7 10 11 12]
+R1522	[1 2 3 4 5]
+R1524	[4 5 6 7 8 9 10 11 12]
+R1525	[2 3]
+R1526	[7 8 9 11 12 13 14 15 16 17 18 19 20]
+R1527	3
+R1528	[3 4 5 6 7 8 9]
+R1536	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19]
+R1601	[1 2 3 4 5 6 7]
+R1603	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16]
+R1604	[1 2 3 4 5 6 7 8 9 10 11 12 13]
+R1605	[1 2 3 4 5 6 7 8 9]
+R1629	[1 2 3 4 5 6 7 8 9 10 11 12 13]
+R1701	[2 3 4 5 6 7 8 9 10 11]
+R1702	[1 2 3 4 5 6 7 8 9]
+------------------
+Run #1: R1518
+------------------
+Running units [1 2 3 4 5]...
+No sorting. Just recalculate...
+
+=================
+09-Jun-2017 13:16:58
+=================
+Preparing run...
+R1518	[1 2 3 4 5]
+R1520	[1 2 3 4 5 6 7 8 10 11 12 13 14 15 16]
+R1521	[1 2 4 5 6 7 10 11 12]
+R1522	[1 2 3 4 5]
+R1524	[4 5 6 7 8 9 10 11 12]
+R1525	[2 3]
+R1526	[7 8 9 11 12 13 14 15 16 17 18 19 20]
+R1527	3
+R1528	[3 4 5 6 7 8 9]
+R1536	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19]
+R1601	[1 2 3 4 5 6 7]
+R1603	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16]
+R1604	[1 2 3 4 5 6 7 8 9 10 11 12 13]
+R1605	[1 2 3 4 5 6 7 8 9]
+R1629	[1 2 3 4 5 6 7 8 9 10 11 12 13]
+R1701	[2 3 4 5 6 7 8 9 10 11]
+R1702	[1 2 3 4 5 6 7 8 9]
+------------------
+Run #1: R1518
+------------------
+Running units [1 2 3 4 5]...
+No sorting. Just recalculate...
+And recalculated all files for R1518
+End of run
+------------------
+Run #2: R1520
+------------------
+Running units [1 2 3 4 5 6 7 8 10 11 12 13 14 15 16]...
+No sorting. Just recalculate...
+
+=================
+09-Jun-2017 13:30:36
+=================
+Preparing run...
+R1518	[1 2 3 4 5]
+R1520	[1 2 3 4 5 6 7 8 10 11 12 13 14 15 16]
+R1521	[1 2 4 5 6 7 10 11 12]
+R1522	[1 2 3 4 5]
+R1524	[4 5 6 7 8 9 10 11 12]
+R1525	[2 3]
+R1526	[7 8 9 11 12 13 14 15 16 17 18 19 20]
+R1527	3
+R1528	[3 4 5 6 7 8 9]
+R1536	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19]
+R1601	[1 2 3 4 5 6 7]
+R1603	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16]
+R1604	[1 2 3 4 5 6 7 8 9 10 11 12 13]
+R1605	[1 2 3 4 5 6 7 8 9]
+R1629	[1 2 3 4 5 6 7 8 9 10 11 12 13]
+R1701	[2 3 4 5 6 7 8 9 10 11]
+R1702	[1 2 3 4 5 6 7 8 9]
+------------------
+Run #1: R1518
+------------------
+Running units [1 2 3 4 5]...
+No sorting. Just recalculate...
+And recalculated all files for R1518
+End of run
+------------------
+Run #2: R1520
+------------------
+Running units [1 2 3 4 5 6 7 8 10 11 12 13 14 15 16]...
+No sorting. Just recalculate...
+
+
+Error using load
+Unable to read file 'I:\Data\R1520\Unit7\R1520#35[Ori]-export.mat'. No such file or directory.
+
+Error in plotStimTimes (line 5)
+load(filePath);
+
+Error in recalculate (line 86)
+            plotStimTimes(dataPath, resultsPath, fileName);
+
+Error in workflow (line 143)
+        recalculate(dataDir, resultsDir, animalID, whichUnits, [], ...
+End of run
+------------------
+Run #3: R1521
+------------------
+Running units [1 2 4 5 6 7 10 11 12]...
+No sorting. Just recalculate...
+
+
+Error using loadRippleSpikes (line 123)
+Subscripted assignment dimension mismatch for table variable 'waveforms'.
+
+Error in dataExport (line 38)
+        Ripple.Electrodes = loadRippleSpikes(dataPath,fileName);
+
+Error in workflow (line 126)
+                dataExport( dataDir, [], animalID, whichUnits, [], 0);
+End of run
+------------------
+Run #4: R1522
+------------------
+Running units [1 2 3 4 5]...
+No sorting. Just recalculate...
+
+=================
+09-Jun-2017 14:47:12
+=================
+Preparing run...
+R1520	[1 2 3 4 5 6 7 8 10 11 12 13 14 15 16]
+R1521	[1 2 4 5 6 7 10 11 12]
+R1522	[1 2 3 4 5]
+R1524	[4 5 6 7 8 9 10 11 12]
+R1525	[2 3]
+R1526	[7 8 9 11 12 13 14 15 16 17 18 19 20]
+R1527	3
+R1528	[3 4 5 6 7 8 9]
+R1536	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19]
+R1601	[1 2 3 4 5 6 7]
+R1603	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16]
+R1604	[1 2 3 4 5 6 7 8 9 10 11 12 13]
+R1605	[1 2 3 4 5 6 7 8 9]
+R1629	[1 2 3 4 5 6 7 8 9 10 11 12 13]
+R1701	[2 3 4 5 6 7 8 9 10 11]
+R1702	[1 2 3 4 5 6 7 8 9]
+------------------
+Run #1: R1520
+------------------
+Running units [1 2 3 4 5 6 7 8 10 11 12 13 14 15 16]...
+No sorting. Just recalculate...
+And recalculated all files for R1520
+End of run
+------------------
+Run #2: R1521
+------------------
+Running units [1 2 4 5 6 7 10 11 12]...
+No sorting. Just recalculate...
+
+
+Index exceeds matrix dimensions.
+
+Error in analyze>@(x)length(unique(x(:,2))) (line 103)
+nUnits = cellfun(@(x) length(unique(x(:,2))), Electrodes.spikes)';
+
+Error in analyze (line 103)
+nUnits = cellfun(@(x) length(unique(x(:,2))), Electrodes.spikes)';
+
+Error in recalculate (line 142)
+                [Params, Results] = analyze(resultsPath, fileName, ...
+
+Error in workflow (line 145)
+        recalculate(dataDir, resultsDir, animalID, whichUnits, [], ...
+End of run
+------------------
+Run #3: R1522
+------------------
+Running units [1 2 3 4 5]...
+No sorting. Just recalculate...
+And recalculated all files for R1522
+End of run
+------------------
+Run #4: R1524
+------------------
+Running units [4 5 6 7 8 9 10 11 12]...
+No sorting. Just recalculate...
+And recalculated all files for R1524
+End of run
+------------------
+Run #5: R1525
+------------------
+Running units [2 3]...
+No sorting. Just recalculate...
+And recalculated all files for R1525
+End of run
+------------------
+Run #6: R1526
+------------------
+Running units [7 8 9 11 12 13 14 15 16 17 18 19 20]...
+No sorting. Just recalculate...
+
+
+Index exceeds matrix dimensions.
+
+Error in convertLogMat (line 279)
+    stimSequence = stimSequence(:,:,1:ceil(size(data,1)/Params.nConds));
+
+Error in loadParams (line 12)
+    Params = convertLogMat( dataPath, fileName );
+
+Error in dataExport (line 63)
+        m.Params = loadParams(dataPath, fileName);
+
+Error in workflow (line 128)
+                dataExport( dataDir, [], animalID, whichUnits, [], 0);
+End of run
+------------------
+Run #7: R1527
+------------------
+Running units 3...
+No sorting. Just recalculate...
+And recalculated all files for R1527
+End of run
+------------------
+Run #8: R1528
+------------------
+Running units [3 4 5 6 7 8 9]...
+No sorting. Just recalculate...
+
+
+Index exceeds matrix dimensions.
+
+Error in analyze>@(x)length(unique(x(:,2))) (line 103)
+nUnits = cellfun(@(x) length(unique(x(:,2))), Electrodes.spikes)';
+
+Error in analyze (line 103)
+nUnits = cellfun(@(x) length(unique(x(:,2))), Electrodes.spikes)';
+
+Error in recalculate (line 142)
+                [Params, Results] = analyze(resultsPath, fileName, ...
+
+Error in workflow (line 145)
+        recalculate(dataDir, resultsDir, animalID, whichUnits, [], ...
+End of run
+------------------
+Run #9: R1536
+------------------
+Running units [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19]...
+No sorting. Just recalculate...
+
+
+Error using zeros
+Requested 1x3221276920 (24.0GB) array exceeds maximum array size preference. Creation of arrays greater than this limit may take a long time and cause MATLAB to become unresponsive. See <a href="matlab: helpview([docroot '/matlab/helptargets.map'], 'matlab_env_workspace_prefs')">array size limit</a> or preference panel for more information.
+
+Error in ns_GetAnalogDataBlock (line 140)
+  Data = zeros(length(EntityIDs), IndexCount);
+
+Error in loadRippleAnalog (line 71)
+    ns_GetAnalogDataBlock(hFile, analogEntityID, 1, min(itemCounts));
+
+Error in dataExport (line 39)
+        Ripple.LFP = loadRippleAnalog(dataPath, fileName, 'lfp');
+
+Error in workflow (line 128)
+                dataExport( dataDir, [], animalID, whichUnits, [], 0);
+End of run
+------------------
+Run #10: R1601
+------------------
+Running units [1 2 3 4 5 6 7]...
+No sorting. Just recalculate...
+And recalculated all files for R1601
+End of run
+------------------
+Run #11: R1603
+------------------
+Running units [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16]...
+No sorting. Just recalculate...
+And recalculated all files for R1603
+End of run
+------------------
+Run #12: R1604
+------------------
+Running units [1 2 3 4 5 6 7 8 9 10 11 12 13]...
+No sorting. Just recalculate...
+And recalculated all files for R1604
+End of run
+------------------
+Run #13: R1605
+------------------
+Running units [1 2 3 4 5 6 7 8 9]...
+No sorting. Just recalculate...
+And recalculated all files for R1605
+End of run
+------------------
+Run #14: R1629
+------------------
+Running units [1 2 3 4 5 6 7 8 9 10 11 12 13]...
+No sorting. Just recalculate...
+And recalculated all files for R1629
+End of run
+------------------
+Run #15: R1701
+------------------
+Running units [2 3 4 5 6 7 8 9 10 11]...
+No sorting. Just recalculate...
+
+
+Assignment has more non-singleton rhs dimensions than non-singleton subscripts
+
+Error in analyze (line 233)
+                f1RepAll(j,k) = mean(f1);
+
+Error in recalculate (line 142)
+                [Params, Results] = analyze(resultsPath, fileName, ...
+
+Error in workflow (line 145)
+        recalculate(dataDir, resultsDir, animalID, whichUnits, [], ...
+End of run
+------------------
+Run #16: R1702
+------------------
+Running units [1 2 3 4 5 6 7 8 9]...
+No sorting. Just recalculate...
+
+
+Index exceeds matrix dimensions.
+
+Error in findFiles (line 54)
+[~,IX] = sort(vertcat(fileNames{:,2}));
+
+Error in dataExport (line 17)
+    findFiles(dataDir, animalID, whichUnits, '*].n*', whichFiles);
+
+Error in workflow (line 128)
+                dataExport( dataDir, [], animalID, whichUnits, [], 0);
+End of run
+End of all runs
+

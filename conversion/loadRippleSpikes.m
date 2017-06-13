@@ -63,9 +63,9 @@ number = nan(length(SegmentEntityID),1);
 name = cell(length(SegmentEntityID),1);
 for i = 1:length(SegmentEntityID)
     label = SegmentLabel{i};
-    elecNo = str2num(char(regexp(label, '\d{2}', 'match')));
-    number(i) = elecNo;
-    name{i} = ['elec',num2str(elecNo)];
+    elecNo = str2num(char(regexp(label, '\d{1,2}', 'match')));
+    number(i) = elecNo(1);
+    name{i} = ['elec',num2str(elecNo(1))];
 end
 
 % choose the correct electrodes
@@ -117,7 +117,7 @@ end
 for i = 1:length(number)
     waveforms = {[]};
     try
-        waveforms = Electrodes.waveforms{number(i)};
+        waveforms = Electrodes.waveforms(number(i));
     catch
     end
     Electrodes(number(i),:) = {spikesTmp(i), waveforms, name(i), number(i)};

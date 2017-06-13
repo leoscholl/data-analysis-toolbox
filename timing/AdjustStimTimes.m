@@ -125,12 +125,12 @@ if ~isempty(stimTimesParallel)
         fprintf(2, 'StimTimesParallel are too big.\n');
         hasError = 1;
     elseif sum([diff(stimTimes); NaN] + 0.1 < ...
-            Params.Data.stimDuration + Params.Data.stimInterval)
+            Params.Data.stimDuration + Params.Data.stimInterval) < ...
+            length(stimTimes)/2
         fprintf(2, 'At least one pair of StimTimesParallel are too close together.\n');
         hasError = 1;
     elseif any(stimOffTimes - stimTimes + 0.1 < Params.Data.stimDuration)
         % on times ok, but off times are not
-        fprintf(2, 'Parallel port stim off times are inaccurate\n');
         stimTimesParallelCorrected = stimTimes;
     else % everything ok
         stimTimesParallelCorrected = stimTimes;
@@ -161,14 +161,14 @@ if ~isempty(stimTimesPhotodiode)
         fprintf(2, 'StimTimesPhotodiode are too big.\n');
         hasError = 1;
     elseif sum([diff(stimTimes); NaN] + 0.1 < ...
-            Params.Data.stimDuration + Params.Data.stimInterval)
+            Params.Data.stimDuration + Params.Data.stimInterval) < ...
+            length(stimTimes)/2
         stimTimes = stimTimesLegacy;
         fprintf(2, 'At least one pair of StimTimesPhotodiode are too close together.\n');
         hasError = 1;
     elseif any(stimOffTimes - stimTimes + 0.1 < Params.Data.stimDuration)
         % on times ok, but off times are not
-        fprintf(2, 'photodiode stim off times are inaccurate\n');
-        fprintf('using photodiode stim times\n');
+        fprintf('using photodiode stim times with stim duration for off times\n');
         source = 'photodiode';
         stimTimesCorrected = stimTimes;
         stimOffTimesCorrected = stimTimes + Params.Data.stimDuration;
@@ -217,6 +217,21 @@ if ~isempty(stimTimesPhotodiode)
         stimTimesCorrected = stimTimesPTB + latency;
         stimOffTimesCorrected = stimOffTimesPTB + latency;
     end
+else
+	% Older data, no photodiode. Use the parallel stim times if they are ok.
+	if ~isempty(stimTimesParallelCorrected) && ...
+		~isempty(stimOffTimesParallelCorrected)
+		fprintf('Using uncorrected parallel port timestamps\n');
+		source = 'parallel';
+		stimTimesCorrected = stimTimesParallelCorrected;
+        stimOffTimesCorrected = stimOffTimesParallelCorrected;
+	elseif ~isempty(stimTimesParallelCorrected)
+		fprintf(['Using parallel port timestamps\n' ...
+            '\tand parallel port + stim duration for off times\n']);
+		source = 'parallel';
+		stimTimesCorrected = stimTimesParallelCorrected;
+        stimOffTimesCorrected = stimTimesParallelCorrected + Params.Data.stimDuration;
+	end
 end
 
 % Finally, check if there is a corrected stim time available
@@ -228,19 +243,19 @@ if isempty(stimTimesCorrected) && ~isempty(stimTimesLegacy)
 end
 
 % Some last-minute sanity checks for whichever times we picked
-if stimTimesCorrected(1) < startTimeRipple || ...
+nOverlappingPairs = sum([diff(stimTimesCorrected); NaN] + 0.1 < ...
+        Params.Data.stimDuration + Params.Data.stimInterval);
+outsideRange = stimTimesCorrected(1) < startTimeRipple || ...
         stimTimesCorrected(end) > endTimeRipple || ...
-        min(stimTimesCorrected) > 1000
-    fprintf(2, 'StimTimes fall outside of the possible range. Aborting');
-    stimTimesCorrected = [];
-    stimOffTimesCorrected = [];
-    hasError = 1;
-elseif sum([diff(stimTimesCorrected); NaN] + 0.1 < ...
-        Params.Data.stimDuration + Params.Data.stimInterval)    
+        min(stimTimesCorrected) > 1000;
+if outsideRange
+    fprintf(2, 'StimTimes fall outside of the possible range. Aborting\n');
+    hasError = 2;
+elseif nOverlappingPairs && nOverlappingPairs < length(stimTimesCorrected)/2
+    % Probably ok if ALL of the stim times are too small -- stim duration
+    % might be wrong...
     fprintf(2, 'At least one pair of triggers are too close together.\n');
-    stimTimesCorrected = [];
-    stimOffTimesCorrected = [];
-    hasError = 1;
+    hasError = 2;
 end
 
 end

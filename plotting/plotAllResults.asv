@@ -47,6 +47,18 @@ for c = 1:length(colors)
         [0.25 0.5 1]), 2);
 end
 
+nUnits = cellfun(@(x) length(unique(x.u)), SpikeDataAll);
+unitColors = [unitColors; hsv(max(nUnits) - size(unitColors, 1))];
+
+% Close any open figures
+close all
+
+% If summary figures are requested, then cannot run in parallel
+if summaryFig
+    poolobj = gcp('nocreate');
+    delete(poolobj);
+end
+
 % Go through each electrode
 parfor i = 1:length(whichElectrodes)
     elecNo = whichElectrodes(i);
@@ -156,7 +168,11 @@ parfor i = 1:length(whichElectrodes)
                 titleStr = sprintf('Ch%d', tmpParams.elecNo);
                 title(titleStr,'FontSize',3,'FontWeight','Normal');
                 set(sub,'FontSize',3);
-                set(sub,'XTick',tmpParams.Conditions);
+                if strfind(tmpParams.stimType, 'Ori')
+                    set(sub,'XTick',[tmpParams.Conditions.condition; 360]);
+                else
+                    set(sub,'XTick',tmpParams.Conditions.condition);
+                end
                 box off;
                 axis tight;
                 
@@ -191,7 +207,7 @@ parfor i = 1:length(whichElectrodes)
         if plotRasters && size(Params.Conditions,1) <= 20
             
             [hRaster, hPSTH] = plotRastergrams( SpikeDataUnit, tmpParams, ...
-                [unitColors; hsv(length(units) - 5)], showFigures );
+                unitColors(j,:), showFigures );
             
 %             export_fig(fullfile(ResultsPath,ElecDir,[FigBaseName,'_raster']),...
 %                 '-png', '-m3', '-p0.05', hRaster);
@@ -228,7 +244,7 @@ parfor i = 1:length(whichElectrodes)
             rSpikeData = rSpikeData(ix,:);
             
             [hRaster, hPSTH] = plotRastergrams( rSpikeData, rParams, ...
-                [unitColors; hsv(length(units) - 5)], showFigures );
+                unitColors(j,:), showFigures );
             
             % draw lines between the condition boundaries
             rcondNo = SpikeDataUnit(ix,:).c;
@@ -274,18 +290,17 @@ parfor i = 1:length(whichElectrodes)
                 maps = cell(size(histograms,2),1);
                 for k = 1:length(latencies)
                     lat = latencies(k);
-                    maxPad = ceil(lat/binSize);
-                    
+                    data = [];
                     for dir=1:length(directions)
                         
                         % How many bins to shift
                         shift = ceil(lat/binSize*cosd(directions(dir))); 
                         
-                        % Shift and add padding
+                        % Shift each histogram
                         if shift < 0
-                            data(dir,:) = [histograms(dir,shift:end), zeros(1,maxPad+shift)];
+                            data(dir,:) = [histograms(dir,shift:end), zeros(1,shift)];
                         else
-                            data(dir,:) = [zeros(1,shift), histograms(dir,:)];
+                            data(dir,:) = [zeros(1,shift), histograms(dir,1:end-shift)];
                         end
                     end
                     maps{k} = back_project(data, directions);
@@ -320,10 +335,10 @@ if summaryFig
     end
     sumFigs = findall(0,'type','figure'); % hopefully they are the only open ones...
     for u = 1:length(sumFigs)
-        unit = u - 1;
+        unit = sumFigs(u).Number - 100;
         figBaseName = [fileName,'_',num2str(unit)];
         
-        set(0,'CurrentFigure',100+u);
+        set(0,'CurrentFigure',100+unit);
         suptitle(sprintf('%d[%s] C %d summary', Params.expNo,...
             Params.stimType, unit));
 %         export_fig(fullfile(ResultsPath,SummaryDir,[FigBaseName,'_summary']),...

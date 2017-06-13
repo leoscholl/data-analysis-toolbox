@@ -1,38 +1,89 @@
-function plotStimTimes( dataPath, fileName )
+function plotStimTimes( dataPath, resultsPath, fileName )
 %plotStimTimes Visualize stim times
 
 filePath = fullfile(dataPath, [fileName, '-export.mat']);
-load(filePath);
+if exist(filePath, 'file')
+    load(filePath);
+else
+    return;
+end
 
-StimTimes = Ripple.Events.StimTimes;
-Analog = Ripple.AnalogIn.Channels(strcmp(Ripple.AnalogIn.Channels.name, ...
-    'analog 1'),:);
-rawPhotodiode = Analog.data{1};
-maxSignal = max(rawPhotodiode);
-photodiode = StimTimes.photodiode;
-parallel = StimTimes.parallel;
-matlab = Params.Data.stimTime;
+% Collect all stim times
+if exist('Ripple', 'var') && isfield(Ripple, 'Events')
+    StimTimes = Ripple.Events.StimTimes;
+    photodiode = StimTimes.photodiode;
+    if ~isempty(photodiode)
+        Analog = Ripple.AnalogIn.Channels(strcmp(Ripple.AnalogIn.Channels.name, ...
+            'analog 1'),:);
+        rawPhotodiode = Analog.data{1};
+        maxSignal = max(rawPhotodiode);
+    else
+        rawPhotodiode = [];
+        maxSignal = 1;
+    end
+    parallel = StimTimes.parallel;
+else
+    photodiode = [];
+    parallel = [];
+end
+if exist('Params', 'var') && isfield(Params, 'Data')
+    matlab = Params.Data.stimTime;
+else
+    matlab = [];
+end
 
-timeFrom = 0.5;
-fs = Ripple.AnalogIn.sampleRate;
-tStart = 1; %round((photodiode(1) - timeFrom)*fs);
-tEnd = length(rawPhotodiode); round((photodiode(end) + timeFrom)*fs);
-
-time = (tStart:tEnd)./fs;
-figure
+figure('Visible', 'off')
 hold on;
-plot(time, rawPhotodiode(tStart:tEnd));
-plot(photodiode(1:2:end),maxSignal/3*2*ones(length(photodiode(1:2:end)),1),'ro');
-plot(photodiode(2:2:end),maxSignal/3*1.8*ones(length(photodiode(2:2:end)),1),'ko');
-plot(parallel(1:2:end),maxSignal/3*ones(length(parallel(1:2:end)),1),'bs');
-plot(parallel(2:2:end),maxSignal/3.2*ones(length(parallel(2:2:end)),1),'gs');
-plot(matlab,maxSignal/2*ones(length(matlab),1),'ms');
+
+
+
+% Plot everything
+legenditems = {};
+
+if ~isempty(rawPhotodiode) 
+    % Determine sample rate, tstart, and tend
+    fs = Ripple.AnalogIn.sampleRate;
+    if photodiode(1) > 0
+        tStart = ceil(photodiode(1)*fs);
+    else
+        tStart = 1;
+    end
+    tEnd = length(rawPhotodiode);
+    time = (tStart:tEnd)./fs;
+    plot(time, rawPhotodiode(tStart:tEnd));
+    legenditems = [legenditems, 'raw'];
+end
+if ~isempty(photodiode)
+    plot(photodiode(1:2:end),maxSignal/3*2*ones(length(photodiode(1:2:end)),1),'ro');
+    plot(photodiode(2:2:end),maxSignal/3*1.8*ones(length(photodiode(2:2:end)),1),'ko');
+    legenditems = [legenditems, {'photodiode on', 'photodiode off'}];
+end
+if ~isempty(parallel)
+    plot(parallel(1:2:end),maxSignal/3*ones(length(parallel(1:2:end)),1),'bs');
+    plot(parallel(2:2:end),maxSignal/3.2*ones(length(parallel(2:2:end)),1),'gs');
+    legenditems = [legenditems, {'parallel on', 'parallel off'}];
+end
+if ~isempty(matlab)
+    plot(matlab,maxSignal/2*ones(length(matlab),1),'ms');
+    legenditems = [legenditems, 'matlab'];
+end
 hold off;
 axis tight;
 
+% Legend depends on what is present
+legend(legenditems);
 
+title(fileName);
 
-legend({'raw','photodiode on','photodiode off','parallel on', 'parallel off', 'matlab'});
+resultsDir = fullfile(resultsPath, 'StimTimes');
+if ~exist(resultsDir, 'dir')
+    mkdir(resultsDir);
+end
+
+saveas(gcf, fullfile(resultsDir, [fileName, '_stimtimes.png']));
+saveas(gcf, fullfile(resultsDir, [fileName, '_stimtimes']), 'fig');
+
+close(gcf)
 
 end
 

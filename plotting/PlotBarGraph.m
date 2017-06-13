@@ -1,5 +1,5 @@
 function [ handle ] = plotBarGraph(Statistics, ...
-    Params, ShowFigure)
+    Params, color, showFigure)
 %PlotTCurve opens and draws a tuning curve figure
 % returns the handle to the tuning curve figure
 
@@ -14,7 +14,7 @@ blankSEM = Statistics.blankSEM(Statistics.conditionNo);
 
 % Open a figure
 handle = figure;
-set(handle,'Visible',ShowFigure);
+set(handle,'Visible',showFigure);
 set(handle,'Color','White')
 hold on;
 
@@ -31,7 +31,7 @@ errorNeg = [tCurveSEM blankSEM];
 errorPos = [tCurveSEM blankSEM];
 errorNeg(data > 0) = NaN;
 errorPos(data < 0) = NaN;
-colors = [[0 0 0]' [0.5 0.5 0.5]' [0 1 0]'];
+colors = [color' [0.5 0.5 0.5]' [0.25 0.25 0.25]'];
 
 % Plot baseline
 if length(conditions) > 1

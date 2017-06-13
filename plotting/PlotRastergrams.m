@@ -1,5 +1,5 @@
 function [ hRaster, hPSTH ] = plotRastergrams( SpikeData,...
-    Params, unitColors, showFigure )
+    Params, color, showFigure )
 %PlotRasters opens and draws raster plot and PSTH figures
 %   hRaster - handle for rater plot
 %   hPSTH - handle for PSTH
@@ -57,7 +57,7 @@ for i = 1:length(conditionNo)
         %scale the time axis to ms
         xx(1:3:3*nSpikes)=allSpikes;
         xx(2:3:3*nSpikes)=allSpikes;
-        plot(ax, xx, yy, 'Color', unitColors(Params.unitNo,:))
+        plot(ax, xx, yy, 'Color', color)
     end;
 
     % Font size, XTick, and title
@@ -136,8 +136,8 @@ for i = 1:length(conditions)
     
     % Plot histogram
     b = bar(ax,centers,histogram,'hist');
-    set(b, 'FaceColor',unitColors(Params.unitNo,:),...
-        'EdgeColor',unitColors(Params.unitNo,:));
+    set(b, 'FaceColor',color,...
+        'EdgeColor',color);
     maxY = max([1; histogram]);
     axis(ax,[-timeFrom stimDiffTime-timeFrom 0 maxY]);
     

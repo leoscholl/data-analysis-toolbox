@@ -1,4 +1,4 @@
-function Electrodes = loadRippleWaveforms(dataPath, fileName, Electrodes, ...
+function Electrodes = loadRippleSpikes(dataPath, fileName, Electrodes, ...
     whichElectrodes)
 
 narginchk(2,4);
@@ -15,8 +15,14 @@ end
 assertNeuroshare();
 
 % get file handle (hFile)
+filePath = fullfile(dataPath,[fileName,'.nev']);
+if ~exist(filePath,'file')
+    warning(['No NEV file for ', fileName]);
+    return
+end
+
 [ns_RESULT, hFile] = ...
-    ns_OpenFile(fullfile(dataPath,[fileName,'.nev']),'single');
+    ns_OpenFile(filePath,'single');
 
 if ~strcmp(ns_RESULT, 'ns_OK')
     error('Failed to open NEV data\n');
@@ -78,7 +84,7 @@ nElectrodes = length(number);
 
 % fill the spikes array
 spikesTmp = cell(length(number),1);
-for i = 1:length(number)
+parfor i = 1:length(number)
     
     thisID = SegmentEntityID(i);
     
@@ -92,27 +98,31 @@ for i = 1:length(number)
     % Iterate through all items and fill wanted timestamps
     for iItem=1:entityInfo.ItemCount
         
-        [ns_RESULT, ts, data, sample_count, unit_id] = ...
-            ns_GetSegmentData(hFile, thisID, iItem);
+        [ns_RESULT, ts, unit_id] = ...
+            ns_GetSegmentDataFast(hFile, thisID, iItem);
         
         count = count+1;
         timestamps(count).ts = (ts);
-        timestamps(count).unit = (unit_id);   
-        timestamps(count).data = data;
+        timestamps(count).unit = (unit_id);        
     end
     
     timestamps = timestamps([timestamps(:).unit]~=-1);
     timestamps = timestamps([timestamps(:).ts]~=0);
     
     spikesTmp{i} = [[timestamps.ts]', double([timestamps.unit])'];
-    wavesTmp{i} = [[timestamps.ts]', double([timestamps.unit])', ...
-        [timestamps.data]'];
     
 end
 
 % fill the Electrode table
 for i = 1:length(number)
-    Electrodes(number(i),:) = {spikesTmp(i), wavesTmp(i), name(i), number(i)};
+    waveforms = {[]};
+    try
+        waveforms = Electrodes.waveforms{number(i)};
+        if 
+    catch
+        waveforms = {[]};
+    end
+    Electrodes(number(i),:) = {spikesTmp(i), waveforms, name(i), number(i)};
 end
 
 % close the file handle

@@ -14,7 +14,7 @@ if nargin < 4
 end
 
 [~, ~, Files] = ...
-    findFiles(dataDir, animalID, whichUnits, '*]*', whichFiles);
+    findFiles(dataDir, animalID, whichUnits, '*].n*', whichFiles);
 
 for i=1:size(Files,1)
     fileName = Files.fileName{i};
