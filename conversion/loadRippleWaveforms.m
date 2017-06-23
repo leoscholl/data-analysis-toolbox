@@ -3,7 +3,7 @@ function Electrodes = loadRippleWaveforms(dataPath, fileName, Electrodes, ...
 
 narginchk(2,4);
 
-if nargin < 3
+if nargin < 3 || isempty(Electrodes)
     Electrodes = table(cell(0),cell(0),cell(0),[]);
     Electrodes.Properties.VariableNames = {'spikes','waveforms','name','number'};
 end
@@ -58,8 +58,8 @@ name = cell(length(SegmentEntityID),1);
 for i = 1:length(SegmentEntityID)
     label = SegmentLabel{i};
     elecNo = str2num(char(regexp(label, '\d{1,2}', 'match')));
-    number(i) = elecNo(1);
-    name{i} = ['elec',num2str(elecNo(1))];
+    number(i) = elecNo(end);
+    name{i} = ['elec',num2str(elecNo(end))];
 end
 
 % choose the correct electrodes
@@ -78,6 +78,7 @@ nElectrodes = length(number);
 
 % fill the spikes array
 spikesTmp = cell(length(number),1);
+wavesTmp = cell(length(number),1);
 for i = 1:length(number)
     
     thisID = SegmentEntityID(i);

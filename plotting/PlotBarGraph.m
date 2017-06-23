@@ -1,5 +1,5 @@
 function [ handle ] = plotBarGraph(Statistics, ...
-    Params, color, showFigure)
+    Params, color, showFigure, elecNo, cell)
 %PlotTCurve opens and draws a tuning curve figure
 % returns the handle to the tuning curve figure
 
@@ -75,8 +75,6 @@ end
 ylim auto;
 
 % Set the title, legends, etc.
-titleStr = makeTitle(Params, Params.elecNo, Params.unit);
-title(titleStr, 'FontSize', 16);
 xlabel(Params.stimType);
 ylabel('Rate [spikes/s]');
 set(gca,'FontSize',6);
@@ -89,6 +87,8 @@ else
 end
 legend('boxoff');
 box off;
+titleStr = makeTitle(Params, elecNo, cell);
+title(titleStr, 'FontSize', 16, 'FontWeight', 'normal');
 
 % Add grid lines
 set(gca,'YGrid','on')

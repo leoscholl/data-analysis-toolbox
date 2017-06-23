@@ -1,34 +1,48 @@
-function RecalculateWaveforms(DataDir, AnimalID, WhichUnits)
-%UNTITLED4 Summary of this function goes here
-%   Detailed explanation goes here
+function recalculateWaveforms(dataDir, resultsDir, animalID, whichUnits, ...
+    whichFiles, whichElectrodes)
+%recalculateWaveforms Plots waveforms for each file
+%   Use this to add waveforms for files that already have been plotted
 
-Units = FindUnits(DataDir, AnimalID, WhichUnits);
+% Default parameters
+if nargin < 4
+    whichUnits = [];
+end
+if nargin < 5
+    whichFiles = [];
+end
+if nargin < 6
+    whichElectrodes = [];
+end
 
-for unt = 1:length(Units(:,1))
+% Find appropriate files
+[~, ~, Files] = ...
+    findFiles(dataDir, animalID, whichUnits, '*].nev', whichFiles);
+
+
+if isempty(Files)
+    warning(['No files found in ', dataDir]);
+end
+
+% Plot the waveforms
+for f = 1:size(Files,1)
     
-    DataPath = ([DataDir,AnimalID,'\',deblank(Units(unt,:)),'\']);
-    Files = ls([DataPath,'*.nev']); %#ok<*NOPTS>
+    unit = Files.unit{f};
+    dataPath = fullfile(dataDir,animalID,unit,filesep);
+    resultsPath = fullfile(resultsDir,animalID,unit,filesep);
     
-    disp(Units(unt,:));
+    fileName = Files.fileName{f};
+    disp(fileName);
     
-    if isempty(Files)
-        warning(['No files found in ', DataPath]);
-    end
-    
-    for f = 1:length(Files(:,1))
-        [~, FileName, ~] = fileparts(Files(f,:));
-        disp(FileName);
-        [SpikeTimesMat, ~, Waveforms] = LoadSpikes(DataPath, FileName);
-        
-        %% Plot waveforms
-        if ~isempty(Waveforms)
-            disp('Plotting waveforms...');
-            if size(SpikeTimesMat,1) ~= size(Waveforms,1)
-                error('Not enough waveforms');
-            end
-            
-            PlotWaveforms(DataPath, FileName, SpikeTimesMat, Waveforms);
+    Electrodes = loadRippleWaveforms(dataPath, fileName, [], ...
+        whichElectrodes);
+    if ~isempty(Electrodes) && ~isempty(Electrodes.waveforms)
+        disp('Plotting waveforms...');
+        if size(Electrodes.waveforms,1) ~= size(Electrodes.spikes,1)
+            error('Not enough waveforms');
         end
+        
+        plotWaveforms(dataPath, resultsPath, fileName, Electrodes);
     end
+end
 end
 

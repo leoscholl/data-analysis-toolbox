@@ -1,4 +1,4 @@
-function [ handle ] = plotMap(tCurve, Params, showFigure)
+function [ handle ] = plotMap(tCurve, Params, showFigure, elecNo, cell)
 %PlotMaps Function plotting RF maps
 
 % Get conditions from parameters
@@ -41,8 +41,8 @@ xticks(X);
 yticks(Y);
 
 colorbar;
-titleStr = makeTitle(Params, Params.elecNo, Params.unit);
-title(titleStr, 'FontSize', 16);
+titleStr = makeTitle(Params, elecNo, cell);
+title(titleStr, 'FontSize', 16, 'FontWeight', 'normal');
 
 box off;
 hold off;

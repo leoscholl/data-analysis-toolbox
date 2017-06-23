@@ -1,15 +1,19 @@
-function plotAllResults(resultsPath, fileName, Params, Results,...
+function plotAllResults(figuresPath, fileName, Params, Results,...
                         whichElectrodes, plotTCs, plotBars, plotRasters,...
-                        plotMaps, summaryFig, plotLFP, showFigures)
+                        plotMaps, summaryFig, plotLFP, showFigures, ...
+                        clumpRasters)
 %plotAllResults Function plotting Tuning Curves for different stimuli
 
 % Check arguments
-narginchk(5,12);
+narginchk(5,13);
 if isempty(Results)
     warning('Cannot plot results without results...');
     return; % Can't do anything. 
 end
 
+if nargin < 13 || isempty(clumpRasters)
+    clumpRasters = 0;
+end
 if nargin < 12 || isempty(showFigures)
     showFigures = 0;
 end
@@ -41,11 +45,8 @@ SpikeDataAll = Results.SpikeDataAll;
 StatisticsAll = Results.StatisticsAll;
 
 % Set up colors
-nUnits = cellfun(@(x) length(unique(x.u)), SpikeDataAll);
-unitColors = makeDefaultColors(nUnits);
-
-% Close any open figures
-close all
+nCells = cellfun(@(x) length(unique(x.cell)), SpikeDataAll);
+cellColors = makeDefaultColors(nCells);
 
 % If summary figures are requested, then cannot run in parallel
 if summaryFig
@@ -59,36 +60,33 @@ parfor i = 1:length(whichElectrodes)
 
     SpikeData = SpikeDataAll{elecNo};
     Statistics = StatisticsAll{elecNo};
-    units = unique(SpikeData.u);
+    cells = unique(SpikeData.cell);
     
     % Plotting Figures
     elecDir = sprintf('Ch%02d',elecNo);
-    if ~isdir(fullfile(resultsPath,elecDir))
-        mkdir(fullfile(resultsPath,elecDir))
+    if ~isdir(fullfile(figuresPath,elecDir))
+        mkdir(fullfile(figuresPath,elecDir))
     end
     
-    for j = 1:length(units)
-        u = units(j);
+    for j = 1:length(cells)
+        u = cells(j);
         
         % TC plots
         figBaseName = [fileName,'_',num2str(u),'El',num2str(elecNo)];
         
         tmpParams = Params;
-        tmpParams.unit = u;
-        tmpParams.unitNo = j;
-        tmpParams.elecNo = elecNo;
-        
-        StatsUnit = Statistics(Statistics.unit == u,:);
+
+        StatsUnit = Statistics(Statistics.cell == u,:);
         tCurve = StatsUnit.tCurve(StatsUnit.conditionNo); % sort properly
         
-        SpikeDataUnit = SpikeData(SpikeData.u == u,:);
+        SpikeDataUnit = SpikeData(SpikeData.cell == u,:);
         
         % Plot tuning curves
         if plotTCs
             
             % Basic tuning curve
             [tCurveFig, OSI, DI] = plotTCurve(StatsUnit, ...
-                tmpParams, showFigures);
+                tmpParams, showFigures, elecNo, u);
             
             % Set the x-scale
             if ~isempty(strfind(tmpParams.stimType,'Looming')) || ...
@@ -99,7 +97,7 @@ parfor i = 1:length(whichElectrodes)
             % File saving
 %             export_fig(fullfile(ResultsPath,ElecDir,[FigBaseName,'_tc']),...
 %                 '-png', '-nocrop', '-m2', TCurveFig);
-            saveas(tCurveFig,fullfile(resultsPath,elecDir,[figBaseName,'_tc.png']));
+            saveas(tCurveFig,fullfile(figuresPath,elecDir,[figBaseName,'_tc.png']));
             %saveas(TCurveFig,fullfile(ResultsPath,ElecDir,[FigBaseName,'_tc']),'fig');
             
             % velocity tunning curves for preffered spatial and temporal
@@ -123,12 +121,12 @@ parfor i = 1:length(whichElectrodes)
                 
                 % Plot a figure
                 velCurveFig = plotTCurve(StatsUnit, ...
-                    velParams, showFigures);
+                    velParams, showFigures, elecNo, u);
                 set(gca,'xscale','log'); % use log scale
                 
 %                 export_fig(fullfile(ResultsPath,ElecDir,[FigBaseName,'_vel_tc']),...
 %                     '-png', '-nocrop', '-m2', VelCurveFig);
-                saveas(velCurveFig,fullfile(resultsPath,elecDir,[figBaseName,'_vel_tc.png']));
+                saveas(velCurveFig,fullfile(figuresPath,elecDir,[figBaseName,'_vel_tc.png']));
                 close(velCurveFig);
             end
             
@@ -141,6 +139,7 @@ parfor i = 1:length(whichElectrodes)
                     figure(100+u);
                     set(gcf,'Visible',showFigures);
                     set(gcf,'Color','White');
+                    set(gcf, 'UserData', 'summary');
                 else
                     set(0,'CurrentFigure', 100+u);
                 end
@@ -159,7 +158,7 @@ parfor i = 1:length(whichElectrodes)
                 copyobj(get(tCurveAxis(1),'Children'),sub);
                 
                 % Title, axes, etc.
-                titleStr = sprintf('Ch%d', tmpParams.elecNo);
+                titleStr = sprintf('Ch%d', elecNo);
                 title(titleStr,'FontSize',3,'FontWeight','Normal');
                 set(sub,'FontSize',3);
                 if strfind(tmpParams.stimType, 'Ori')
@@ -188,30 +187,30 @@ parfor i = 1:length(whichElectrodes)
             
             % Basic tuning curve
             barFig = plotBarGraph(StatsUnit, ...
-                tmpParams, unitColors(j,:), showFigures);
+                tmpParams, cellColors(j,:), showFigures, elecNo, u);
             
             % File saving
 %             export_fig(fullfile(ResultsPath,ElecDir,[FigBaseName,'_bar']),...
 %                 '-png', '-nocrop', '-m2', BarFig);
-            saveas(barFig,fullfile(resultsPath,elecDir,[figBaseName,'_bar.png']));
+            saveas(barFig,fullfile(figuresPath,elecDir,[figBaseName,'_bar.png']));
 
         end
         
         % Plotting rasters and histograms
-        if plotRasters && size(Params.Conditions,1) <= 20
+        if plotRasters && size(Params.Conditions,1) <= 20 && ~clumpRasters
             
             [hRaster, hPSTH] = plotRastergrams( SpikeDataUnit, tmpParams, ...
-                unitColors(j,:), showFigures );
+                cellColors(j,:), showFigures, elecNo, u);
             
 %             export_fig(fullfile(ResultsPath,ElecDir,[FigBaseName,'_raster']),...
 %                 '-png', '-m3', '-p0.05', hRaster);
-            saveas(hRaster,fullfile(resultsPath,elecDir,[figBaseName,'_raster.png']));
+            saveas(hRaster,fullfile(figuresPath,elecDir,[figBaseName,'_raster.png']));
 
             close(hRaster);
             
 %             export_fig(fullfile(ResultsPath,ElecDir,[FigBaseName,'_PSTHs']), ...
 %                 '-png', '-m3', '-p0.05', hPSTH);
-            saveas(hPSTH,fullfile(resultsPath,elecDir,[figBaseName,'_PSTHs.png']));
+            saveas(hPSTH,fullfile(figuresPath,elecDir,[figBaseName,'_PSTHs.png']));
             close(hPSTH);
             
         elseif plotRasters
@@ -233,15 +232,15 @@ parfor i = 1:length(whichElectrodes)
             rParams.Conditions.conditionNo = 1;
             
             rSpikeData.c = ones(size(rSpikeData,1),1);
-            [~, ix] = sort(SpikeDataUnit.c); % sort by condition
+            [~, ix] = sort(SpikeDataUnit.conditionNo); % sort by condition
             rSpikeData.t = [1:size(rSpikeData,1)]';
             rSpikeData = rSpikeData(ix,:);
             
             [hRaster, hPSTH] = plotRastergrams( rSpikeData, rParams, ...
-                unitColors(j,:), showFigures );
+                cellColors(j,:), showFigures, elecNo, u );
             
             % draw lines between the condition boundaries
-            rcondNo = SpikeDataUnit(ix,:).c;
+            rcondNo = SpikeDataUnit(ix,:).conditionNo;
             rTrialNo = rSpikeData.t;
             minX = min(rParams.Conditions.centers{:});
             maxX = max(rParams.Conditions.centers{:});
@@ -255,13 +254,13 @@ parfor i = 1:length(whichElectrodes)
             
 %             export_fig(fullfile(ResultsPath,ElecDir,[FigBaseName,'_raster']),...
 %                 '-png', '-m3', '-p0.05', hRaster);
-            saveas(hRaster,fullfile(resultsPath,elecDir,[figBaseName,'_raster.png']));
+            saveas(hRaster,fullfile(figuresPath,elecDir,[figBaseName,'_raster_all.png']));
 
             close(hRaster);
             
 %             export_fig(fullfile(ResultsPath,ElecDir,[FigBaseName,'_PSTHs']), ...
 %                 '-png', '-m3', '-p0.05', hPSTH);
-            saveas(hPSTH,fullfile(resultsPath,elecDir,[figBaseName,'_PSTHs.png']));
+            saveas(hPSTH,fullfile(figuresPath,elecDir,[figBaseName,'_PSTHs_all.png']));
             close(hPSTH);
         end
         
@@ -276,7 +275,7 @@ parfor i = 1:length(whichElectrodes)
                 % Get the hists
                 histograms = cell2mat(SpikeDataUnit.hist);
                 histograms = histograms./binSize; % spike density
-                directions = SpikeDataUnit.c;
+                directions = SpikeDataUnit.conditionNo;
                 
                 % Calculate latency
                 latencies = 0.03:0.01:0.2; % 30 - 200 ms
@@ -308,26 +307,26 @@ parfor i = 1:length(whichElectrodes)
                 hMap = plotBackProjection(bestMap, tmpParams, showFigures);
                 
             else
-                hMap = plotMap(tCurve, tmpParams, showFigures);
+                hMap = plotMap(tCurve, tmpParams, showFigures, elecNo, u);
             end
             
 %             export_fig(fullfile(ResultsPath,ElecDir,[FigBaseName,'_RFMap']), ...
 %                 '-png', '-m2', '-p0.05', hMap);
-            saveas(hMap,fullfile(resultsPath,elecDir,[figBaseName,'_RFMap.png']));
+            saveas(hMap,fullfile(figuresPath,elecDir,[figBaseName,'_RFMap.png']));
             close(hMap);
             
         end
         
     end % Units loop
-end; % Electrodes loop
+end % Electrodes loop
     
 % Save summary figures if any are open
 if summaryFig
     summaryDir = 'Summary';
-    if ~isdir(fullfile(resultsPath,summaryDir))
-        mkdir(fullfile(resultsPath,summaryDir))
+    if ~isdir(fullfile(figuresPath,summaryDir))
+        mkdir(fullfile(figuresPath,summaryDir))
     end
-    sumFigs = findall(0,'type','figure'); % hopefully they are the only open ones...
+    sumFigs = findall(0,'type','figure', 'UserData', 'summary');
     for u = 1:length(sumFigs)
         unit = sumFigs(u).Number - 100;
         figBaseName = [fileName,'_',num2str(unit)];
@@ -337,7 +336,7 @@ if summaryFig
             Params.stimType, unit));
 %         export_fig(fullfile(ResultsPath,SummaryDir,[FigBaseName,'_summary']),...
 %             '-png', '-m3', '-nocrop', gcf);
-        saveas(gcf,fullfile(resultsPath,summaryDir,[figBaseName,'_summary.png']));
+        saveas(gcf,fullfile(figuresPath,summaryDir,[figBaseName,'_summary.png']));
         close(gcf);
     end
 end

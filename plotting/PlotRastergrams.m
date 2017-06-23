@@ -1,16 +1,15 @@
 function [ hRaster, hPSTH ] = plotRastergrams( SpikeData,...
-    Params, color, showFigure )
+    Params, color, showFigure, elecNo, cell )
 %PlotRasters opens and draws raster plot and PSTH figures
 %   hRaster - handle for rater plot
 %   hPSTH - handle for PSTH
 
-titleStr = makeTitle(Params, Params.elecNo, Params.unit);
+titleStr = makeTitle(Params, elecNo, cell);
 conditions = Params.Conditions.condition;
 conditionNo = Params.Conditions.conditionNo;
 
 % Plot raster
-hRaster = figure;
-set(hRaster,'Visible',showFigure)
+hRaster = figure('Visible',showFigure);
 set(hRaster,'Color','White');
 suptitle(titleStr);
 hold on;
@@ -38,8 +37,8 @@ for i = 1:length(conditionNo)
     end
     
     % Plot vertical lines
-    spikes = SpikeData{SpikeData.c == c, 'raster'};
-    trials = SpikeData{SpikeData.c == c, 't'};
+    spikes = SpikeData{SpikeData.conditionNo == c, 'raster'};
+    trials = SpikeData{SpikeData.conditionNo == c, 'trial'};
     allTrials = [];
     allSpikes = [];
     for t=1:size(spikes,1)
@@ -86,8 +85,10 @@ for i = 1:length(conditionNo)
         set(ax, 'XTickLabel', []);
 %         set(ax2, 'XTickLabel', []);
     end
-    title(ax, sprintf('%s = %.3f', Params.stimType, conditions(c)), ...
-        'FontSize',fontSize,'FontWeight','Normal');
+    if length(conditionNo) > 1
+        title(ax, sprintf('%s = %.3f', Params.stimType, conditions(c)), ...
+            'FontSize',fontSize,'FontWeight','Normal');
+    end
     ylabel(ax, 'Trial');
     
 end
@@ -118,7 +119,7 @@ for i = 1:length(conditions)
     binSize = Condition.binSize;
     
     % Get the hist
-    histogram = cell2mat(SpikeData{SpikeData.c == c, 'hist'}');
+    histogram = cell2mat(SpikeData{SpikeData.conditionNo == c, 'hist'}');
     histogram = mean(histogram,2)./binSize; % spike density
 
     % Make a two-column subplot

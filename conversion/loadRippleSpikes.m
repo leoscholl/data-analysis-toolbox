@@ -64,8 +64,8 @@ name = cell(length(SegmentEntityID),1);
 for i = 1:length(SegmentEntityID)
     label = SegmentLabel{i};
     elecNo = str2num(char(regexp(label, '\d{1,2}', 'match')));
-    number(i) = elecNo(1);
-    name{i} = ['elec',num2str(elecNo(1))];
+    number(i) = elecNo(end);
+    name{i} = ['elec',num2str(elecNo(end))];
 end
 
 % choose the correct electrodes

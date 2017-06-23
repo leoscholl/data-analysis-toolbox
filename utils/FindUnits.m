@@ -1,4 +1,4 @@
-function units = findUnits(baseDir, animalID, whichUnits)
+function [units, Units] = findUnits(baseDir, animalID, whichUnits)
 %findUnits returns a cell array of units
 
 narginchk(2,3);
@@ -27,5 +27,9 @@ end
 % Sort units
 [~, idx] = sort(unitNos);
 units = {units{idx}};
+
+Units = cell2table(units');
+Units.number = unitNos(idx)';
+Units.Properties.VariableNames = {'name', 'number'};
 
 end

@@ -1,4 +1,5 @@
-function [ handle, OSI, DI ] = plotTCurve(Statistics, Params, ShowFigure)
+function [ handle, OSI, DI ] = plotTCurve(Statistics, Params, ShowFigure, ...
+    elecNo, cell)
 %PlotTCurve opens and draws a tuning curve figure
 % returns the handle to the tuning curve figure
 
@@ -60,7 +61,7 @@ else
     legend({'avg bg';'Mean FR';'F1';'bg';'FR-bg'},'Location','NorthEast');
 end
 legend('boxoff');
-titleStr = makeTitle(Params, Params.elecNo, Params.unit);
+titleStr = makeTitle(Params, elecNo, cell);
     
 xlabel(Params.stimType);
 ylabel('Rate [spikes/s]');
@@ -68,31 +69,8 @@ set(gca,'FontSize',fontSize);
 set(gca,'XTick',conditions);
 box off;
 
-% Orientation Selectivity Index
-if strcmp(Params.stimType,'Ori')==1
-    R = tCurve - baseline; % subtract baseline
-    [RPref, RPrefInd] = max(tCurve); % take the maximum value
-    Opref = conditions(RPrefInd);
-    
-    % calculate OSI for two halfs and choose higher. number
-    % 2 - changes to 360 degree because we have 16
-    % directions but only 8 orientations
-    aperture1 = conditions(1:8);
-    R1 = R(1:8); R2 = R(9:16);
-    
-    OSI1 = abs(sum(R1.*exp(1i.*2.*deg2rad(aperture1(:)))))/sum(abs(R1));
-    OSI1 = round(OSI1*100)/100;
-    OSI2 = abs(sum(R2.*exp(1i.*2.*deg2rad(aperture1(:)))))/sum(abs(R2));
-    OSI2 = round(OSI2*100)/100;
-    
-    OSI = max([OSI1,OSI2]);
-    DI = abs(sum(R.*exp(1i.*deg2rad(conditions(:)))))/sum(abs(R));
-    
-    titleStr = makeTitle(Params, Params.elecNo, Params.unit, OSI, DI);
-end
-
 % Change the title
-title(titleStr, 'FontSize', 16);
+title(titleStr, 'FontSize', 16, 'FontWeight', 'normal');
 hold off;
 end
 

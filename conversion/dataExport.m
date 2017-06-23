@@ -1,4 +1,4 @@
-function dataExport( dataDir, copyDir, animalID, whichUnits, whichFiles, overwrite)
+function dataExport( dataDir, destDir, animalID, whichUnits, whichFiles, overwrite)
 %DataExport exports specified units and directories from DataDir to CopyDir
 
 narginchk(3,6);
@@ -16,12 +16,12 @@ end
 [~, ~, Files] = ...
     findFiles(dataDir, animalID, whichUnits, '*].n*', whichFiles);
 
-for i=1:size(Files,1)
+parfor i=1:size(Files,1)
     fileName = Files.fileName{i};
     unit = Files.unit{i};
     dataPath = fullfile(dataDir, animalID, unit);
-    destPath = fullfile(copyDir, animalID, unit);
-    exportFile = fullfile(dataPath, [fileName, '-export.mat']);
+    destPath = fullfile(destDir, animalID, unit);
+    exportFile = fullfile(destPath, [fileName, '-export.mat']);
       
     disp(['exporting ', fileName]);
     
@@ -31,11 +31,14 @@ for i=1:size(Files,1)
     end
 
     % Export anything that's not already there
+    if ~exist(destPath, 'dir')
+        mkdir(destPath);
+    end
     m = matfile(exportFile,'Writable',true);
     if isempty(whos(m,'Ripple'))
         % Spikes, LFP, and Events
         Ripple = [];
-        Ripple.Electrodes = loadRippleSpikes(dataPath,fileName);
+        Ripple.Electrodes = loadRippleWaveforms(dataPath,fileName);
         Ripple.LFP = loadRippleAnalog(dataPath, fileName, 'lfp');
         Ripple.AnalogIn = loadRippleAnalog(dataPath, fileName, 'analog');
         Ripple.Events = loadRippleEvents(dataPath,fileName);
@@ -46,7 +49,7 @@ for i=1:size(Files,1)
         m.Ripple = Ripple;
     elseif ~isfield(m.Ripple, 'Electrodes')
         Ripple = m.Ripple;
-        Ripple.Electrodes = loadRippleSpikes(dataPath,fileName);
+        Ripple.Electrodes = loadRippleWaveforms(dataPath,fileName);
         m.Ripple = Ripple;
     elseif ~isfield(m.Ripple, 'LFP')
         Ripple = m.Ripple;
@@ -61,10 +64,5 @@ for i=1:size(Files,1)
     if isempty(whos(m,'Params'))
         % Redo Params
         m.Params = loadParams(dataPath, fileName);
-    end
-    
-    % Finally, copy anything that exists
-    if ~isempty(copyDir)
-        copyFiles ([fileName,'-export.mat'], dataPath, destPath);
     end
 end

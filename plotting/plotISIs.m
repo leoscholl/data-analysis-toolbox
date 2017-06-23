@@ -1,11 +1,11 @@
-function plotISIs(resultsPath, fileName, Results)
+function plotISIs(figuresPath, fileName, Results)
 %PlotWaveforms plots mean waveform for each unit
 
 Electrodes = Results.Electrodes;
 
 centers = 0:0.0005:0.1;
-nUnits = cellfun(@(x) length(unique(x.u)), Results.SpikeDataAll);
-colors = makeDefaultColors(nUnits);
+nCells = cellfun(@(x) length(unique(x.cell)), Results.SpikeDataAll);
+colors = makeDefaultColors(nCells);
 
 for ch = 1:size(Electrodes,1)
     
@@ -16,11 +16,12 @@ for ch = 1:size(Electrodes,1)
        
     % ISIs
     figure('Visible','off');
-    units = unique(SpikeData.u);
-    for u = 1:length(units)
-        unit = units(u);
-        subplot(ceil(length(units)/2),2,u)
-        isi = SpikeData(SpikeData.u == unit,:).isi;
+    cells = unique(SpikeData.cell);
+    for u = 1:length(cells)
+        unit = cells(u);
+        h = subplot(ceil(length(cells)/2),2,u);
+        hold on;
+        isi = SpikeData(SpikeData.cell == unit,:).isi;
         isi = vertcat(isi{:});
         histogram(isi,centers,'FaceColor',colors(u,:),'EdgeColor','none');
         xlim([0,0.05]);
@@ -31,10 +32,21 @@ for ch = 1:size(Electrodes,1)
         ylabel('number of invervals');
         set(gca,'FontSize',6);
         title(sprintf('Unit %d', unit));
+        
+        % minimum refractory period
+        str = sprintf('min isi = %3.1fms\nmean isi = %3.1fms', ...
+            min(isi)*1000, mean(isi)*1000);
+        xl = xlim(h);
+        xPos = xl(1) + diff(xl)/2;
+        yl = ylim(h);
+        yPos = yl(2) - diff(yl)/4;
+        t = text(xPos, yPos, str, 'Parent', h);
+        set(t, 'FontSize', 6);
+        hold off;
     end
   
 
-    figureName = fullfile(resultsPath,elecDir,[fileName, '_','El', num2str(elecNo),'-isi']);
+    figureName = fullfile(figuresPath,elecDir,[fileName, '_','El', num2str(elecNo),'-isi']);
     print(gcf,figureName,'-dpng');
     hgsave(gcf,figureName);
     close;

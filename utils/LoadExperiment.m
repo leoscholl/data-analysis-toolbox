@@ -15,7 +15,7 @@ filePath = fullfile(dataPath,[fileName,'-export.mat']);
 % Reload from raw data?
 overwrite = 0; % if needed for testing
 if overwrite
-    dataExport( dataDir, [], animalID, unitNo, fileNo, overwrite);
+    dataExport( dataDir, dataDir, animalID, unitNo, fileNo, 1);
 end
 
 % Make sure some variables exist in case they are non-existent in the file

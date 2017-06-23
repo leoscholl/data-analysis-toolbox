@@ -1,4 +1,4 @@
-function [Params, Results] = analyze(resultsPath, fileName, ...
+function [Params, Results] = analyze(dataPath, fileName, ...
     Params, StimTimes, Electrodes, whichElectrodes)
 %analyze Function making PSTH, rasters, and ISIs for data in Electrodes
 
@@ -67,12 +67,12 @@ for i = 1:length(conditionNo)
     switch Params.binType
         case 'number'
             stimDiffTime = min(Stimuli.stimDiffTime); % This condition
-            numBins = 200;
+            numBins = 100;
             binSize = stimDiffTime/numBins;
         case 'size'
             stimDiffTime = min(Stimuli.stimDiffTime); % This condition
 %             stimDiffTime = min(Params.Data.stimDiffTime); % All stimuli
-            binSize = 0.001;
+            binSize = 0.01;
             numBins = floor(stimDiffTime/binSize);
     end
     
@@ -116,29 +116,29 @@ for i = 1:length(whichElectrodes)
         continue;
     end
     
-    units = unique(spikeTimes(:,2));
+    cells = unique(spikeTimes(:,2));
     
     % Initialize the data structures
     SpikeData = table([],[],[],cell(0),cell(0),cell(0));
     SpikeData.Properties.VariableNames = ...
-        {'c','t','u','raster','hist','isi'};
-    Statistics = nan(length(conditionNo)*length(units),11);
+        {'conditionNo','trial','cell','raster','hist','isi'};
+    Statistics = nan(length(conditionNo)*length(cells),11);
     Statistics = array2table(Statistics);
     Statistics.Properties.VariableNames = ...
-        {'conditionNo','unit',...
+        {'conditionNo','cell',...
         'tCurve','tCurveSEM','blank','blankSEM',...
         'tCurveCorr','tCurveCorrSEM','f1Rep','f1RepSD', ...
         'latency'};
-    meanTrials = cell(length(conditionNo),length(units));
-    blankTrials = cell(length(conditionNo),length(units));
-    tCurveAll = zeros(length(conditionNo),length(units));
-    tCurveSEMAll = zeros(length(conditionNo),length(units));
-    blankAll = zeros(length(conditionNo),length(units));
-    blankSEMAll = zeros(length(conditionNo),length(units));
-    tCurveCorrAll = zeros(length(conditionNo),length(units));
-    tCurveCorrSEMAll = zeros(length(conditionNo),length(units));
-    f1RepAll = nan(length(conditionNo),length(units));
-    f1RepSDAll = nan(length(conditionNo),length(units));
+    meanTrials = cell(length(conditionNo),length(cells));
+    blankTrials = cell(length(conditionNo),length(cells));
+    tCurveAll = zeros(length(conditionNo),length(cells));
+    tCurveSEMAll = zeros(length(conditionNo),length(cells));
+    blankAll = zeros(length(conditionNo),length(cells));
+    blankSEMAll = zeros(length(conditionNo),length(cells));
+    tCurveCorrAll = zeros(length(conditionNo),length(cells));
+    tCurveCorrSEMAll = zeros(length(conditionNo),length(cells));
+    f1RepAll = nan(length(conditionNo),length(cells));
+    f1RepSDAll = nan(length(conditionNo),length(cells));
     
     %% Analysis
     for j = 1:length(conditionNo)
@@ -153,8 +153,8 @@ for i = 1:length(whichElectrodes)
         which = centers>=0 & centers < Condition.stimDuration+Params.responseLag;
         whichBlank = centers<0;
         
-        for k = 1:length(units)
-            u = units(k);
+        for k = 1:length(cells)
+            u = cells(k);
             
             % Make Rasters and Histograms
             for t = 1:size(Stimuli,1) % how many trials for this condition
@@ -184,8 +184,8 @@ for i = 1:length(whichElectrodes)
             end
             
             % Prepare Trials x Centers matrix for histogram
-            hists = cell2mat(SpikeData.hist(SpikeData.c == c ...
-                & SpikeData.u == u)');
+            hists = cell2mat(SpikeData.hist(SpikeData.conditionNo == c ...
+                & SpikeData.cell == u)');
             
             % Statistics
             psth = hists(which,:);
@@ -229,7 +229,7 @@ for i = 1:length(whichElectrodes)
                 psthSpectra = abs(Y(1:floor(N/2),:))/floor(N/2);
                 specFreq = 0:1/T:floor((N-1)/T/2);
                 f1 = psthSpectra(find(specFreq>=min(Stimuli.tf)-0.05,1),:);
-                
+                if isempty(f1); f1 = NaN; end
                 f1RepAll(j,k) = mean(f1);
                 f1RepSDAll(j,k) = std(f1)/sqrt(nTrials);
             else
@@ -237,7 +237,7 @@ for i = 1:length(whichElectrodes)
                 f1RepSDAll(j,k) = NaN;
             end
             
-            Statistics((j-1)*length(units)+k,:) = ...
+            Statistics((j-1)*length(cells)+k,:) = ...
                 {c, u, ...
                 tCurveAll(j,k),tCurveSEMAll(j,k), ...
                 blankAll(j,k),blankSEMAll(j,k), ...
@@ -260,17 +260,17 @@ for i = 1:length(whichElectrodes)
 %         'tCurveCorr','tCurveCorrSEM','f1Rep','f1RepSD'};
 
     % Save everything
-    Results.Electrodes = Electrodes;
+    Results.Electrodes = Electrodes(:,{'name','number'});
     Results.SpikeDataAll{elecNo} = SpikeData;
     Results.StatisticsAll{elecNo} = Statistics;
     Results.StimTimes = StimTimes;
 
-end; % Electrodes loop
+end % Electrodes loop
 
-if ~exist(resultsPath,'dir')
-    mkdir(resultsPath);
+if ~exist(dataPath,'dir')
+    mkdir(dataPath);
 end
-save(fullfile(resultsPath,[fileName,'-results.mat']),...
-        'Params','Results');
+save(fullfile(dataPath,[fileName,'-export.mat']),...
+        'Params','Results', '-append');
 
 end

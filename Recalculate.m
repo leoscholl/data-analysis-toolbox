@@ -1,15 +1,10 @@
-function recalculate(dataDir, resultsDir, animalID, whichUnits, whichFiles, ...
+function recalculate(dataDir, figuresDir, animalID, whichUnits, whichFiles, ...
     whichElectrodes, showFigures, plotLFP, summaryFig)
 %recalculate and replot all data
 % whichUnits is an array of unit numbers to calculate
 % whichFiles is an array of file numbers to calculate
 
-close all;
-addpath('conversion');
-addpath('plotting');
-addpath('utils');
-addpath('export_fig_toolbox');
-addpath('C:\Program Files (x86)\Ripple\Trellis\Tools\neuroshare\');
+% addpath('C:\Program Files (x86)\Ripple\Trellis\Tools\neuroshare\');
 tic;
 
 % Default parameters
@@ -19,11 +14,11 @@ end
 if nargin < 5
     whichFiles = [];
 end
-if nargin < 6 || isempty(showFigures)
-    showFigures = 0;
-end
-if nargin < 7
+if nargin < 6
     whichElectrodes = [];
+end
+if nargin < 7 || isempty(showFigures)
+    showFigures = 0;
 end
 if nargin < 8 || isempty(plotLFP)
     plotLFP = 0;
@@ -46,7 +41,7 @@ smoothing = 0.2;
 
 % Figure out which files need to be recalculated
 [~, ~, Files] = ...
-    findFiles(dataDir, animalID, whichUnits, '*].mat', whichFiles);
+    findFiles(dataDir, animalID, whichUnits, '*', whichFiles);
 
 % Display some info about duration
 nFiles = size(Files,1);
@@ -69,7 +64,7 @@ for f = 1:size(Files,1)
     % Data comes from the DataDir, results go into the ResultsDir
     unit = Files.unit{f};
     dataPath = fullfile(dataDir,animalID,unit,filesep);
-    resultsPath = fullfile(resultsDir,animalID,unit,filesep);
+    figuresPath = fullfile(figuresDir,animalID,unit,filesep);
     
     clear hasError Electrodes Paams StimTimes LFP AnalogIn
     fileName = Files.fileName{f};
@@ -83,7 +78,7 @@ for f = 1:size(Files,1)
             loadExperiment(dataDir, animalID, unit, fileName);
         
         if hasError
-            plotStimTimes(dataPath, resultsPath, fileName);
+            plotStimTimes(dataPath, figuresPath, fileName);
         end
         
         if hasError > 1
@@ -139,25 +134,25 @@ for f = 1:size(Files,1)
                 
                 % Binning and making rastergrams
                 disp('analyzing...');
-                [Params, Results] = analyze(resultsPath, fileName, ...
+                [Params, Results] = analyze(dataPath, fileName, ...
                     Params, StimTimes, Electrodes, whichElectrodes);
                 
                 % Plotting tuning curves and maps
                 disp('plotting...');
-                plotAllResults(resultsPath, fileName, Params, Results, ...
+                plotAllResults(figuresPath, fileName, Params, Results, ...
                     whichElectrodes, plotTCs, plotBars, plotRasters, ...
                     plotMaps, summaryFig, plotLFP, showFigures);
                 
                 % Plot waveforms?
                 if plotWFs
                     disp('Plotting waveforms...');
-                    plotWaveforms(dataPath, resultsPath, fileName, Electrodes);
+                    plotWaveforms(dataPath, figuresPath, fileName, Electrodes);
                 end
                 
                 % Plot ISIs?
                 if plotISI && ~isempty(Results)
                     disp('Plotting ISIs...');
-                    plotISIs(resultsPath, fileName, Results);
+                    plotISIs(figuresPath, fileName, Results);
                 end
         end
         

@@ -1,4 +1,4 @@
-function plotWaveforms(dataPath, resultsPath, fileName, Electrodes)
+function plotWaveforms(dataPath, figuresPath, fileName, Electrodes)
 %PlotWaveforms plots mean waveform for each unit
 
 if nargin < 4 || isempty(Electrodes) || ...
@@ -27,6 +27,7 @@ for ch = 1:size(Electrodes,1)
     end
     
     units = unique(wf(:,2));
+    numSpikes = [];
     
     % Plot the waveforms
     lines = [];
@@ -34,6 +35,7 @@ for ch = 1:size(Electrodes,1)
     fig1 = figure('Visible','off');hold on;
     for t = 1:length(units)
         wf_unit = wf(wf(:,2) == units(t),3:end);
+        numSpikes(t) = size(wf_unit,1);
         x = 1/30000:1/30000:(1/30000)*size(wf_unit,2);
         wf_mean = mean(wf_unit,1);
         wf_std = std(wf_unit,0,1);
@@ -43,23 +45,26 @@ for ch = 1:size(Electrodes,1)
         lines = [lines; h];
 
         x = 1/30000:1/30000:(1/30000)*size(wf_unit,2);
-        fill_between_lines(x, wf_mean-wf_sem, wf_mean+wf_sem, colors(t,:));
+        %fill_between_lines(x, wf_mean-wf_sem, wf_mean+wf_sem, colors(t,:));
+        fill_between_lines(x, wf_mean-wf_std, wf_mean+wf_std, colors(t,:));
     end
 
     alpha(0.2); % add transparency
 
     % Save the figure
-    if ~isdir(fullfile(resultsPath,elecDir))
-        mkdir(fullfile(resultsPath,elecDir));
+    if ~isdir(fullfile(figuresPath,elecDir))
+        mkdir(fullfile(figuresPath,elecDir));
     end
-    legend(lines,{num2str(units)});
+    legend(lines,arrayfun( ...
+        @(x)sprintf('cell %d - %d spks', units(x), numSpikes(x)), ...
+        1:length(units), 'Un', 0));
     title([fileName,' El', num2str(elecNo)],'FontSize',6);
     axis tight;
-    figureName = fullfile(resultsPath,elecDir, ...
+    figureName = fullfile(figuresPath,elecDir, ...
         [fileName, '_','El', num2str(elecNo),'-waveforms']);
     print(fig1,figureName,'-dpng');
     hgsave(fig1,figureName);
-    close;
+    close(fig1);
     disp(['Waveforms saved for ch ', num2str(elecNo)]);
 end
 
