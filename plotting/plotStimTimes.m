@@ -16,10 +16,14 @@ if exist('Ripple', 'var') && isfield(Ripple, 'Events')
         Analog = Ripple.AnalogIn.Channels(strcmp(Ripple.AnalogIn.Channels.name, ...
             'analog 1'),:);
         rawPhotodiode = Analog.data{1};
-        maxSignal = max(rawPhotodiode);
+        meanSignal = mean(rawPhotodiode);
+        maxSignal = meanSignal+3*std(rawPhotodiode);
+        minSignal = meanSignal-1*std(rawPhotodiode);
     else
         rawPhotodiode = [];
+        meanSignal = 0;
         maxSignal = 1;
+        minSignal = -1;
     end
     parallel = StimTimes.parallel;
 else
@@ -33,13 +37,12 @@ else
 end
 
 figure('Visible', 'off')
-hold on;
+suptitle(fileName);
 
-
-
-% Plot everything
+% Raw photodiode plot
 legenditems = {};
-
+subplot(10,1,[1:7]);
+hold on;
 if ~isempty(rawPhotodiode) 
     % Determine sample rate, tstart, and tend
     fs = Ripple.AnalogIn.sampleRate;
@@ -50,30 +53,75 @@ if ~isempty(rawPhotodiode)
     end
     tEnd = length(rawPhotodiode);
     time = (tStart:tEnd)./fs;
-    plot(time, rawPhotodiode(tStart:tEnd));
-    legenditems = [legenditems, 'raw'];
+    
+    plot(time, rawPhotodiode(tStart:tEnd), 'LineWidth', 0.25);
 end
+axis tight
+ylim([minSignal maxSignal]);
+xticks([]);
+ylabel('Photodiode signal (mV)');
+set(gca, 'FontSize', 6);
+box off
+
+% Photodiode marks
+subplot(10,1,8);
+hold on;
 if ~isempty(photodiode)
-    plot(photodiode(1:2:end),maxSignal/3*2*ones(length(photodiode(1:2:end)),1),'ro');
-    plot(photodiode(2:2:end),maxSignal/3*1.8*ones(length(photodiode(2:2:end)),1),'ko');
-    legenditems = [legenditems, {'photodiode on', 'photodiode off'}];
+    plot(photodiode(1:2:end),...
+        ones(length(photodiode(1:2:end)),1),...
+        'm.', 'MarkerSize', 3);
+    plot(photodiode(2:2:end),...
+        zeros(length(photodiode(2:2:end)),1),...
+        'r.', 'MarkerSize', 3);
 end
+axis tight
+ylim([-1 2]);
+box off;
+xticks([])
+yticks([]);
+ylabel('photo')
+set(gca, 'FontSize', 6);
+
+% Parallel marks
+subplot(10,1,9);
+hold on;
 if ~isempty(parallel)
-    plot(parallel(1:2:end),maxSignal/3*ones(length(parallel(1:2:end)),1),'bs');
-    plot(parallel(2:2:end),maxSignal/3.2*ones(length(parallel(2:2:end)),1),'gs');
-    legenditems = [legenditems, {'parallel on', 'parallel off'}];
+    plot(parallel(1:2:end),...
+        ones(length(parallel(1:2:end)),1),...
+        'm.', 'MarkerSize', 3);
+    plot(parallel(2:2:end),...
+        zeros(length(parallel(2:2:end)),1),...
+        'r.', 'MarkerSize', 3);
 end
+axis tight
+ylim([-1 2]);
+box off;
+xticks([])
+yticks([]);
+ylabel('parallel')
+set(gca, 'FontSize', 6);
+
+% Matlab marks
+subplot(10,1,10);
+hold on;
 if ~isempty(matlab)
-    plot(matlab,maxSignal/2*ones(length(matlab),1),'ms');
-    legenditems = [legenditems, 'matlab'];
+    plot(matlab,...
+        zeros(length(matlab),1),...
+        'm.', 'MarkerSize', 3);
+    legenditems = 'matlab';
 end
-hold off;
-axis tight;
+axis tight
+ylim([-1 1]);
+box off;
+xlabel('Time (s)');
+yticks([]);
+ylabel('matlab')
+set(gca, 'FontSize', 6);
+
 
 % Legend depends on what is present
-legend(legenditems);
 
-title(fileName);
+
 
 resultsDir = fullfile(resultsPath, 'StimTimes');
 if ~exist(resultsDir, 'dir')

@@ -81,6 +81,8 @@ for f = 1:size(Files,1)
             plotStimTimes(dataPath, figuresPath, fileName);
         end
         
+        continue;
+        
         if hasError > 1
             warning('Loading experiment failed. Skipping.');
             continue;
