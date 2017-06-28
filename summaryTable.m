@@ -124,7 +124,7 @@ classdef summaryTable < handle
             % Also export a csvFile for excel
             csvFile = fullfile(obj.dataDir, obj.animalID, 'summary.csv');
             csvFile = obj.incrementFileName(csvFile);
-            writetable(Summary,csvFile,'WriteRowNames',true);
+            writetable(Summary,csvFile,'WriteRowNames',true,'QuoteStrings',true);
             
         end
         
@@ -170,15 +170,17 @@ classdef summaryTable < handle
                             [Params, Results] = loadResults(obj.dataDir, ...
                                 obj.animalID, obj.unitNo, oriFileNo);
                             Statistics = Results.StatisticsAll{oriElec};
-                            Statistics = Statistics(Statistics.unit == oriCell,:);
+                            Statistics = Statistics(Statistics.cell == oriCell,:);
                             [ osi, di ] = calculateOsi(Statistics, Params);
                         else
                             osi = [];
                             di = [];
                         end
                         
-                        Summary = [Summary; {track, obj.unitNo, electrode, cell, ...
-                            ori, osi, di, sf, tf, apt, velocity, latency, other, notes}];
+                        Summary = [Summary; {track, obj.Units.number(i), ...
+                            electrode, cell, ...
+                            ori, osi, di, sf, tf, apt, velocity, ...
+                            latency, other, notes}];
                     end % cells loop
                 end % Electrodes loop
             end % Units loop
@@ -246,13 +248,13 @@ classdef summaryTable < handle
             
             % Generate from files if it doesn't already exist
             [~, ~, Files] = findFiles(dataDir, animalID, ...
-                unitNo, '*-results.mat');
+                unitNo, '*-export.mat');
             
             for f=1:size(Files,1)
                 
                 fileName = Files.fileName{f};
                 filePath = fullfile(dataDir, animalID, ...
-                    Files.unit{f}, [fileName, '-results.mat']);
+                    Files.unit{f}, [fileName, '-export.mat']);
                 if exist(filePath,'file')
                     load(filePath);
                 end
@@ -266,10 +268,10 @@ classdef summaryTable < handle
                 
                 for i=1:nElectrodes
                     Stats = Results.StatisticsAll{i};
-                    cells{i} = unique(Stats.unit);
+                    cells{i} = unique(Stats.cell);
                     
                     for j = 1:length(cells{i})
-                        StatsCell = Stats(Stats.unit == cells{i}(j),:);
+                        StatsCell = Stats(Stats.cell == cells{i}(j),:);
                         [maxCorr, maxCorrInd] = max(StatsCell.tCurveCorr);
                         [maxF1, maxF1Ind] = max(StatsCell.f1Rep);
                         if ~isnan(maxCorr)

@@ -22,7 +22,7 @@ for f = 1:size(Files,1)
     unitNo = Files.unitNo(f);
     fileNo = Files.fileNo(f);
     figuresPath = fullfile(figuresDir, animalID, unit);
-    [Params, Results] = loadResults(figuresDir, animalID, unitNo, fileNo);
+    [Params, Results] = loadResults(dataDir, animalID, unitNo, fileNo);
 
     % Start the parallel pool if one isn't already opened
     if isempty(gcp('nocreate'))

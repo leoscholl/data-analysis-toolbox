@@ -10,7 +10,6 @@ else
 end
 seqDir = fullfile(home,'Dropbox','TunningCurvePlugin');
 altSeqDir = fullfile(home,'Dropbox','TunningCurvePlugin','NewSeq');
-addpath(fullfile(home,'Dropbox','TunningCurvePlugin'));
 
 Params = [];
 

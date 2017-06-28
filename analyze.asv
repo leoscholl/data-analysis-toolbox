@@ -2,9 +2,15 @@ function [Params, Results] = analyze(dataPath, fileName, ...
     Params, StimTimes, Electrodes, whichElectrodes)
 %analyze Function making PSTH, rasters, and ISIs for data in Electrodes
 
+% Filter out any electrodes without spikes
+goodElectrodes = Electrodes.number(~cellfun(@isempty, Electrodes.spikes));
 if nargin < 7 || isempty(whichElectrodes)
-    whichElectrodes = Electrodes.number;
+    whichElectrodes = goodElectrodes;
+else
+    whichElectrodes = intersect(whichElectrodes, goodElectrodes);
 end
+whichElectrodesIdx = find(arrayfun(@(x)ismember(x, whichElectrodes), ...
+    Electrodes.number));
 
 % Parameters
 Params.blankPeriod = 0.5; % how much time to consider blank (only if
@@ -105,9 +111,6 @@ fprintf('%d electrodes (out of %d) with %s units\n', Params.nElectrodes, ...
     size(Electrodes, 1), mat2str(nUnits));
 for i = 1:length(whichElectrodes)
     elecNo = whichElectrodes(i);
-    if elecNo == 0
-        continue;
-    end
     
     % Collect spike times for this electrode
     spikeTimes = Electrodes.spikes{elecNo};
@@ -276,12 +279,4 @@ end
 save(fullfile(dataPath,[fileName,'-export.mat']),...
         'Params','Results', '-append');
 
-end
-
-function count = countUnits(spikes)
-if isempty(spikes)
-    count = 0;
-else
-    count = length(unique(spikes(:,2)));
-end
 end

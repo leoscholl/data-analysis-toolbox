@@ -117,10 +117,10 @@ end
 for i = 1:length(number)
     waveforms = {[]};
     try
-        waveforms = Electrodes.waveforms(number(i));
+        waveforms = Electrodes.waveforms(Electrodes.number == number(i));
     catch
     end
-    Electrodes(number(i),:) = {spikesTmp(i), waveforms, name(i), number(i)};
+    Electrodes(end+1,:) = {spikesTmp(i), waveforms, name(i), number(i)};
 end
 
 % close the file handle

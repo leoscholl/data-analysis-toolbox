@@ -76,7 +76,27 @@ switch fileType
         end
         
         % Convert everything into a nice format
-        [ Electrodes, LFP, AnalogIn, Events ] = convertDataset( dataset );
+        spikes = [dataset.spike.time', dataset.spike.unitid'];
+        waveforms = [dataset.spike.time', dataset.spike.unitid' dataset.spike.data'];
+        name = sprintf('elec %d', dataset.spike.electrodeid);
+        number = dataset.spike.electrodeid;
+        Electrodes = table(spikes, waveforms, name, number);
+        LFP.endTime = dataset.lfp.time(2);
+        LFP.samplerate = dataset.lfp.fs;
+        name = sprintf('lfp %d', dataset.lfp.electrodeid);
+        number = dataset.lfp.electrodeid;
+        data = mat2cell(dataset.lfp.data, size(dataset.lfp.data,1), repmat(1, 1, size(dataset.lfp.data,2)))';
+        LFP.Channels = table(data, name, number);
+        AnalogIn.endTime = dataset.analog1k.time(2);
+        AnalogIn.samplerate = dataset.analog1k.fs;
+        name = sprintf('analog %d', dataset.analog1k.electrodeid);
+        number = dataset.analog1k.electrodeid;
+        data = mat2cell(dataset.analog1k.data, size(dataset.analog1k.data,1), repmat(1, 1, size(dataset.analog1k.data,2)))';
+        AnalogIn.Channels = table(data, name, number);
+        
+        Events.startTime = dataset.digital.data(dataset.digital.channel == 'SMA 4');
+        Events.endTime = dataset.digital.data(dataset.digital.channel == 'SMA 3');
+        Events.parallelInput = [ddataset.digital.data(dataset.digital.channel == 'SMA 3');
      
     otherwise
         warning('Unsupported filetype');

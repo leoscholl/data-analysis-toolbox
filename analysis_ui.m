@@ -99,11 +99,16 @@ function figure1_CloseRequestFcn(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+% Make sure any summary data is exported
+if isfield(handles, 's') && isa(handles.s, 'summaryTable')
+    disp(['Exporting summary to ', fileName]);
+    fileName = handles.s.export();
+end
+
 % Save Preferences
 global uiPrefsList
-savePrefs(handles);
-
 disp('Saving preferences...');
+savePrefs(handles);
 
 % Close the figure
 delete(hObject);
@@ -237,7 +242,7 @@ function SummaryStart_Callback(hObject, eventdata, handles)
 % hObject    handle to SummaryStart (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-figuresDir = get(handles.FiguresDirBox, 'String');
+dataDir = get(handles.DataDirBox, 'String');
 animalID = get(handles.AnimalIDBox, 'String');
 unitNo = eval(get(handles.UnitNoBox, 'String'));
 
@@ -255,7 +260,7 @@ if ~state
 end
 drawnow
 disp('Preparing summary...');
-s = summaryTable( figuresDir, animalID, unitNo, handles );
+s = summaryTable( dataDir, animalID, unitNo, handles );
 s.showUnit();
 handles.s = s;
 guidata(hObject,handles);

@@ -74,14 +74,13 @@ for f = 1:size(Files,1)
 %         
         % Load experiment
         disp('Loading experiment files...');
-        [hasError, Electrodes, Params, StimTimes, LFP, AnalogIn] = ...
+        [Electrodes, Params, StimTimes, LFP, AnalogIn, hasError, errorMsg] = ...
             loadExperiment(dataDir, animalID, unit, fileName);
         
         if hasError
-            plotStimTimes(dataPath, figuresPath, fileName);
+            plotStimTimes(StimTimes, AnalogIn, figuresPath, fileName, errorMsg);
         end
-        
-        continue;
+
         
         if hasError > 1
             warning('Loading experiment failed. Skipping.');
@@ -105,7 +104,11 @@ for f = 1:size(Files,1)
                 plotTCs = 0;
                 plotBars = 1;
                 plotRasters = 1;
-                plotWFs = 1;
+                if strcmp(animalID, 'R1702')
+                    plotWFs = 0;
+                else
+                    plotWFs = 1;
+                end
                 plotISI = 1;
             case {'RFmap', 'CatRFdetailed', 'CatRFfast', 'CatRFfast10x10'}
                 plotMaps = 1;

@@ -1,15 +1,6 @@
-function Electrodes = loadRippleWaveforms(dataPath, fileName, Electrodes, ...
-    whichElectrodes)
+function Electrodes = loadRippleWaveforms(dataPath, fileName)
 
-narginchk(2,4);
-
-if nargin < 3 || isempty(Electrodes)
-    Electrodes = table(cell(0),cell(0),cell(0),[]);
-    Electrodes.Properties.VariableNames = {'spikes','waveforms','name','number'};
-end
-if nargin < 4
-    whichElectrodes = [];
-end
+narginchk(2,2);
 
 % Check that neuroshare exists
 assertNeuroshare();
@@ -63,18 +54,8 @@ for i = 1:length(SegmentEntityID)
 end
 
 % choose the correct electrodes
-if isempty(whichElectrodes)
-    whichElectrodes = logical(ones(length(SegmentEntityID),1));
-else
-    whichElectrodes = ismember(number, whichElectrodes);
-    number = number(whichElectrodes);
-end
-SegmentEntityID = SegmentEntityID(whichElectrodes);
-SegmentItemCounts = SegmentItemCounts(whichElectrodes);
-name = name(whichElectrodes);
 disp([num2str(length(SegmentEntityID)), ' electrodes with ', ...
     mat2str(SegmentItemCounts), ' events']);
-nElectrodes = length(number);
 
 % fill the spikes array
 spikesTmp = cell(length(number),1);
@@ -112,9 +93,8 @@ for i = 1:length(number)
 end
 
 % fill the Electrode table
-for i = 1:length(number)
-    Electrodes(number(i),:) = {spikesTmp(i), wavesTmp(i), name(i), number(i)};
-end
+Electrodes = table(spikesTmp, wavesTmp, name, number);
+Electrodes.Properties.VariableNames = {'spikes','waveforms','name','number'};
 
 % close the file handle
 ns_CloseFile(hFile);

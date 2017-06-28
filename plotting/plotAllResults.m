@@ -216,41 +216,35 @@ parfor i = 1:length(whichElectrodes)
         elseif plotRasters
             
             % Lump conditions together for stimuli with many conditions
-            rParams = tmpParams;
-            rSpikeData = SpikeDataUnit;
-            unpadded = rSpikeData.hist;
-            minSize = min(cellfun('length',unpadded));
-            hists = [];
-            for k = 1:size(unpadded,1)
-                hists{k,1} = unpadded{k}(1:minSize);
-            end
-            rSpikeData.hist = hists;
+           [hRaster] = plotRastersAll( SpikeDataUnit, tmpParams, ...
+                showFigures, elecNo, u );
+
             
-            rParams.Conditions = ...
-                tmpParams.Conditions(find(tmpParams.Conditions.numBins == minSize,1),:);
-            rParams.Conditions.condition = NaN;
-            rParams.Conditions.conditionNo = 1;
+%             rParams.Conditions = ...
+%                 tmpParams.Conditions(find(tmpParams.Conditions.numBins == minSize,1),:);
+%             rParams.Conditions.condition = NaN;
+%             rParams.Conditions.conditionNo = 1;
+%             
+%             rSpikeData.conditionNo = ones(size(rSpikeData,1),1);
+%             rSpikeData.trial = [1:size(rSpikeData,1)]';
+%             [~, ix] = sort(SpikeDataUnit.conditionNo); % sort by condition
+%             rSpikeData = rSpikeData(ix,:);
             
-            rSpikeData.c = ones(size(rSpikeData,1),1);
-            [~, ix] = sort(SpikeDataUnit.conditionNo); % sort by condition
-            rSpikeData.t = [1:size(rSpikeData,1)]';
-            rSpikeData = rSpikeData(ix,:);
-            
-            [hRaster, hPSTH] = plotRastergrams( rSpikeData, rParams, ...
-                cellColors(j,:), showFigures, elecNo, u );
+%             [hRaster, hPSTH] = plotRastergrams( rSpikeData, rParams, ...
+%                 cellColors(j,:), showFigures, elecNo, u );
             
             % draw lines between the condition boundaries
-            rcondNo = SpikeDataUnit(ix,:).conditionNo;
-            rTrialNo = rSpikeData.t;
-            minX = min(rParams.Conditions.centers{:});
-            maxX = max(rParams.Conditions.centers{:});
-            set(0,'CurrentFigure',hRaster);
-            hold on;
-            for k = 1:length(rcondNo)-1
-                if rcondNo(k) ~= rcondNo(k+1)
-                    plot([minX maxX],[rSpikeData.t(k) rSpikeData.t(k)],'k:');
-                end
-            end
+%             rcondNo = SpikeDataUnit(ix,:).conditionNo;
+%             rTrialNo = rSpikeData.trial;
+%             minX = min(rParams.Conditions.centers{:});
+%             maxX = max(rParams.Conditions.centers{:});
+%             set(0,'CurrentFigure',hRaster);
+%             hold on;
+%             for k = 1:length(rcondNo)-1
+%                 if rcondNo(k) ~= rcondNo(k+1)
+%                     plot([minX maxX],[rSpikeData.t(k) rSpikeData.t(k)],'k:');
+%                 end
+%             end
             
 %             export_fig(fullfile(ResultsPath,ElecDir,[FigBaseName,'_raster']),...
 %                 '-png', '-m3', '-p0.05', hRaster);
@@ -260,8 +254,8 @@ parfor i = 1:length(whichElectrodes)
             
 %             export_fig(fullfile(ResultsPath,ElecDir,[FigBaseName,'_PSTHs']), ...
 %                 '-png', '-m3', '-p0.05', hPSTH);
-            saveas(hPSTH,fullfile(figuresPath,elecDir,[figBaseName,'_PSTHs_all.png']));
-            close(hPSTH);
+%             saveas(hPSTH,fullfile(figuresPath,elecDir,[figBaseName,'_PSTHs_all.png']));
+%             close(hPSTH);
         end
         
         % Plot maps

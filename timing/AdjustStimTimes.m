@@ -1,5 +1,5 @@
 function [stimTimesCorrected, stimOffTimesCorrected, source, ...
-    latency, variation, hasError] = adjustStimTimes( Params, Events )
+    latency, variation, hasError, msg] = adjustStimTimes( Params, Events )
 %AdjustStimTimes Adjust stim times to pick the most accurate ones
 
 animalID = Params.animalID;
@@ -20,10 +20,10 @@ end
 stimTimesCorrected = [];
 stimOffTimesCorrected = [];
 source = '';
+msg = '';
 
 % Collect times from params structure
 stimTimesPTB = []; stimOffTimesPTB = []; 
-startTimeRipple = []; endTimeRipple = [];
 startTimePTB = []; endTimePTB = [];
 if ismember('stimTime', Params.Data.Properties.VariableNames)
     stimTimesPTB = Params.Data.stimTime;
@@ -108,26 +108,28 @@ if ~isempty(stimTimesParallel)
         stimOffTimesPTB = stimOffTimesPTB + correction;
 
     else
-        fprintf('Could not correct PTB stim times for timer drift\n');
+        msg = [msg, 'Could not correct PTB stim times for timer drift. '];
     end
     
     % Some sanity checks
     if length(stimTimes) ~= nStims || length(stimOffTimes) ~= nStims
-        fprintf(2, 'Parallel port caught %d out of %d StimTimes\n', ...
-            length(stimTimes) + length(stimOffTimes), nStims*2);
+        msg = [msg, sprintf('Parallel port caught %d out of %d StimTimes. ', ...
+            length(stimTimes) + length(stimOffTimes), nStims*2)];
         hasError = 1;
     elseif min(stimTimes) + 0.5 < min(stimTimesPTB) || ...
         (~isempty(stimTimesPhotodiode) && ...
         min(stimTimes) + 0.5 < min(stimTimesPhotodiode))
-        fprintf(2, 'StimTimesParallel are too small.\n');
+        msg = [msg, 'StimTimesParallel are too small. '];
         hasError = 1;
     elseif min(stimTimes) > 1000
-        fprintf(2, 'StimTimesParallel are too big.\n');
+        msg = [msg, 'StimTimesParallel are too big. '];
         hasError = 1;
     elseif sum([diff(stimTimes); NaN] + 0.1 < ...
+            Params.Data.stimDuration + Params.Data.stimInterval) && ...
+            sum([diff(stimTimes); NaN] + 0.1 < ...
             Params.Data.stimDuration + Params.Data.stimInterval) < ...
             length(stimTimes)/2
-        fprintf(2, 'At least one pair of StimTimesParallel are too close together.\n');
+        msg = [msg, 'At least one pair of StimTimesParallel are too close together. '];
         hasError = 1;
     elseif any(stimOffTimes - stimTimes + 0.1 < Params.Data.stimDuration)
         % on times ok, but off times are not
@@ -149,31 +151,33 @@ if ~isempty(stimTimesPhotodiode)
 
     % Some sanity checks
     if length(stimTimes) ~= nStims || length(stimOffTimes) ~= nStims
-        fprintf(2, 'Photodiode caught %d out of %d StimTimes\n', ...
-            length(stimTimes) + length(stimOffTimes), nStims*2);
+        msg = [msg, sprintf('Photodiode caught %d out of %d StimTimes. ', ...
+            length(stimTimes) + length(stimOffTimes), nStims*2)];
         hasError = 1;
     elseif min(stimTimes) + 0.5 < min(stimTimesPTB) || ...
         (~isempty(stimTimesParallel) && ...
         min(stimTimes) + 0.5 < min(stimTimesParallel))
-        fprintf(2, 'StimTimesPhotodiode are too small.\n');
+        msg = [msg, 'StimTimesPhotodiode are too small. '];
         hasError = 1;
     elseif min(stimTimes) > 1000
-        fprintf(2, 'StimTimesPhotodiode are too big.\n');
+        msg = [msg, 'StimTimesPhotodiode are too big. '];
         hasError = 1;
     elseif sum([diff(stimTimes); NaN] + 0.1 < ...
+            Params.Data.stimDuration + Params.Data.stimInterval) && ...
+            sum([diff(stimTimes); NaN] + 0.1 < ...
             Params.Data.stimDuration + Params.Data.stimInterval) < ...
             length(stimTimes)/2
         stimTimes = stimTimesLegacy;
-        fprintf(2, 'At least one pair of StimTimesPhotodiode are too close together.\n');
+        msg = [msg, 'At least one pair of StimTimesPhotodiode are too close together. '];
         hasError = 1;
     elseif any(stimOffTimes - stimTimes + 0.1 < Params.Data.stimDuration)
         % on times ok, but off times are not
-        fprintf('using photodiode stim times with stim duration for off times\n');
+        msg = [msg, 'using photodiode stim times with stim duration for off times. '];
         source = 'photodiode';
         stimTimesCorrected = stimTimes;
         stimOffTimesCorrected = stimTimes + Params.Data.stimDuration;
     else % everything ok
-        fprintf('Using photodiode timestamps\n');
+        msg = [msg, 'Using photodiode timestamps. '];
         source = 'photodiode';
         stimTimesCorrected = stimTimes;
         stimOffTimesCorrected = stimOffTimes;
@@ -186,11 +190,13 @@ if ~isempty(stimTimesPhotodiode)
         latency = mean(difference);
         variation = std(difference);
     elseif strcmp(animalID(1),'R')
-        fprintf('Could not correct timestamps with photodiode. Assuming 0.141 latency\n');
+        msg = [msg, 'Could not correct timestamps with photodiode. ', ...
+            'Assuming 0.141 latency. '];
         latency = 0.141;
         variation = NaN;
     else
-        fprintf('Could not correct timestamps with photodiode. Assuming 0 latency\n');
+        msg = [msg, 'Could not correct timestamps with photodiode. ', ...
+            'Assuming 0 latency. '];
         latency = 0;
         variation = NaN;
     end
@@ -199,20 +205,20 @@ if ~isempty(stimTimesPhotodiode)
     if isempty(stimTimesCorrected) && ~isempty(stimTimesParallelCorrected) ...
             && ~isempty(stimOffTimesParallelCorrected)
         % Use parallel port times
-        fprintf('Using parallel port timestamps (corrected with photodiode)\n');
+        msg = [msg, 'Using parallel port timestamps (corrected with photodiode). '];
         source = 'parallel';
         stimTimesCorrected = stimTimesParallelCorrected + latency;
         stimOffTimesCorrected = stimOffTimesParallelCorrected + latency;
     elseif isempty(stimTimesCorrected) && ~isempty(stimTimesParallelCorrected)
         % Use parallel on times, but PTB off times
-        fprintf(['Using parallel port timestamps (corrected with photodiode)\n' ...
-            '\tand parallel port + stim duration for off times\n']);
+        msg = [msg, 'Using parallel port timestamps (corrected with photodiode)', ...
+            ' and parallel port + stim duration for off times. '];
         source = 'parallel';
         stimTimesCorrected = stimTimesParallelCorrected + latency;
         stimOffTimesCorrected = stimTimesCorrected + Params.Data.stimDuration;
     elseif isempty(stimTimesCorrected)
         % Use PTB times
-        fprintf('Using matlab timestamps (corrected with photodiode)\n');
+        msg = [msg, 'Using matlab timestamps (corrected with photodiode). '];
         source = 'matlab';
         stimTimesCorrected = stimTimesPTB + latency;
         stimOffTimesCorrected = stimOffTimesPTB + latency;
@@ -221,13 +227,13 @@ else
 	% Older data, no photodiode. Use the parallel stim times if they are ok.
 	if ~isempty(stimTimesParallelCorrected) && ...
 		~isempty(stimOffTimesParallelCorrected)
-		fprintf('Using uncorrected parallel port timestamps\n');
+		msg = [msg, 'Using uncorrected parallel port timestamps. '];
 		source = 'parallel';
 		stimTimesCorrected = stimTimesParallelCorrected;
         stimOffTimesCorrected = stimOffTimesParallelCorrected;
 	elseif ~isempty(stimTimesParallelCorrected)
-		fprintf(['Using parallel port timestamps\n' ...
-            '\tand parallel port + stim duration for off times\n']);
+		msg = [msg, 'Using parallel port timestamps', ...
+            ' and parallel port + stim duration for off times. '];
 		source = 'parallel';
 		stimTimesCorrected = stimTimesParallelCorrected;
         stimOffTimesCorrected = stimTimesParallelCorrected + Params.Data.stimDuration;
@@ -236,7 +242,7 @@ end
 
 % Finally, check if there is a corrected stim time available
 if isempty(stimTimesCorrected) && ~isempty(stimTimesLegacy)
-    fprintf('Using matlab timestamps (corrected with 0.141)\n');
+    msg = [msg, 'Using matlab timestamps (corrected with 0.141). '];
     source = 'matlab';
     stimTimesCorrected = stimTimesLegacy;
     stimOffTimesCorrected = stimOffTimesLegacy;
@@ -249,13 +255,19 @@ outsideRange = stimTimesCorrected(1) < startTimeRipple || ...
         stimTimesCorrected(end) > endTimeRipple || ...
         min(stimTimesCorrected) > 1000;
 if outsideRange
-    fprintf(2, 'StimTimes fall outside of the possible range. Aborting\n');
+    msg = [msg, 'StimTimes fall outside of the possible range. Aborting. '];
     hasError = 2;
 elseif nOverlappingPairs && nOverlappingPairs < length(stimTimesCorrected)/2
     % Probably ok if ALL of the stim times are too small -- stim duration
     % might be wrong...
-    fprintf(2, 'At least one pair of triggers are too close together.\n');
+    msg = [msg, 'At least one pair of triggers are too close together. '];
     hasError = 2;
+end
+
+if hasError
+    fprintf(2, [msg, '\n']);
+else
+    disp(msg);
 end
 
 end
