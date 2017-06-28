@@ -273,7 +273,7 @@ end % Electrodes loop
 if ~exist(dataPath,'dir')
     mkdir(dataPath);
 end
-save(fullfile(dataPath,[fileName,'-export.mat']),...
+save(fullfile(dataPath,[fileName,'.mat']),...
         'Params','Results', '-append');
 
 end

@@ -165,8 +165,6 @@ for f = 1:size(Files,1)
 %         disp(['This file didnt work ',fileName])
 %         warning(getReport(e,'extended','hyperlinks','off'),'Error');
 %     end
-%     
-    close all;
     
     % Update duration log
     fileDuration = toc;

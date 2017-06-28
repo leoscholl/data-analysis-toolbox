@@ -1,8 +1,8 @@
 function [Electrodes, Params, StimTimes, LFP, AnalogIn, hasError, errorMsg] ...
-    = loadExperiment(dataDir, animalID, unit, fileName, fileType)
+    = loadExperiment(dataDir, animalID, unit, fileName, sourceFormat)
 
-if nargin < 5 || isempty(fileType)
-    fileType = 'unsorted';
+if nargin < 5 || isempty(sourceFormat)
+    sourceFormat = {'Plexon', 'Ripple'};
 end
 
 [~, fileName, ~] = fileparts(fileName);
@@ -27,84 +27,73 @@ if ~exist(filePath)
 end
 load(filePath);
 
-% Check data
-switch fileType
-    case 'unsorted'
-        % Check Ripple spikes
-        if ~exist('dataset','var')
-            warning(['No data for ', fileName]);
-            hasError = 2;
-            return;
-        end
-        if ~isfield(dataset,'spike')
-            warning(['No spikes for ', fileName]);
-            hasError = 2;
-            return;
-        end
-        
-        
-        
-        % Check params
-        if ~isfield(dataset,'Params')  || ~isfield(Params,'Data')
-            warning(['Missing Params for ', fileName]);
-            hasError = 2;
-            return;
-        end
-        
-        % Check LFP
-        if ~isfield(dataset,'lfp')
-            % Attempt to convert from ripple
-            warning(['No LFP for ', fileName]);
-            hasError = 2;
-            return;
-        end
-        
-        % Check Analog
-        if ~isfield(dataset,'analog1k')
-            % Attempt to convert from ripple
-            warning(['No analog data for ', fileName]);
-            hasError = 2;
-            return;
-        end
-       
-        
-        % Check Events
-        if ~isfield(dataset,'digital')
-            warning(['No digital events for ', fileName]);
-            hasError = 2;
-            return;
-        end
-        
-        % Convert everything into a nice format
-        spikes = [dataset.spike.time', dataset.spike.unitid'];
-        waveforms = [dataset.spike.time', dataset.spike.unitid' dataset.spike.data'];
-        name = sprintf('elec %d', dataset.spike.electrodeid);
-        number = dataset.spike.electrodeid;
-        Electrodes = table(spikes, waveforms, name, number);
-        LFP.endTime = dataset.lfp.time(2);
-        LFP.samplerate = dataset.lfp.fs;
-        name = sprintf('lfp %d', dataset.lfp.electrodeid);
-        number = dataset.lfp.electrodeid;
-        data = mat2cell(dataset.lfp.data, size(dataset.lfp.data,1), repmat(1, 1, size(dataset.lfp.data,2)))';
-        LFP.Channels = table(data, name, number);
-        AnalogIn.endTime = dataset.analog1k.time(2);
-        AnalogIn.samplerate = dataset.analog1k.fs;
-        name = sprintf('analog %d', dataset.analog1k.electrodeid);
-        number = dataset.analog1k.electrodeid;
-        data = mat2cell(dataset.analog1k.data, size(dataset.analog1k.data,1), repmat(1, 1, size(dataset.analog1k.data,2)))';
-        AnalogIn.Channels = table(data, name, number);
-        
-        Events.startTime = dataset.digital.data(dataset.digital.channel == 'SMA 4');
-        Events.endTime = dataset.digital.data(dataset.digital.channel == 'SMA 3');
-        Events.parallelInput = [ddataset.digital.data(dataset.digital.channel == 'SMA 3');
-     
-    otherwise
+% Pick which data to load
+whichData = [];
+i = 1;
+while isempty(whichData)
+    if strcmp({dataset.sourceformat}, sourceFormat{i})
+        whichData = i;
+    end
+    i = i + 1;
+    if i > length(sourceFormat)
         warning('Unsupported filetype');
         hasError = 2;
         return;
+    end
+end
+dataset = dataset(:,whichData);
+
+% Check data
+if ~exist('dataset','var')
+    warning(['No data for ', fileName]);
+    hasError = 2;
+    return;
+end
+if ~isfield(dataset,'spike')
+    warning(['No spikes for ', fileName]);
+    hasError = 2;
+    return;
 end
 
 
+
+% Check params
+if ~isfield(dataset,'ex') || ~isfield(dataset.ex, 'Params') ...
+        || ~isfield(dataset.ex.Params,'Data')
+    warning(['Missing Params for ', fileName]);
+    hasError = 2;
+    return;
+end
+
+% Check LFP
+if ~isfield(dataset,'lfp')
+    % Attempt to convert from ripple
+    warning(['No LFP for ', fileName]);
+    hasError = 2;
+    return;
+end
+
+% Check Analog
+if ~isfield(dataset,'analog1k')
+    % Attempt to convert from ripple
+    warning(['No analog data for ', fileName]);
+    hasError = 2;
+    return;
+end
+
+
+% Check Events
+if ~isfield(dataset,'digital')
+    warning(['No digital events for ', fileName]);
+    hasError = 2;
+    return;
+end
+
+
+
+% Convert everything into a nice format
+[ Electrodes, LFP, AnalogIn, Events ] = convertDataset( dataset );
+Params = dataset.ex.Params;
 
 % Adjust StimTimes
 StimTimes = Events.StimTimes;

@@ -1,51 +1,42 @@
-function plotStimTimes( dataPath, resultsPath, fileName )
+function plotStimTimes( StimTimes, AnalogIn, figuresPath, fileName, errorMsg )
 %plotStimTimes Visualize stim times
 
-filePath = fullfile(dataPath, [fileName, '-export.mat']);
-if exist(filePath, 'file')
-    load(filePath);
-else
-    return;
-end
-
 % Collect all stim times
-if exist('Ripple', 'var') && isfield(Ripple, 'Events')
-    StimTimes = Ripple.Events.StimTimes;
+rawPhotodiode = [];
+photodiode = [];
+parallel = [];
+matlab = [];
+meanSignal = 0;
+maxSignal = 1;
+minSignal = -1;
+
+if isfield(StimTimes, 'photodiode') && ~isempty(StimTimes.photodiode)
     photodiode = StimTimes.photodiode;
     if ~isempty(photodiode)
-        Analog = Ripple.AnalogIn.Channels(strcmp(Ripple.AnalogIn.Channels.name, ...
+        Analog = AnalogIn.Channels(strcmp(AnalogIn.Channels.name, ...
             'analog 1'),:);
         rawPhotodiode = Analog.data{1};
+        fs = AnalogIn.sampleRate;
         meanSignal = mean(rawPhotodiode);
         maxSignal = meanSignal+3*std(rawPhotodiode);
         minSignal = meanSignal-1*std(rawPhotodiode);
-    else
-        rawPhotodiode = [];
-        meanSignal = 0;
-        maxSignal = 1;
-        minSignal = -1;
     end
-    parallel = StimTimes.parallel;
-else
-    photodiode = [];
-    parallel = [];
 end
-if exist('Params', 'var') && isfield(Params, 'Data')
-    matlab = Params.Data.stimTime;
-else
-    matlab = [];
+if isfield(StimTimes, 'parallel') && ~isempty(StimTimes.parallel)
+    parallel = StimTimes.parallel;
+end
+if isfield(StimTimes, 'matlab')
+    matlab = StimTimes.matlab;
 end
 
 figure('Visible', 'off')
 suptitle(fileName);
 
 % Raw photodiode plot
-legenditems = {};
-subplot(10,1,[1:7]);
+subplot(10,1,[1:6]);
 hold on;
-if ~isempty(rawPhotodiode) 
+if ~isempty(rawPhotodiode)
     % Determine sample rate, tstart, and tend
-    fs = Ripple.AnalogIn.sampleRate;
     if photodiode(1) > 0
         tStart = ceil(photodiode(1)*fs);
     else
@@ -119,17 +110,19 @@ ylabel('matlab')
 set(gca, 'FontSize', 6);
 
 
-% Legend depends on what is present
+% Text box with error message
+dim = [0.125 0.33 0.75 0.1];
+annotation('textbox',dim,'String',errorMsg,'FitBoxToText','off', ...
+    'FontSize', 6, 'Color', 'r', 'LineStyle', 'none');
 
 
-
-resultsDir = fullfile(resultsPath, 'StimTimes');
-if ~exist(resultsDir, 'dir')
-    mkdir(resultsDir);
+figureDir = fullfile(figuresPath, 'StimTimes');
+if ~exist(figureDir, 'dir')
+    mkdir(figureDir);
 end
 
-saveas(gcf, fullfile(resultsDir, [fileName, '_stimtimes.png']));
-saveas(gcf, fullfile(resultsDir, [fileName, '_stimtimes']), 'fig');
+saveas(gcf, fullfile(figureDir, [fileName, '_stimtimes.png']));
+saveas(gcf, fullfile(figureDir, [fileName, '_stimtimes']), 'fig');
 
 close(gcf)
 

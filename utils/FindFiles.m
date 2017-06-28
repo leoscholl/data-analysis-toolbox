@@ -48,6 +48,9 @@ if ~isempty(fileNames) && ~isempty(whichFiles)
     
     % Remove files that aren't in WhichFiles
     fileNames = fileNames(ismember(vertcat(fileNames{:,2}), whichFiles),:);
+elseif isempty(fileNames)
+    warning('No files found'); 
+    return;
 end
 
 % Sort files
