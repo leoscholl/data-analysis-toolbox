@@ -4,7 +4,7 @@ function plotIndividual(dataDir, figuresDir, animalID, whichUnits, whichFiles, .
 
 % Figure out which files need to be recalculated
 [~, ~, Files] = ...
-    findFiles(dataDir, animalID, whichUnits, '*-export.mat', whichFiles);
+    findFiles(dataDir, animalID, whichUnits, '*.mat', whichFiles);
 
 % Display some info about duration
 nFiles = size(Files,1);
@@ -31,15 +31,9 @@ for f = 1:size(Files,1)
     
     switch figureType
         case 'waveforms'
-            if sum(~cellfun(@isempty, Results.Electrodes.waveforms)) == 0
-                dataPath = fullfile(dataDir, animalID, unit);
-                Results.Electrodes = loadRippleWaveforms(dataPath, fileName, [], ...
-                    whichElectrodes);
-                % save the new Electrodes structure
-                filePath = fullfile(figuresDir, animalID, unit, [fileName, '-results.mat']);
-                save(filePath, 'Results', '-append');
-            end
-            plotWaveforms([], figuresPath, fileName, Results.Electrodes);
+            Electrodes = loadExperiment(dataDir, animalID, unit, ...
+                fileName);
+            plotWaveforms(figuresPath, fileName, Electrodes);
         case 'isi'
             plotISIs(figuresPath, fileName, Results);
         case 'rasters'
@@ -48,7 +42,7 @@ for f = 1:size(Files,1)
         case 'lfp'
             plotAllResults(figuresPath, fileName, Params, Results,...
                             whichElectrodes, 0, 0, 0, 0, 0, 1, 0);
-        case 'extras'
+        case 'one raster'
             % clump rasters
              plotAllResults(figuresPath, fileName, Params, Results,...
                             whichElectrodes, 0, 0, 1, 0, 0, 0, 0, 1);

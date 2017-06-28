@@ -151,7 +151,7 @@ for f = 1:size(Files,1)
                 % Plot waveforms?
                 if plotWFs
                     disp('Plotting waveforms...');
-                    plotWaveforms(dataPath, figuresPath, fileName, Electrodes);
+                    plotWaveforms(figuresPath, fileName, Electrodes);
                 end
                 
                 % Plot ISIs?

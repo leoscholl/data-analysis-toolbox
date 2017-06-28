@@ -222,7 +222,7 @@ function PlotExtras_Callback(hObject, eventdata, handles)
 % hObject    handle to PlotExtras (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-plotHelper(handles, 'extras');
+plotHelper(handles, 'one raster');
 
 
 % --- Executes on button press in SummaryPrev.

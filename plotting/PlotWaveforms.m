@@ -1,11 +1,5 @@
-function plotWaveforms(dataPath, figuresPath, fileName, Electrodes)
+function plotWaveforms(figuresPath, fileName, Electrodes)
 %PlotWaveforms plots mean waveform for each unit
-
-if nargin < 4 || isempty(Electrodes) || ...
-        ~sum(cellfun(@length, Electrodes.waveforms))
-    disp('Loading waveforms...');
-    Electrodes = loadRippleWaveforms(dataPath, fileName);
-end
 
 % helper function to fill std error
 fill_between_lines = @(X,Y1,Y2,C) patch( [X fliplr(X)],  [Y1 fliplr(Y2)], ...

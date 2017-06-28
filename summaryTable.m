@@ -248,15 +248,15 @@ classdef summaryTable < handle
             
             % Generate from files if it doesn't already exist
             [~, ~, Files] = findFiles(dataDir, animalID, ...
-                unitNo, '*-export.mat');
+                unitNo, '*.mat');
             
             for f=1:size(Files,1)
                 
                 fileName = Files.fileName{f};
                 filePath = fullfile(dataDir, animalID, ...
-                    Files.unit{f}, [fileName, '-export.mat']);
+                    Files.unit{f}, [fileName, '.mat']);
                 if exist(filePath,'file')
-                    load(filePath);
+                    load(filePath, 'Params', 'Results');
                 end
                 
                 if ~isfield(Params, 'nElectrodes')
