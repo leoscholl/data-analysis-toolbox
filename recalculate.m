@@ -1,5 +1,5 @@
 function recalculate(dataDir, figuresDir, animalID, whichUnits, whichFiles, ...
-    whichElectrodes, showFigures, plotLFP, summaryFig)
+    whichElectrodes, plotFigures, plotLFP, summaryFig)
 %recalculate and replot all data
 % whichUnits is an array of unit numbers to calculate
 % whichFiles is an array of file numbers to calculate
@@ -17,8 +17,8 @@ end
 if nargin < 6
     whichElectrodes = [];
 end
-if nargin < 7 || isempty(showFigures)
-    showFigures = 0;
+if nargin < 7 || isempty(plotFigures)
+    plotFigures = 1;
 end
 if nargin < 8 || isempty(plotLFP)
     plotLFP = 0;
@@ -143,21 +143,25 @@ for f = 1:size(Files,1)
                     Params, StimTimes, Electrodes, whichElectrodes);
                 
                 % Plotting tuning curves and maps
-                disp('plotting...');
-                plotAllResults(figuresPath, fileName, Params, Results, ...
-                    whichElectrodes, plotTCs, plotBars, plotRasters, ...
-                    plotMaps, summaryFig, plotLFP, showFigures);
+                if plotFigures
+                    disp('plotting...');
+                    showFigures = 0;
+                    plotAllResults(figuresPath, fileName, Params, Results, ...
+                        whichElectrodes, plotTCs, plotBars, plotRasters, ...
+                        plotMaps, summaryFig, plotLFP, showFigures);
                 
-                % Plot waveforms?
-                if plotWFs
-                    disp('Plotting waveforms...');
-                    plotWaveforms(figuresPath, fileName, Electrodes);
-                end
                 
-                % Plot ISIs?
-                if plotISI && ~isempty(Results)
-                    disp('Plotting ISIs...');
-                    plotISIs(figuresPath, fileName, Results);
+                    % Plot waveforms?
+                    if plotWFs
+                        disp('Plotting waveforms...');
+                        plotWaveforms(figuresPath, fileName, Electrodes);
+                    end
+
+                    % Plot ISIs?
+                    if plotISI && ~isempty(Results)
+                        disp('Plotting ISIs...');
+                        plotISIs(figuresPath, fileName, Results);
+                    end
                 end
         end
         

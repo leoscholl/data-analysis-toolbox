@@ -45,7 +45,7 @@ SpikeDataAll = Results.SpikeDataAll;
 StatisticsAll = Results.StatisticsAll;
 
 % Set up colors
-nCells = cellfun(@(x) length(unique(x.cell)), SpikeDataAll);
+nCells = cellfun(@cellCount, SpikeDataAll);
 cellColors = makeDefaultColors(nCells);
 
 % If summary figures are requested, then cannot run in parallel
@@ -337,4 +337,12 @@ end
 
 disp('...done');
 
+end
+
+function count = cellCount(x)
+if isempty(x)
+    count = 0;
+else
+    count = length(unique(x.cell));
+end
 end

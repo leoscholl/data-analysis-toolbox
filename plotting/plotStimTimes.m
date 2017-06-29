@@ -1,7 +1,7 @@
 function plotStimTimes( StimTimes, AnalogIn, figuresPath, fileName, errorMsg )
 %plotStimTimes Visualize stim times
 
-% Collect all stim times
+%% Collect all stim times
 rawPhotodiode = [];
 photodiode = [];
 parallel = [];
@@ -10,6 +10,7 @@ meanSignal = 0;
 maxSignal = 1;
 minSignal = -1;
 
+% Photodiode
 if isfield(StimTimes, 'photodiode') && ~isempty(StimTimes.photodiode)
     photodiode = StimTimes.photodiode;
     if ~isempty(photodiode)
@@ -22,14 +23,19 @@ if isfield(StimTimes, 'photodiode') && ~isempty(StimTimes.photodiode)
         minSignal = meanSignal-1*std(rawPhotodiode);
     end
 end
+
+% Parallel
 if isfield(StimTimes, 'parallel') && ~isempty(StimTimes.parallel)
     parallel = StimTimes.parallel;
 end
+
+% PTB
 if isfield(StimTimes, 'matlab')
     matlab = StimTimes.matlab;
 end
 
-figure('Visible', 'off')
+%% Plotting
+fig = figure('Visible', 'off');
 suptitle(fileName);
 
 % Raw photodiode plot
@@ -121,10 +127,10 @@ if ~exist(figureDir, 'dir')
     mkdir(figureDir);
 end
 
-saveas(gcf, fullfile(figureDir, [fileName, '_stimtimes.png']));
-saveas(gcf, fullfile(figureDir, [fileName, '_stimtimes']), 'fig');
+saveas(fig, fullfile(figureDir, [fileName, '_stimtimes.png']));
+saveas(fig, fullfile(figureDir, [fileName, '_stimtimes']), 'fig');
 
-close(gcf)
+close(fig)
 
 end
 

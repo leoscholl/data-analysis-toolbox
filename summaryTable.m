@@ -53,7 +53,7 @@ classdef summaryTable < handle
             if size(obj.Units,1) >= i + 1
                 obj.unitNo = obj.Units.number(i+1);
             else
-                fprintf(2, 'No more units');
+                fprintf(2, 'No more units\n');
             end
         end
         
@@ -67,7 +67,7 @@ classdef summaryTable < handle
             if i > 1
                 obj.unitNo = obj.Units.number(i-1);
             else
-                fprintf(2, 'No previous units');
+                fprintf(2, 'No previous units\n');
             end
         end
         

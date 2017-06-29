@@ -79,11 +79,13 @@ if strcmp(animalID(1),'R')
         stimTimesLegacy = stimTimesPTB+0.141;
         stimOffTimesLegacy = stimOffTimesPTB+0.141;
     end
+    legacyLatency = 0.141;
 else
     % For old cat experiments, assume the CRT was fast enough that the
     % recorded stim times are accurate
     stimTimesLegacy = stimTimesPTB;
     stimOffTimesLegacy = stimOffTimesPTB;
+    legacyLatency = 0;
 end
 
 % Make sure Parallel Stim times are ok
@@ -242,7 +244,8 @@ end
 
 % Finally, check if there is a corrected stim time available
 if isempty(stimTimesCorrected) && ~isempty(stimTimesLegacy)
-    msg = [msg, 'Using matlab timestamps (corrected with 0.141). '];
+    msg = [msg, sprintf('Using matlab timestamps (corrected with %f). ', ...
+        legacyLatency)];
     source = 'matlab';
     stimTimesCorrected = stimTimesLegacy;
     stimOffTimesCorrected = stimOffTimesLegacy;

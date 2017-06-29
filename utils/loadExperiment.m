@@ -18,6 +18,7 @@ Params = [];
 StimTimes = [];
 LFP = [];
 AnalogIn = [];
+errorMsg = '';
 
 % Load the file
 if ~exist(filePath)
@@ -65,26 +66,18 @@ end
 
 % Check LFP
 if ~isfield(dataset,'lfp')
-    % Attempt to convert from ripple
     warning(['No LFP for ', fileName]);
-    hasError = 2;
-    return;
 end
 
 % Check Analog
 if ~isfield(dataset,'analog1k')
-    % Attempt to convert from ripple
     warning(['No analog data for ', fileName]);
-    hasError = 2;
-    return;
 end
 
 
 % Check Events
 if ~isfield(dataset,'digital')
     warning(['No digital events for ', fileName]);
-    hasError = 2;
-    return;
 end
 
 
@@ -94,7 +87,9 @@ end
 Params = dataset.ex.Params;
 
 % Adjust StimTimes
-StimTimes = Events.StimTimes;
+if ~isempty(Events)
+    StimTimes = Events.StimTimes;
+end
 StimTimes.matlab = Params.Data.stimTime;
 
 Params.unitNo = unitNo;

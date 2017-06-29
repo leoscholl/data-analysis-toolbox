@@ -102,7 +102,7 @@ gaussFilter = gaussFilter / sum (gaussFilter); % normalize
 % All electrodes
 nUnits = cellfun(@countUnits, Electrodes.spikes)';
 fprintf('%d electrodes (out of %d) with %s units\n', Params.nElectrodes, ...
-    size(Electrodes, 1), mat2str(nUnits));
+    max(Electrodes.number), mat2str(nUnits));
 for i = 1:length(whichElectrodes)
     elecNo = whichElectrodes(i);
     if elecNo == 0
@@ -110,9 +110,9 @@ for i = 1:length(whichElectrodes)
     end
     
     % Collect spike times for this electrode
-    spikeTimes = Electrodes.spikes{elecNo};
+    spikeTimes = Electrodes.spikes{Electrodes.number == elecNo};
     
-    electrodeName = Electrodes.name{elecNo};
+    electrodeName = Electrodes.name{Electrodes.number == elecNo};
     
     if isempty(spikeTimes)
         fprintf(2, 'No spikes for %s...', electrodeName);

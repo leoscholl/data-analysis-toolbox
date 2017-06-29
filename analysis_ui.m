@@ -22,7 +22,7 @@ function varargout = analysis_ui(varargin)
 
 % Edit the above text to modify the response to help analysis_ui
 
-% Last Modified by GUIDE v2.5 28-Jun-2017 12:03:50
+% Last Modified by GUIDE v2.5 28-Jun-2017 17:54:30
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -65,7 +65,7 @@ guidata(hObject, handles);
 
 % Load preferences
 global uiPrefsList
-uiPrefsList = {'PlotLFPCheck', 'ShowFiguresCheck', ...
+uiPrefsList = {'PlotLFPCheck', 'PlotFiguresCheck', ...
     'SummaryFigsCheck', 'DataDirBox', 'FiguresDirBox', ...
     'AnimalIDBox', 'UnitNoBox', 'FileNoBox', 'SortingDirBox', ...
     'SuffixBox'};
@@ -102,14 +102,16 @@ function figure1_CloseRequestFcn(hObject, eventdata, handles)
 
 % Make sure any summary data is exported
 if isfield(handles, 's') && isa(handles.s, 'summaryTable')
-    disp(['Exporting summary to ', fileName]);
+    fprintf('Exporting summary...');
     fileName = handles.s.export();
+    fprintf(' done.\n');
 end
 
 % Save Preferences
 global uiPrefsList
-disp('Saving preferences...');
+fprintf('Saving preferences...');
 savePrefs(handles);
+fprintf(' done.\n');
 
 % Close the figure
 delete(hObject);
@@ -129,7 +131,7 @@ expTypeMenu = cellstr(get(handles.ExpTypeMenu, 'String'));
 expType = expTypeMenu{get(handles.ExpTypeMenu, 'Value')};
 
 plotLFP = get(handles.PlotLFPCheck, 'Value');
-showFigures = get(handles.ShowFiguresCheck, 'Value');
+plotFigures = get(handles.PlotFiguresCheck, 'Value');
 summaryFigs = get(handles.SummaryFigsCheck, 'Value');
 dataDir = get(handles.DataDirBox, 'String');
 figuresDir = get(handles.FiguresDirBox, 'String');
@@ -137,7 +139,7 @@ figuresDir = get(handles.FiguresDirBox, 'String');
 switch expType
     case 'Spikes'
         recalculate(dataDir, figuresDir, animalID, unitNo, fileNo, whichElectrodes, ...
-            showFigures, plotLFP, summaryFigs);
+            plotFigures, plotLFP, summaryFigs);
     case 'ECoG'
         
 end
@@ -415,13 +417,13 @@ function PlotWaveformsCheck_Callback(hObject, eventdata, handles)
 % Hint: get(hObject,'Value') returns toggle state of PlotWaveformsCheck
 
 
-% --- Executes on button press in ShowFiguresCheck.
-function ShowFiguresCheck_Callback(hObject, eventdata, handles)
-% hObject    handle to ShowFiguresCheck (see GCBO)
+% --- Executes on button press in PlotFiguresCheck.
+function PlotFiguresCheck_Callback(hObject, eventdata, handles)
+% hObject    handle to PlotFiguresCheck (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hint: get(hObject,'Value') returns toggle state of ShowFiguresCheck
+% Hint: get(hObject,'Value') returns toggle state of PlotFiguresCheck
 
 
 % --- Executes on selection change in ExpTypeMenu.
