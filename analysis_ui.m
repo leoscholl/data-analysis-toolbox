@@ -22,7 +22,7 @@ function varargout = analysis_ui(varargin)
 
 % Edit the above text to modify the response to help analysis_ui
 
-% Last Modified by GUIDE v2.5 28-Jun-2017 17:54:30
+% Last Modified by GUIDE v2.5 29-Jun-2017 13:04:37
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -152,7 +152,7 @@ function MakeBinFile_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 animalID = get(handles.AnimalIDBox, 'String');
 unitNo = eval(get(handles.UnitNoBox, 'String'));
-dataDir = get(handles.DataDirBox, 'String');
+dataDir = get(handles.RawDataBox, 'String');
 sortingDir = get(handles.SortingDirBox, 'String');
 
 makeFilesForSorting(dataDir, sortingDir, animalID, unitNo, 'bin');
@@ -654,6 +654,29 @@ function SuffixBox_Callback(hObject, eventdata, handles)
 % --- Executes during object creation, after setting all properties.
 function SuffixBox_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to SuffixBox (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function RawDataBox_Callback(hObject, eventdata, handles)
+% hObject    handle to RawDataBox (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of RawDataBox as text
+%        str2double(get(hObject,'String')) returns contents of RawDataBox as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function RawDataBox_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to RawDataBox (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
