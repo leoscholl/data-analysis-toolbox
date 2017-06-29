@@ -10,6 +10,7 @@ else
 end
 seqDir = fullfile(home,'Dropbox','TunningCurvePlugin');
 altSeqDir = fullfile(home,'Dropbox','TunningCurvePlugin','NewSeq');
+addpath(seqDir);
 
 Params = [];
 
@@ -195,6 +196,8 @@ switch stimType
         Data.xPosition = data(:,3);
         Data.yPosition = data(:,4);
         Data.aperture = data(:,5);
+        Data.condition = data(:,3:4);
+        stimSequence = [];
     case 'CatRFdetailed'
         Data.stimNo = (1:size(data,1))';
         Data.stimTime = data(:,1);
@@ -295,4 +298,6 @@ end
 
 % Data goes into params, too
 Params.Data = Data;
+
+rmpath(seqDir);
 end
