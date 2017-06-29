@@ -21,7 +21,7 @@ if isempty(units)
     return;
 end
 
-if isempty(gcp('nocreate'))
+if length(units) > 1 && isempty(gcp('nocreate'))
     parpool; % open a new parallel pool
 end
 
@@ -70,6 +70,7 @@ parfor un = 1:length(units)
     
     nextEnd = 0;
     endTimes = [];
+    sampleRate = 30000; % just in case
     
     for fi = 1:size(Files,1)
         
@@ -167,7 +168,7 @@ parfor un = 1:length(units)
         end
         ns_CloseFile(hFile);
         
-        endTime = max(RawItemCounts)/sampleRate;        
+        endTime = rawItemCounts(1)/sampleRate;        
         nextEnd = nextEnd + endTime;
         endTimes(fi,:) = [endTime(1),rawItemCounts(1),nextEnd];
         
