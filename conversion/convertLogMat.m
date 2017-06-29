@@ -102,7 +102,9 @@ end
 % Fix new sequences
 sf = unique(data(:,3));
 tf = unique(data(:,4));
-apt = unique(data(:,5));
+if size(data,2) >= 5
+    apt = unique(data(:,5));
+end
 if size(data,2) >= 7
     con = unique(data(:,7));
 end
