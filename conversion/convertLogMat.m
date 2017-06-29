@@ -8,6 +8,9 @@ if ispc
 else
     home = getenv('HOME');
 end
+if strcmp(getenv('COMPUTERNAME'), 'STUDENTLYONLAB')
+    home = '\\STUDENTLYONLAB\Users\Andrzej\';
+end
 seqDir = fullfile(home,'Dropbox','TunningCurvePlugin');
 altSeqDir = fullfile(home,'Dropbox','TunningCurvePlugin','NewSeq');
 addpath(seqDir);

@@ -37,7 +37,8 @@ while isempty(whichData)
         hasError = 2;
         return;
     end
-    whichData = find(strcmp({file.dataset.sourceformat}, sourceFormat{i}));
+    whichData = find(strcmp({file.dataset.sourceformat}, sourceFormat{i}), ...
+        1, 'last');
     i = i + 1;
 end
 dataset = file.dataset(:,whichData);

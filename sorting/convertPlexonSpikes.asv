@@ -53,6 +53,14 @@ for UnitNo = whichUnits
             spike = struct;
             for n = 1:size(spikes,1) % for each channel
                 
+                if int8(spikes{n}(:,2)) == spikes{n}(:,2)
+                    unitCol = 2;
+                    timeCol = 3;
+                else
+                    unitCol = 3;
+                    timeCol = 2;
+                end
+                
                 whichSpikes = spikes{n}(:,2) > startTime & spikes{n}(:,2) <= endTime;
                 
                 spike(n).time = spikes{n}(whichSpikes, 2)'-startTime;

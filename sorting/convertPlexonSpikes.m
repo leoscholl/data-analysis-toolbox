@@ -53,11 +53,26 @@ for UnitNo = whichUnits
             spike = struct;
             for n = 1:size(spikes,1) % for each channel
                 
-                whichSpikes = spikes{n}(:,2) > startTime & spikes{n}(:,2) <= endTime;
+                if int8(spikes{n}(:,2)) == spikes{n}(:,2)
+                    unitCol = 2;
+                    timeCol = 3;
+                else
+                    unitCol = 3;
+                    timeCol = 2;
+                end
                 
-                spike(n).time = spikes{n}(whichSpikes, 2)'-startTime;
-                spike(n).unitid = spikes{n}(whichSpikes, 3)';
-                spike(n).data = spikes{n}(whichSpikes, 5:end)';
+                if int8(spikes{n}(:,4)) == spikes{n}(:,4)
+                    waveCol = 5;
+                else
+                    waveCol = 4;
+                end
+                
+                whichSpikes = spikes{n}(:,timeCol) > startTime & ...
+                    spikes{n}(:,timeCol) <= endTime;
+                
+                spike(n).time = spikes{n}(whichSpikes, timeCol)'-startTime;
+                spike(n).unitid = spikes{n}(whichSpikes, unitCol)';
+                spike(n).data = spikes{n}(whichSpikes, waveCol:end)';
                 spike(n).electrodeid = electrodeid{n};
                 
             end
