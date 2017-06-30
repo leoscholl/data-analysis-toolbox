@@ -1,0 +1,34 @@
+function deleteFitFiles(dir, animalID, whichUnits, whichFiles)
+
+Files = findFiles(dir, animalID, whichUnits, '*', whichFiles);
+for f = 1:size(Files,1)
+    
+    fileName = Files.fileName{f};
+    unit = Files.unit{f};
+    
+    % delete for the unit
+    dataPath = fullfile(dir, animalID, unit);
+    delete(fullfile(dataPath, [fileName, '*.png']), ...
+        fullfile(dataPath, [fileName, '*.fig']));
+end
+
+% delete for all channels
+units = findUnits(dir, animalID, whichUnits);
+for u = 1:length(units)
+    
+channels = dir(fullfile(dataPath,'Ch*'));
+if isempty(channels)
+    continue;
+end
+channels = vertcat(channels(vertcat(channels.isdir)).name);
+for ch = 1:length(channels(:,1))
+    channelName = deblank(channels(ch,:));
+    Files = findFiles(dir, animalID, whichUnits, fullfile(channelName, '*'));
+    for f = 1:size(Files,1)
+        fileName = Files.fileName{f}
+    dataPath = fullfile(dir, animalID, unit,);
+    delete(fullfile(dataPath, [fileName, '*.png']), ...
+        fullfile(dataPath, [fileName, '*.fig']));
+end
+
+disp(['...done deleting for ', animalID]);

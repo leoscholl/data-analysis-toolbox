@@ -39,6 +39,12 @@ else
 end
 smoothing = 0.2;
 
+if plotFigures
+    % delete any old figures
+    disp('deleting old fit files...');
+    deleteFitFiles(figuresDir, animalID, whichUnits, whichFiles)
+end
+
 % Figure out which files need to be recalculated
 [~, ~, Files] = ...
     findFiles(dataDir, animalID, whichUnits, '*', whichFiles);

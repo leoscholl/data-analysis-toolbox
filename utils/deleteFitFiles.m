@@ -1,29 +1,39 @@
-function deleteFitFiles(dir, animalID, whichUnits)
+function deleteFitFiles(baseDir, animalID, whichUnits, whichFiles)
 
-disp(['deleting figures for ', animalID, ' units ', mat2str(whichUnits)]);
-
-units = FindUnits(dir, animalID, whichUnits);
-
-if isempty(units)
-    return
-end
-
-for unt = 1:length(units(:,1))
+[~, ~, Files] = findFiles(baseDir, animalID, whichUnits, '*', whichFiles);
+for f = 1:size(Files,1)
+    
+    fileName = Files.fileName{f};
+    unit = Files.unit{f};
     
     % delete for the unit
-    dataPath = fullfile(dir, animalID, deblank(units(unt,:)));
-    delete(fullfile(dataPath, '*.png'), fullfile(dataPath, '*.fig'));
+    dataPath = fullfile(baseDir, animalID, unit);
+    delete(fullfile(dataPath, [fileName, '*.png']), ...
+        fullfile(dataPath, [fileName, '*.fig']));
+end
 
-    % delete for all channels
-    dataPath = fullfile(dir,animalID,deblank(units(unt,:)));
-    channels = dir(fullfile(dataPath,'Ch*'));
+% delete for all channels
+units = findUnits(baseDir, animalID, whichUnits);
+for u = 1:length(units)
+    unit = units{u};
+    dataPath = fullfile(baseDir, animalID, unit);
+    channels = [dir(fullfile(dataPath,'Ch*'));
+                dir(fullfile(dataPath,'StimTimes*'))];
     if isempty(channels)
-        fprintf('nothing to delete for unit %d...\n', unt);
         continue;
     end
-    channels = vertcat(channels(vertcat(channels.isdir)).name);
-    for ch = 1:length(channels(:,1))
-        rmdir(fullfile(dataPath,channels(ch,:)),'s');
+    channels = {channels(vertcat(channels.isdir)).name};
+    for ch = 1:length(channels)
+        channelName = channels{ch};
+        [~, ~, Files] = findFiles(baseDir, animalID, whichUnits, ...
+            fullfile(channelName, '*'), whichFiles);
+        for f = 1:size(Files,1)
+            fileName = Files.fileName{f};
+            unit = Files.unit{f};
+            dataPath = fullfile(baseDir, animalID, unit, channelName);
+            delete(fullfile(dataPath, [fileName, '*.png']), ...
+                fullfile(dataPath, [fileName, '*.fig']));
+        end
     end
 end
 
