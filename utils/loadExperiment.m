@@ -63,6 +63,10 @@ if ~isfield(dataset,'ex') || ~isfield(dataset.ex, 'Params') ...
     warning(['Missing Params for ', fileName]);
     hasError = 2;
     return;
+elseif ~ismember('stimDuration', dataset.ex.Params.Data.Properties.VariableNames) || ...
+        isempty(dataset.ex.Params.Data.stimDuration)
+    dataset.ex.Params.Data.stimDuration = ...
+        dataset.ex.Params.stimDuration*ones(size(dataset.ex.Params.Data,1),1);
 end
 
 % Check LFP

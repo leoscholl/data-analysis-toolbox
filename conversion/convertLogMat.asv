@@ -295,37 +295,27 @@ switch stimType
         end
 end
 
-stim = num2cell(stimSequence, [1 2]);
-stim = vertcat(stim{:}); % condition number, condition
-    
+if ~isempty(stimSequence)
+    stim = num2cell(stimSequence, [1 2]);
+    stim = vertcat(stim{:}); % condition number, condition
+else
+    conditions = unique(Data.condition,'rows');
+    conditions = reshape(conditions, length(conditions), size(Data.condition,2));
+    conditionNo = zeros(length(Data.condition),1);
+    for i = 1:length(Data.condition)
+        conditionNo(i) = find(sum(Data.condition(i,:) == ...
+            conditions,2) == size(Data.condition,2)); % should only be one!
+    end
+    stim = [conditionNo, conditions];
+end
 if ~ismember('condition', Data.Properties.VariableNames) || ...
         isempty(Data.condition)
-    if ~isempty(stim)
-        Data.condition = stim(1:size(data,1),2);
-    else
-        warning('Empty stim sequence and no condition numbers.')
-        rmpath(seqDir);
-        return;
-    end
+    Data.condition = stim(1:size(data,1),2);
 end
-
 if ~ismember('conditionNo', Data.Properties.VariableNames) || ...
         isempty(Data.conditionNo)
-    if ~isempty(stim)
-        Data.conditionNo = stim(1:size(data,1),1);
-    else
-        % No stim sequence. Generate new condition numbers
-        conditions = unique(Data.condition,'rows');
-        conditions = reshape(conditions, length(conditions), size(Data.condition,2));
-        conditionNo = zeros(length(Data.condition),1);
-        for i = 1:length(Data.condition)
-            conditionNo(i) = find(sum(Data.condition(i,:) == ...
-                conditions,2) == size(Data.condition,2)); % should only be one!
-        end
-        Data.conditionNo = conditionNo;
-    end
+    Data.conditionNo = stim(1:size(data,1),1);
 end
-
 if ~ismember('stimInterval', Data.Properties.VariableNames) || ...
         isempty(Data.stimInterval)
     Data.stimInterval = Params.stimInterval*ones(size(data,1),1);

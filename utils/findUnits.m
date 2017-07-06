@@ -28,8 +28,12 @@ end
 [~, idx] = sort(unitNos);
 units = {units{idx}};
 
-Units = cell2table(units');
-Units.number = unitNos(idx)';
+if ~isempty(units)
+    Units = cell2table(units');
+    Units.number = unitNos(idx)';
+else
+    Units = table(cell(0), []);
+end
 Units.Properties.VariableNames = {'name', 'number'};
 
 end

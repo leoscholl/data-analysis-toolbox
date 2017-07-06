@@ -6,10 +6,10 @@ if nargin < 4 || isempty(suffix)
     suffix = '-spikes';
 end
 
-for UnitNo = whichUnits
+parfor unitNo = whichUnits
     
-    unit = ['Unit', deblank(num2str(UnitNo))];
-    plexonPath = fullfile(plexonDir, animalID, unit, filesep);
+    unit = ['Unit', deblank(num2str(unitNo))];
+    plexonPath = fullfile(plexonDir, animalID, filesep);
     dataPath = fullfile(dataDir, animalID, unit, filesep);
     
     logFile = [plexonPath,animalID,unit,'.mat'];
@@ -18,26 +18,45 @@ for UnitNo = whichUnits
     disp(['Splitting files from ', spikesFile]);
     
     if exist(spikesFile,'file') && exist(logFile, 'file')
-        load(spikesFile);
-        load(logFile);
+        log = load(logFile);
+        
+        if isfield(log, 'Files') && ~istable(log.Files) && ...
+                isfield(log, 'EndTimes')
+            % convert from old format
+            nFiles = size(log.Files, 1);
+            fileNames = cellfun(@stripFileName, cellstr(log.Files), ...
+                'UniformOutput', false);
+            [~, fileNos, stimTypes] = cellfun(@parseFileName, fileNames, ...
+                'UniformOutput', false);
+            units = repmat({unit}, nFiles, 1);
+            unitNos = repmat(unitNo, nFiles, 1);
+            
+            % EndTimes spills over from the previous file... :(
+            duration = log.EndTimes(1:nFiles,1);
+            samples = log.EndTimes(1:nFiles,2);
+            time = [log.EndTimes(1:nFiles,3) - log.EndTimes(1:nFiles,1), ...
+                log.EndTimes(1:nFiles,3)];
+            
+            Files = table(fileNames, fileNos, stimTypes, units, unitNos, ...
+                duration, samples, time);
+            Files.Properties.VariableNames = ...
+                {'fileName', 'fileNo', 'stimType', 'unit', 'unitNo', ...
+                'duration', 'samples', 'time'};
+        else
+            Files = log.Files;
+        end
         disp(Files.fileName);
         
-        clear elec*;
-        varNames = who('adc*');
+        % Load spikes
+        plexon = load(spikesFile);
+        spikes = struct2cell(plexon);
+        varNames = fieldnames(plexon);
         
-        % Collect spikes for each electrode
-        spikes = cell(length(varNames),1);
+        % Collect electrode ids
         electrodeid = cell(length(varNames),1);
         for n = 1:length(varNames)
-            electrodeName = varNames{n};
-            electrodeid{n} = sscanf(electrodeName, 'adc%d');
-            eval(sprintf('spikes{%d} = %s;',n,electrodeName));
-            
-            if isempty(spikes{n})    
-                disp(['No spikes in channel ',varNames{n}]);
-            end
+            electrodeid{n} = sscanf(varNames{n}, 'adc%d');
         end
-        clear adc*;
         
         % Cut the spikes into individual datasets
         for f = 1:size(Files,1)
@@ -49,7 +68,6 @@ for UnitNo = whichUnits
 
             startTime = Files.time(f,1);
             endTime = Files.time(f,2);
-            samples = Files.samples(f);
             spike = struct;
             for n = 1:size(spikes,1) % for each channel
                 

@@ -101,12 +101,11 @@ hold off;
 % save([DataPath,FileName,'_latency.mat'],'LatencyAll','HistSmoothedAll','Time');
 
 % plotting PSTHs
-hPSTH = figure;
-set(hPSTH,'Visible',showFigure);
+hPSTH = figure('Visible',showFigure);
 set(hPSTH,'Color','White');
 suptitle(titleStr);
 hold on;
-for i = 1:length(conditions)
+for i = 1:length(conditionNo)
     
     % Figure out the binsize
     c = conditionNo(i);

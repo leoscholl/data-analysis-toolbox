@@ -168,7 +168,9 @@ dataDir = get(handles.DataDirBox, 'String');
 sortingDir = get(handles.SortingDirBox, 'String');
 suffix = get(handles.SuffixBox, 'String');
 
+disp('Converting sorted files...')
 convertPlexonSpikes(sortingDir, dataDir, animalID, unitNo, suffix);
+disp('...done.')
 
 % --- Helper function for plotting buttons
 function plotHelper(handles, figureType)

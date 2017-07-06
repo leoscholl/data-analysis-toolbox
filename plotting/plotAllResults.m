@@ -78,6 +78,7 @@ parfor i = 1:length(whichElectrodes)
 
         StatsUnit = Statistics(Statistics.cell == u,:);
         tCurve = StatsUnit.tCurve(StatsUnit.conditionNo); % sort properly
+        blank = StatsUnit.blank(StatsUnit.conditionNo);
         
         SpikeDataUnit = SpikeData(SpikeData.cell == u,:);
         
@@ -216,35 +217,10 @@ parfor i = 1:length(whichElectrodes)
         elseif plotRasters
             
             % Lump conditions together for stimuli with many conditions
-           [hRaster] = plotRastersAll( SpikeDataUnit, tmpParams, ...
-                showFigures, elecNo, u );
+           [hRaster, hPSTH] = plotRastersAll( SpikeDataUnit, tmpParams, ...
+                cellColors(j,:), showFigures, elecNo, u );
 
-            
-%             rParams.Conditions = ...
-%                 tmpParams.Conditions(find(tmpParams.Conditions.numBins == minSize,1),:);
-%             rParams.Conditions.condition = NaN;
-%             rParams.Conditions.conditionNo = 1;
-%             
-%             rSpikeData.conditionNo = ones(size(rSpikeData,1),1);
-%             rSpikeData.trial = [1:size(rSpikeData,1)]';
-%             [~, ix] = sort(SpikeDataUnit.conditionNo); % sort by condition
-%             rSpikeData = rSpikeData(ix,:);
-            
-%             [hRaster, hPSTH] = plotRastergrams( rSpikeData, rParams, ...
-%                 cellColors(j,:), showFigures, elecNo, u );
-            
-            % draw lines between the condition boundaries
-%             rcondNo = SpikeDataUnit(ix,:).conditionNo;
-%             rTrialNo = rSpikeData.trial;
-%             minX = min(rParams.Conditions.centers{:});
-%             maxX = max(rParams.Conditions.centers{:});
-%             set(0,'CurrentFigure',hRaster);
-%             hold on;
-%             for k = 1:length(rcondNo)-1
-%                 if rcondNo(k) ~= rcondNo(k+1)
-%                     plot([minX maxX],[rSpikeData.t(k) rSpikeData.t(k)],'k:');
-%                 end
-%             end
+          
             
 %             export_fig(fullfile(ResultsPath,ElecDir,[FigBaseName,'_raster']),...
 %                 '-png', '-m3', '-p0.05', hRaster);
@@ -254,8 +230,8 @@ parfor i = 1:length(whichElectrodes)
             
 %             export_fig(fullfile(ResultsPath,ElecDir,[FigBaseName,'_PSTHs']), ...
 %                 '-png', '-m3', '-p0.05', hPSTH);
-%             saveas(hPSTH,fullfile(figuresPath,elecDir,[figBaseName,'_PSTHs_all.png']));
-%             close(hPSTH);
+            saveas(hPSTH,fullfile(figuresPath,elecDir,[figBaseName,'_PSTHs_all.png']));
+            close(hPSTH);
         end
         
         % Plot maps
@@ -301,7 +277,7 @@ parfor i = 1:length(whichElectrodes)
                 hMap = plotBackProjection(bestMap, tmpParams, showFigures);
                 
             else
-                hMap = plotMap(tCurve, tmpParams, showFigures, elecNo, u);
+                hMap = plotMap(StatsUnit, tmpParams, showFigures, elecNo, u);
             end
             
 %             export_fig(fullfile(ResultsPath,ElecDir,[FigBaseName,'_RFMap']), ...

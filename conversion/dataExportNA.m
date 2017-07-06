@@ -20,7 +20,7 @@ end
 %     parpool;
 % end
 
-for i=1:size(Files,1)
+parfor i=1:size(Files,1)
     fileName = Files.fileName{i};
     unit = Files.unit{i};
     dataPath = fullfile(dataDir, animalID, unit);

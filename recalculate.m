@@ -120,7 +120,7 @@ for f = 1:size(Files,1)
                 plotMaps = 1;
                 plotTCs = 0;
                 plotBars = 0;
-                plotRasters = 1;
+                plotRasters = 0;
                 plotWFs = 0;
                 plotISI = 0;
             otherwise

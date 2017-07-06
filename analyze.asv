@@ -104,8 +104,8 @@ spikes = Electrodes.spikes(ismember(Electrodes.number, whichElectrodes));
 nUnits = cellfun(@countUnits, spikes)';
 fprintf('%d electrodes (out of %d) with %s units\n', ...
     length(whichElectrodes), Params.nElectrodes, mat2str(nUnits));
-SpikeDataAll = cell(1,length(whichElectrodes));
-StatisticsAll = cell(1,length(whichElectrodes));
+SpikeDataAll{elecNo} = SpikeData;
+    StatisticsAll = P
 parfor i = 1:length(whichElectrodes)
     elecNo = whichElectrodes(i);
     if elecNo == 0
@@ -266,17 +266,13 @@ parfor i = 1:length(whichElectrodes)
 %         'tCurveCorr','tCurveCorrSEM','f1Rep','f1RepSD'};
 
     % Save everything
-    SpikeDataAll{i} = SpikeData;
-    StatisticsAll{i} = Statistics;
+    SpikeDataAll{elecNo} = SpikeData;
+    StatisticsAll{elecNo} = Statistics;
 
 end % Electrodes loop
 
-% Save results
-for i = 1:length(whichElectrodes)
-    elecNo = whichElectrodes(i); 
-    Results.SpikeDataAll{elecNo} = SpikeDataAll{i};
-    Results.StatisticsAll{elecNo} = StatisticsAll{i};
-end
+Results.SpikeDataAll = SpikeDataAll;
+Results.StatisticsAll = StatisticsAll;
 Results.StimTimes = StimTimes;
 Results.Electrodes = Electrodes(:,{'name','number'});
 

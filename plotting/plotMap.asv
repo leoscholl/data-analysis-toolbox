@@ -32,7 +32,7 @@ for i = 1:length(conditionNo)
 end
 
 % Smoothing
-% smoothmap = smooth2a(onmap,2,2) - blankmap;
+map = smooth2a(onmap - blankmap,1,1);
 
 % Open a figure
 handle = figure;
@@ -42,7 +42,7 @@ hold on;
 
 % Plot data depending on matlab version
 if verLessThan('matlab', '8.3') % < 2014
-    contourf(X,Y,corr,20);
+    contourf(X,Y,map,20);
     shading(gca,'flat');
 else % >= 2014
     surf(X,Y,corrmap,'FaceColor','interp');
