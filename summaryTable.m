@@ -180,7 +180,7 @@ classdef summaryTable < handle
                         Summary = [Summary; {track, obj.Units.number(i), ...
                             electrode, cell, ...
                             ori, osi, di, sf, tf, apt, velocity, ...
-                            latency, other, notes}];
+                            latency, other, char(notes)}];
                     end % cells loop
                 end % Electrodes loop
             end % Units loop
@@ -259,15 +259,19 @@ classdef summaryTable < handle
                     load(filePath, 'Params', 'Results');
                 end
                 
-                if ~isfield(Params, 'nElectrodes')
+                if ~exist('Params', 'var') || ~exist('Results', 'var')
+                    fprintf(2, 'Missing results for %s\n', fileName);
                     continue;
                 end
-                nElectrodes = Params.nElectrodes;
                 Electrodes = Results.Electrodes(:,{'name', 'number'});
+
                 cells = {};
                 
-                for i=1:nElectrodes
+                for i=1:length(Results.StatisticsAll)
                     Stats = Results.StatisticsAll{i};
+                    if isempty(Stats)
+                        continue;
+                    end
                     cells{i} = unique(Stats.cell);
                     
                     for j = 1:length(cells{i})
@@ -293,7 +297,7 @@ classdef summaryTable < handle
                         
                         
                         summary = [summary; {Files.fileNo(f), Files.stimType{f}, ...
-                            Results.Electrodes.number(i), cells{i}(j), ...
+                            i, cells{i}(j), ...
                             [], maxF1Cond, maxCorrCond, latency}];
                     end
                 end
