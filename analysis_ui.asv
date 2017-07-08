@@ -22,7 +22,7 @@ function varargout = analysis_ui(varargin)
 
 % Edit the above text to modify the response to help analysis_ui
 
-% Last Modified by GUIDE v2.5 29-Jun-2017 13:04:37
+% Last Modified by GUIDE v2.5 07-Jul-2017 13:20:53
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -68,7 +68,7 @@ global uiPrefsList
 uiPrefsList = {'PlotLFPCheck', 'PlotFiguresCheck', ...
     'SummaryFigsCheck', 'DataDirBox', 'FiguresDirBox', ...
     'AnimalIDBox', 'UnitNoBox', 'FileNoBox', 'SortingDirBox', ...
-    'SuffixBox'};
+    'SuffixBox', 'SourceFormatMenu'};
 loadPrefs(handles);
 
 % Set the title
@@ -135,16 +135,18 @@ plotFigures = get(handles.PlotFiguresCheck, 'Value');
 summaryFigs = get(handles.SummaryFigsCheck, 'Value');
 dataDir = get(handles.DataDirBox, 'String');
 figuresDir = get(handles.FiguresDirBox, 'String');
+SourceFormatMenu = cellstr(get(handles.SourceFormatMenu, 'String'));
+sourceFormat = expTypeMenu{get(handles.SourceFormatMenu, 'Value')};
 
-setStatus('recalculating...');
+setStatus(handles, 'recalculating...');
 switch expType
     case 'Spikes'
         recalculate(dataDir, figuresDir, animalID, unitNo, fileNo, whichElectrodes, ...
-            plotFigures, plotLFP, summaryFigs);
+            plotFigures, plotLFP, summaryFigs, );
     case 'ECoG'
         
 end
-setStatus('');
+setStatus(handles, '');
 
 % --- Executes on button press in MakeBinFile.
 function MakeBinFile_Callback(hObject, eventdata, handles)
@@ -156,9 +158,9 @@ unitNo = eval(get(handles.UnitNoBox, 'String'));
 dataDir = get(handles.RawDataBox, 'String');
 sortingDir = get(handles.SortingDirBox, 'String');
 
-setStatus('generating files...');
+setStatus(handles, 'generating files...');
 makeFilesForSorting(dataDir, sortingDir, animalID, unitNo, 'bin');
-setStatus('');
+setStatus(handles, '');
 
 % --- Executes on button press in DoneSorting.
 function DoneSorting_Callback(hObject, eventdata, handles)
@@ -171,9 +173,9 @@ dataDir = get(handles.DataDirBox, 'String');
 sortingDir = get(handles.SortingDirBox, 'String');
 suffix = get(handles.SuffixBox, 'String');
 
-setStatus('converting sorted files...');
+setStatus(handles, 'converting sorted files...');
 convertPlexonSpikes(sortingDir, dataDir, animalID, unitNo, suffix);
-setStatus('');
+setStatus(handles, '');
 
 % --- Helper function for plotting buttons
 function plotHelper(handles, figureType)
@@ -188,7 +190,7 @@ figuresDir = get(handles.FiguresDirBox, 'String');
 expTypeMenu = cellstr(get(handles.ExpTypeMenu, 'String'));
 expType = expTypeMenu{get(handles.ExpTypeMenu, 'Value')};
 
-setStatus('plotting...');
+setStatus(handles, 'plotting...');
 switch expType
     case 'Spikes'
         plotIndividual(dataDir, figuresDir, animalID, unitNo, fileNo, ...
@@ -196,7 +198,7 @@ switch expType
     case 'ECoG'
         
 end
-setStatus('');
+setStatus(handles, '');
 
 % --- Executes on button press in PlotWaveforms.
 function PlotWaveforms_Callback(hObject, eventdata, handles)
@@ -262,6 +264,7 @@ function SummaryFinish_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 if isfield(handles, 's') && isa(handles.s, 'summaryTable')
+    setStatus(handles, 'exporting summary data...');
     fileName = handles.s.export();
     handles.s = [];
     guidata(hObject, handles);
@@ -269,6 +272,7 @@ if isfield(handles, 's') && isa(handles.s, 'summaryTable')
     set(handles.ShowSummary, 'Value', 0);
     toggleSummaryVisibility(handles, 0);
     disp(['Exported summary data to ', fileName]);
+    setStatus(handles, '');
 end
 
 % --- Executes on button press in SummaryStart.
@@ -293,12 +297,12 @@ if ~state
     toggleSummaryVisibility(handles, 1);
 end
 drawnow
-disp('Preparing summary...');
+setStatus(handles, 'preparing summary...');
 s = summaryTable( dataDir, animalID, unitNo, handles );
 s.showUnit();
 handles.s = s;
 guidata(hObject,handles);
-
+setStatus(handles, '');
 
 % Update the unit number
 set(handles.UnitNoBox, 'String', num2str(handles.s.unitNo));
@@ -341,6 +345,14 @@ set(handles.SummaryControlPanel, 'Position', panelPos(3,:));
 set(handles.SortingPanel, 'Position', panelPos(4,:));
 set(handles.FiguresPanel, 'Position', panelPos(5,:));
 
+% --- Sets the title with a status indication
+function setStatus(handles, text)
+if isempty(text)
+    set(handles.figure1, 'Name', 'analysis UI');
+else
+    set(handles.figure1, 'Name', ['analysis UI - ', text]);
+end
+drawnow;
 
 % --- Loads preferences.
 function loadPrefs(handles)
@@ -688,6 +700,29 @@ function RawDataBox_CreateFcn(hObject, eventdata, handles)
 % handles    empty - handles not created until after all CreateFcns called
 
 % Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on selection change in SourceFormatMenu.
+function SourceFormatMenu_Callback(hObject, eventdata, handles)
+% hObject    handle to SourceFormatMenu (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns SourceFormatMenu contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from SourceFormatMenu
+
+
+% --- Executes during object creation, after setting all properties.
+function SourceFormatMenu_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to SourceFormatMenu (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');

@@ -1,41 +1,41 @@
-function plotAllResults(figuresPath, fileName, Params, Results,...
+function plotAllResults(figuresPath, fileName, Results,...
                         whichElectrodes, plotTCs, plotBars, plotRasters,...
                         plotMaps, summaryFig, plotLFP, showFigures, ...
                         clumpRasters)
 %plotAllResults Function plotting Tuning Curves for different stimuli
 
 % Check arguments
-narginchk(5,13);
+narginchk(4,12);
 if isempty(Results)
     warning('Cannot plot results without results...');
     return; % Can't do anything. 
 end
 
-if nargin < 13 || isempty(clumpRasters)
+if nargin < 12 || isempty(clumpRasters)
     clumpRasters = 0;
 end
-if nargin < 12 || isempty(showFigures)
+if nargin < 11 || isempty(showFigures)
     showFigures = 0;
 end
-if nargin < 11 || isempty(plotLFP)
+if nargin < 10 || isempty(plotLFP)
     plotLFP = 0;
 end
-if nargin < 10 || isempty(summaryFig)
+if nargin < 9 || isempty(summaryFig)
     summaryFig = 0;
 end
-if nargin < 9 || isempty(plotMaps)
+if nargin < 8 || isempty(plotMaps)
     plotMaps = 0;
 end
-if nargin < 8 || isempty(plotRasters)
+if nargin < 7 || isempty(plotRasters)
     plotRasters = 0;
 end
-if nargin < 7 || isempty(plotBars)
+if nargin < 6 || isempty(plotBars)
     plotBars = 0;
 end
-if nargin < 6 || isempty(plotTCs)
+if nargin < 5 || isempty(plotTCs)
     plotTCs = 0;
 end
-if nargin < 5 || isempty(whichElectrodes)
+if nargin < 4 || isempty(whichElectrodes)
     whichElectrodes = Results.Electrodes.number;
 end
 if showFigures; showFigures = 'on'; else; showFigures = 'off'; end
@@ -43,6 +43,7 @@ if showFigures; showFigures = 'on'; else; showFigures = 'off'; end
 % Set up results
 SpikeDataAll = Results.SpikeDataAll;
 StatisticsAll = Results.StatisticsAll;
+Params = Results.Params;
 
 % Set up colors
 nCells = cellfun(@cellCount, SpikeDataAll);
@@ -60,6 +61,10 @@ parfor i = 1:length(whichElectrodes)
 
     SpikeData = SpikeDataAll{elecNo};
     Statistics = StatisticsAll{elecNo};
+    
+    if isempty(SpikeData) || isempty(Statistics)
+        continue;
+    end
     cells = unique(SpikeData.cell);
     
     % Plotting Figures
@@ -198,7 +203,7 @@ parfor i = 1:length(whichElectrodes)
         end
         
         % Plotting rasters and histograms
-        if plotRasters && size(Params.Conditions,1) <= 20 && ~clumpRasters
+        if plotRasters && size(tmpParams.Conditions,1) <= 20 && ~clumpRasters
             
             [hRaster, hPSTH] = plotRastergrams( SpikeDataUnit, tmpParams, ...
                 cellColors(j,:), showFigures, elecNo, u);

@@ -20,7 +20,7 @@ if ~isempty(files) && size(files, 1) == 1
     i = 1;
     while isempty(whichData)
         if i > length(sourceFormat)
-            warning('No analysis for %s', char(sourceFormat));
+            warning('No analysis for %s', sourceFormat);
             return;
         end
         whichData = find(strcmp({analysis.sourceFormat}, sourceFormat{i}), ...
@@ -28,6 +28,11 @@ if ~isempty(files) && size(files, 1) == 1
         i = i + 1;
     end    
     analysis = analysis(whichData);
+    if length(analysis) > 1
+        error('Duplicate analyses found');
+    elseif length(analysis) < 1
+        warning('No analysis for %s', sourceFormat);
+    end
 else
     warning('File not found');
 end

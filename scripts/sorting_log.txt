@@ -7689,3 +7689,3678 @@ Run #13: R1604
 ------------------
 Running units [1 2 3 4 5 6 7 8 9 10 11 12 13]...
 No sorting. Just recalculate...
+
+=================
+07-Jul-2017 12:07:27
+=================
+Preparing run...
+R1528	[3 4 5 6 7 8 9]
+R1536	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19]
+------------------
+Run #1: R1528
+------------------
+Running units [3 4 5 6 7 8 9]...
+
+=================
+07-Jul-2017 12:08:15
+=================
+Preparing run...
+R1528	[3 4 5 6 7 8 9]
+R1536	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19]
+------------------
+Run #1: R1528
+------------------
+Running units [3 4 5 6 7 8 9]...
+
+=================
+07-Jul-2017 12:10:20
+=================
+Preparing run...
+R1528	[3 4 5 6 7 8 9]
+R1536	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19]
+------------------
+Run #1: R1528
+------------------
+Running units [3 4 5 6 7 8 9]...
+
+=================
+07-Jul-2017 12:11:09
+=================
+Preparing run...
+R1528	[3 4 5 6 7 8 9]
+R1536	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19]
+------------------
+Run #1: R1528
+------------------
+Running units [3 4 5 6 7 8 9]...
+
+=================
+07-Jul-2017 12:11:30
+=================
+Preparing run...
+R1528	[3 4 5 6 7 8 9]
+R1536	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19]
+------------------
+Run #1: R1528
+------------------
+Running units [3 4 5 6 7 8 9]...
+
+=================
+07-Jul-2017 12:12:08
+=================
+Preparing run...
+R1528	[3 4 5 6 7 8 9]
+R1536	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19]
+------------------
+Run #1: R1528
+------------------
+Running units [3 4 5 6 7 8 9]...
+
+
+Error for file R1528#16[Contrast]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#17[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#18[MouseSpatial]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#19[MouseTemporal]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#20[MouseAperture]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#21[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#22[Contrast]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#23[CatAperture]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#24[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#25[MouseSpatial]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#26[MouseTemporal]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#27[MouseTemporal]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#28[MouseAperture]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#29[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#30[Contrast]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#31[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#32[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#33[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#34[MouseSpatial]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#35[MouseTemporal]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#36[MouseAperture]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#37[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#38[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#39[MouseSpatial]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#40[Contrast]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#41[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#42[MouseSpatial]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#43[MouseTemporal]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#44[MouseAperture]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#45[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#46[Contrast]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#47[LatencyTest]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#48[LatencyTest]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#49[LatencyTest]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#50[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#51[MouseSpatial]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#52[MouseTemporal]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#53[MouseAperture]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#54[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#55[MouseSpatial]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#56[MouseTemporal]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#57[MouseAperture]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#58[Contrast]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#59[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#60[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#61[MouseSpatial]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#62[MouseTemporal]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#63[MouseAperture]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#64[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#65[Contrast]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#66[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1528#67[LatencyTest]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+End of run
+------------------
+Run #2: R1536
+------------------
+Running units [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19]...
+
+
+Error for file R1536#1[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#2[LatencyTest]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#3[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#4[LatencyTest]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#5[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#6[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#7[MouseSpatial]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#8[MouseTemporal]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#9[MouseAperture]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#10[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#11[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#12[PatternMotion]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#13[MouseSpatial]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#14[LatencyTest]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#15[PatternMotion]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#16[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#17[MouseSpatial]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#18[MouseTemporal]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#19[PatternMotion]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#20[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#21[MouseSpatial]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#22[MouseTemporal]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#23[MouseAperture]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#24[PatternMotion]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#25[LatencyTest]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#26[LatencyTest]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#27[LatencyTest]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#28[LatencyTest]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#29[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#30[LatencyTest]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#31[LatencyTest]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#32[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#33[LatencyTest]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#34[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#35[MouseSpatial]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#36[PatternMotion]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#37[MouseSpatial]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#38[MouseTemporal]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#39[MouseAperture]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#40[Contrast]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#41[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#42[PatternMotion]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#43[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#44[LatencyTest]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#45[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#46[MouseSpatial]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#47[MouseTemporal]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#48[PatternMotion]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#49[MouseAperture]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#50[LatencyTest]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#51[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#52[MouseSpatial]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#53[MouseTemporal]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#54[MouseAperture]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#55[PatternMotion]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#56[LatencyTest]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#57[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#58[PatternMotion]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#59[LatencyTest]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#61[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#62[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#63[MouseSpatial]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#64[MouseTemporal]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#65[PatternMotion]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#66[MouseAperture]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#67[CatAperture]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#68[Contrast]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#69[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#70[LatencyTest]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#71[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#72[PatternMotion]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#73[MouseSpatial]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#73[PatternMotion]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#74[MouseTemporal]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#75[MouseTemporal]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#76[MouseAperture]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#77[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#78[PatternMotion]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#79[Contrast]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#80[MouseAperture]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#81[CatRFfast]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#82[CatRFfast]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#83[RFmap]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#84[PatternMotion]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#85[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#86[LatencyTest]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#87[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#88[PatternMotion]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#89[MouseSpatial]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#90[MouseTemporal]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#91[MouseAperture]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#92[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#93[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#94[CatRFfast]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#95[CatRFfast]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#96[Contrast]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#97[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#98[PatternMotion]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#99[Ori]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#100[PatternMotion]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#101[PatternMotion]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+
+
+Error for file R1536#102[RFmap]
+Undefined function or variable 'dataDir'.
+
+Error in recalculate_batch>tryFile (line 90)
+        recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+Error in recalculate_batch (line 74)
+            tryFile(Files(f,:), log);
+End of run
+End of all runs
+
+
+=================
+07-Jul-2017 12:15:02
+=================
+Preparing run...
+R1528	[3 4 5 6 7 8 9]
+R1536	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19]
+------------------
+Run #1: R1528
+------------------
+Running units [3 4 5 6 7 8 9]...
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+And recalculated all files for R1528
+End of run
+------------------
+Run #2: R1536
+------------------
+Running units [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19]...
+
+=================
+07-Jul-2017 12:31:42
+=================
+Preparing run...
+R1521	[1 2 4 5 6 7 10 11 12]
+R1536	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19]
+------------------
+Run #1: R1521
+------------------
+Running units [1 2 4 5 6 7 10 11 12]...
+
+=================
+07-Jul-2017 12:35:41
+=================
+Preparing run...
+R1521	[1 2 4 5 6 7 10 11 12]
+R1536	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19]
+------------------
+Run #1: R1521
+------------------
+Running units [1 2 4 5 6 7 10 11 12]...
+
+=================
+07-Jul-2017 12:38:38
+=================
+Preparing run...
+R1521	[1 2 4 5 6 7 10 11 12]
+R1536	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19]
+------------------
+Run #1: R1521
+------------------
+Running units [1 2 4 5 6 7 10 11 12]...
+R1521#1[Ori]
+R1521#2[Ori]
+R1521#3[MouseSpatial]
+R1521#4[MouseSpatial]
+R1521#5[Ori]
+R1521#6[Ori]
+R1521#7[MouseSpatial]
+R1521#8[MouseTemporal]
+R1521#9[MouseAperture]
+R1521#10[Contrast]
+R1521#11[LatencyTest]
+R1521#12[LatencyTest]
+R1521#21[LatencyTest]
+R1521#22[Ori]
+R1521#23[MouseSpatial]
+R1521#24[LatencyTest]
+R1521#25[Ori]
+R1521#26[MouseSpatial]
+R1521#27[MouseTemporal]
+R1521#28[LatencyTest]
+R1521#29[Ori]
+R1521#30[MouseSpatial]
+R1521#31[Ori]
+R1521#32[MouseSpatial]
+R1521#33[Ori]
+R1521#34[MouseSpatial]
+R1521#35[MouseTemporal]
+R1521#36[MouseAperture]
+R1521#37[Contrast]
+R1521#38[Ori]
+R1521#39[Ori]
+R1521#40[LatencyTest]
+R1521#61[LatencyTest]
+R1521#62[LatencyTest]
+R1521#63[LatencyTest]
+R1521#64[LatencyTest]
+R1521#65[LatencyTest]
+R1521#66[LatencyTest]
+R1521#67[LatencyTest]
+R1521#68[Lesion]
+R1521#68[LatencyTest]
+R1521#69[LatencyTest]
+R1521#70[Ori]
+R1521#71[MouseSpatial]
+R1521#72[MouseSpatial]
+R1521#73[MouseTemporal]
+R1521#74[Contrast]
+R1521#75[Ori]
+R1521#76[Ori]
+R1521#77[LatencyTest]
+R1521#78[Ori]
+R1521#79[Lesion]
+End of run
+------------------
+Run #2: R1536
+------------------
+Running units [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19]...
+R1536#1[Ori]
+R1536#2[LatencyTest]
+R1536#3[Ori]
+R1536#4[LatencyTest]
+R1536#5[Ori]
+R1536#6[Ori]
+R1536#7[MouseSpatial]
+R1536#8[MouseTemporal]
+R1536#9[MouseAperture]
+R1536#10[Ori]
+R1536#11[Ori]
+R1536#12[PatternMotion]
+R1536#13[MouseSpatial]
+R1536#14[LatencyTest]
+
+
+Error for file R1536#15[PatternMotion]:
+Error using analyze (line 52)
+Assertion failed.
+
+Error in recalculate (line 148)
+                [Params, Results] = analyze(dataPath, fileName, ...
+
+Error in parallel_function>make_general_channel/channel_general (line 914)
+                    O = F(C{:});
+
+Error in remoteParallelFunction (line 38)
+        out = parallel.internal.pool.serialize(feval(channel, channelArgs{:}));
+R1536#16[Ori]
+R1536#17[MouseSpatial]
+R1536#18[MouseTemporal]
+R1536#19[PatternMotion]
+R1536#20[Ori]
+R1536#21[MouseSpatial]
+R1536#22[MouseTemporal]
+R1536#23[MouseAperture]
+R1536#24[PatternMotion]
+R1536#25[LatencyTest]
+R1536#26[LatencyTest]
+R1536#27[LatencyTest]
+R1536#28[LatencyTest]
+R1536#29[Ori]
+R1536#30[LatencyTest]
+R1536#31[LatencyTest]
+R1536#32[Ori]
+R1536#33[LatencyTest]
+R1536#34[Ori]
+R1536#35[MouseSpatial]
+R1536#36[PatternMotion]
+R1536#37[MouseSpatial]
+R1536#38[MouseTemporal]
+R1536#39[MouseAperture]
+R1536#40[Contrast]
+R1536#41[Ori]
+R1536#42[PatternMotion]
+R1536#43[Ori]
+R1536#44[LatencyTest]
+R1536#45[Ori]
+R1536#46[MouseSpatial]
+R1536#47[MouseTemporal]
+R1536#48[PatternMotion]
+R1536#49[MouseAperture]
+R1536#50[LatencyTest]
+R1536#51[Ori]
+R1536#52[MouseSpatial]
+R1536#53[MouseTemporal]
+R1536#54[MouseAperture]
+R1536#55[PatternMotion]
+R1536#56[LatencyTest]
+R1536#57[Ori]
+R1536#58[PatternMotion]
+R1536#59[LatencyTest]
+R1536#61[Ori]
+R1536#62[Ori]
+R1536#63[MouseSpatial]
+R1536#64[MouseTemporal]
+R1536#65[PatternMotion]
+R1536#66[MouseAperture]
+R1536#67[CatAperture]
+R1536#68[Contrast]
+R1536#69[Ori]
+R1536#70[LatencyTest]
+R1536#71[Ori]
+R1536#72[PatternMotion]
+R1536#73[MouseSpatial]
+R1536#73[PatternMotion]
+R1536#74[MouseTemporal]
+R1536#75[MouseTemporal]
+R1536#76[MouseAperture]
+R1536#77[Ori]
+R1536#78[PatternMotion]
+R1536#79[Contrast]
+R1536#80[MouseAperture]
+R1536#81[CatRFfast]
+R1536#82[CatRFfast]
+R1536#83[RFmap]
+R1536#84[PatternMotion]
+R1536#85[Ori]
+R1536#86[LatencyTest]
+R1536#87[Ori]
+R1536#88[PatternMotion]
+R1536#89[MouseSpatial]
+R1536#90[MouseTemporal]
+R1536#91[MouseAperture]
+R1536#92[Ori]
+R1536#93[Ori]
+R1536#94[CatRFfast]
+R1536#95[CatRFfast]
+R1536#96[Contrast]
+R1536#97[Ori]
+R1536#98[PatternMotion]
+R1536#99[Ori]
+R1536#100[PatternMotion]
+R1536#101[PatternMotion]
+R1536#102[RFmap]
+End of run
+End of all runs
+
+
+=================
+07-Jul-2017 14:05:43
+=================
+Preparing run...
+R1518	[1 2 3 4 5]
+R1520	[1 2 3 4 5 6 7 8 10 11 12 13 14 15 16]
+R1521	[1 2 4 5 6 7 10 11 12]
+R1522	[1 2 3 4 5]
+R1524	[4 5 6 7 8 9 10 11 12]
+R1525	[2 3]
+R1526	[7 8 9 11 12 13 14 15 16 17 18 19 20]
+R1527	3
+R1528	[3 4 5 6 7 8 9]
+R1536	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19]
+R1601	[1 2 3 4 5 6 7]
+R1603	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16]
+R1604	[1 2 3 4 5 6 7 8 9 10 11 12 13]
+R1605	[1 2 3 4 5 6 7 8 9]
+R1629	[1 2 3 4 5 6 7 8 9 10 11 12 13]
+R1701	[2 3 4 5 6 7 8 9 10 11]
+R1702	[1 2 3 4 5 6 7 8 9]
+------------------
+Run #1: R1518
+------------------
+Running units [1 2 3 4 5]...
+
+=================
+07-Jul-2017 14:06:36
+=================
+Preparing run...
+R1518	[1 2 3 4 5]
+R1520	[1 2 3 4 5 6 7 8 10 11 12 13 14 15 16]
+R1521	[1 2 4 5 6 7 10 11 12]
+R1522	[1 2 3 4 5]
+R1524	[4 5 6 7 8 9 10 11 12]
+R1525	[2 3]
+R1526	[7 8 9 11 12 13 14 15 16 17 18 19 20]
+R1527	3
+R1528	[3 4 5 6 7 8 9]
+R1536	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19]
+R1601	[1 2 3 4 5 6 7]
+R1603	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16]
+R1604	[1 2 3 4 5 6 7 8 9 10 11 12 13]
+R1605	[1 2 3 4 5 6 7 8 9]
+R1629	[1 2 3 4 5 6 7 8 9 10 11 12 13]
+R1701	[2 3 4 5 6 7 8 9 10 11]
+R1702	[1 2 3 4 5 6 7 8 9]
+------------------
+Run #1: R1518
+------------------
+Running units [1 2 3 4 5]...
+
+=================
+07-Jul-2017 14:07:46
+=================
+Preparing run...
+R1518	[1 2 3 4 5]
+R1520	[1 2 3 4 5 6 7 8 10 11 12 13 14 15 16]
+R1521	[1 2 4 5 6 7 10 11 12]
+R1522	[1 2 3 4 5]
+R1524	[4 5 6 7 8 9 10 11 12]
+R1525	[2 3]
+R1526	[7 8 9 11 12 13 14 15 16 17 18 19 20]
+R1527	3
+R1528	[3 4 5 6 7 8 9]
+R1536	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19]
+R1601	[1 2 3 4 5 6 7]
+R1603	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16]
+R1604	[1 2 3 4 5 6 7 8 9 10 11 12 13]
+R1605	[1 2 3 4 5 6 7 8 9]
+R1629	[1 2 3 4 5 6 7 8 9 10 11 12 13]
+R1701	[2 3 4 5 6 7 8 9 10 11]
+R1702	[1 2 3 4 5 6 7 8 9]
+------------------
+Run #1: R1518
+------------------
+Running units [1 2 3 4 5]...
+
+=================
+07-Jul-2017 14:09:06
+=================
+Preparing run...
+R1518	[1 2 3 4 5]
+R1520	[1 2 3 4 5 6 7 8 10 11 12 13 14 15 16]
+R1521	[1 2 4 5 6 7 10 11 12]
+R1522	[1 2 3 4 5]
+R1524	[4 5 6 7 8 9 10 11 12]
+R1525	[2 3]
+R1526	[7 8 9 11 12 13 14 15 16 17 18 19 20]
+R1527	3
+R1528	[3 4 5 6 7 8 9]
+R1536	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19]
+R1601	[1 2 3 4 5 6 7]
+R1603	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16]
+R1604	[1 2 3 4 5 6 7 8 9 10 11 12 13]
+R1605	[1 2 3 4 5 6 7 8 9]
+R1629	[1 2 3 4 5 6 7 8 9 10 11 12 13]
+R1701	[2 3 4 5 6 7 8 9 10 11]
+R1702	[1 2 3 4 5 6 7 8 9]
+------------------
+Run #1: R1518
+------------------
+Running units [1 2 3 4 5]...
+
+=================
+07-Jul-2017 14:09:58
+=================
+Preparing run...
+R1518	[1 2 3 4 5]
+R1520	[1 2 3 4 5 6 7 8 10 11 12 13 14 15 16]
+R1521	[1 2 4 5 6 7 10 11 12]
+R1522	[1 2 3 4 5]
+R1524	[4 5 6 7 8 9 10 11 12]
+R1525	[2 3]
+R1526	[7 8 9 11 12 13 14 15 16 17 18 19 20]
+R1527	3
+R1528	[3 4 5 6 7 8 9]
+R1536	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19]
+R1601	[1 2 3 4 5 6 7]
+R1603	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16]
+R1604	[1 2 3 4 5 6 7 8 9 10 11 12 13]
+R1605	[1 2 3 4 5 6 7 8 9]
+R1629	[1 2 3 4 5 6 7 8 9 10 11 12 13]
+R1701	[2 3 4 5 6 7 8 9 10 11]
+R1702	[1 2 3 4 5 6 7 8 9]
+------------------
+Run #1: R1518
+------------------
+Running units [1 2 3 4 5]...
+
+=================
+07-Jul-2017 14:10:20
+=================
+Preparing run...
+R1518	[1 2 3 4 5]
+R1520	[1 2 3 4 5 6 7 8 10 11 12 13 14 15 16]
+R1521	[1 2 4 5 6 7 10 11 12]
+R1522	[1 2 3 4 5]
+R1524	[4 5 6 7 8 9 10 11 12]
+R1525	[2 3]
+R1526	[7 8 9 11 12 13 14 15 16 17 18 19 20]
+R1527	3
+R1528	[3 4 5 6 7 8 9]
+R1536	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19]
+R1601	[1 2 3 4 5 6 7]
+R1603	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16]
+R1604	[1 2 3 4 5 6 7 8 9 10 11 12 13]
+R1605	[1 2 3 4 5 6 7 8 9]
+R1629	[1 2 3 4 5 6 7 8 9 10 11 12 13]
+R1701	[2 3 4 5 6 7 8 9 10 11]
+R1702	[1 2 3 4 5 6 7 8 9]
+------------------
+Run #1: R1518
+------------------
+Running units [1 2 3 4 5]...
+
+=================
+07-Jul-2017 14:11:08
+=================
+Preparing run...
+R1518	[1 2 3 4 5]
+R1520	[1 2 3 4 5 6 7 8 10 11 12 13 14 15 16]
+R1521	[1 2 4 5 6 7 10 11 12]
+R1522	[1 2 3 4 5]
+R1524	[4 5 6 7 8 9 10 11 12]
+R1525	[2 3]
+R1526	[7 8 9 11 12 13 14 15 16 17 18 19 20]
+R1527	3
+R1528	[3 4 5 6 7 8 9]
+R1536	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19]
+R1601	[1 2 3 4 5 6 7]
+R1603	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16]
+R1604	[1 2 3 4 5 6 7 8 9 10 11 12 13]
+R1605	[1 2 3 4 5 6 7 8 9]
+R1629	[1 2 3 4 5 6 7 8 9 10 11 12 13]
+R1701	[2 3 4 5 6 7 8 9 10 11]
+R1702	[1 2 3 4 5 6 7 8 9]
+------------------
+Run #1: R1518
+------------------
+Running units [1 2 3 4 5]...
+
+
+Error for file R1518#1[Ori]
+Error using analyze (line 293)
+'analysis' does not exist in 'I:\DataExport\R1518\Unit1\R1518#1[Ori].mat'.
+
+Error in recalculate (line 151)
+                Results = analyze(dataPath, fileName, sourceFormat, ...
+
+Error in recalculate_batch (line 95)
+                recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+=================
+07-Jul-2017 14:12:28
+=================
+Preparing run...
+R1518	[1 2 3 4 5]
+R1520	[1 2 3 4 5 6 7 8 10 11 12 13 14 15 16]
+R1521	[1 2 4 5 6 7 10 11 12]
+R1522	[1 2 3 4 5]
+R1524	[4 5 6 7 8 9 10 11 12]
+R1525	[2 3]
+R1526	[7 8 9 11 12 13 14 15 16 17 18 19 20]
+R1527	3
+R1528	[3 4 5 6 7 8 9]
+R1536	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19]
+R1601	[1 2 3 4 5 6 7]
+R1603	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16]
+R1604	[1 2 3 4 5 6 7 8 9 10 11 12 13]
+R1605	[1 2 3 4 5 6 7 8 9]
+R1629	[1 2 3 4 5 6 7 8 9 10 11 12 13]
+R1701	[2 3 4 5 6 7 8 9 10 11]
+R1702	[1 2 3 4 5 6 7 8 9]
+------------------
+Run #1: R1518
+------------------
+Running units [1 2 3 4 5]...
+R1518#1[Ori]
+R1518#2[Ori]
+
+=================
+07-Jul-2017 14:16:45
+=================
+Preparing run...
+R1518	[1 2 3 4 5]
+R1520	[1 2 3 4 5 6 7 8 10 11 12 13 14 15 16]
+R1521	[1 2 4 5 6 7 10 11 12]
+R1522	[1 2 3 4 5]
+R1524	[4 5 6 7 8 9 10 11 12]
+R1525	[2 3]
+R1526	[7 8 9 11 12 13 14 15 16 17 18 19 20]
+R1527	3
+R1528	[3 4 5 6 7 8 9]
+R1536	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19]
+R1601	[1 2 3 4 5 6 7]
+R1603	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16]
+R1604	[1 2 3 4 5 6 7 8 9 10 11 12 13]
+R1605	[1 2 3 4 5 6 7 8 9]
+R1629	[1 2 3 4 5 6 7 8 9 10 11 12 13]
+R1701	[2 3 4 5 6 7 8 9 10 11]
+R1702	[1 2 3 4 5 6 7 8 9]
+------------------
+Run #1: R1518
+------------------
+Running units [1 2 3 4 5]...
+
+
+Error for file R1518#1[Ori]
+Reference to non-existent field 'sourceFormat'.
+
+Error in loadExperiment (line 94)
+sourceFormat = dataset.sourceFormat;
+
+Error in recalculate (line 88)
+            loadExperiment(dataDir, animalID, unit, fileName, sourceFormat);
+
+Error in recalculate_batch (line 95)
+                recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+
+Error for file R1518#2[Ori]
+Reference to non-existent field 'sourceFormat'.
+
+Error in loadExperiment (line 94)
+sourceFormat = dataset.sourceFormat;
+
+Error in recalculate (line 88)
+            loadExperiment(dataDir, animalID, unit, fileName, sourceFormat);
+
+Error in recalculate_batch (line 95)
+                recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+
+Error for file R1518#3[MouseSpatial]
+Reference to non-existent field 'sourceFormat'.
+
+Error in loadExperiment (line 94)
+sourceFormat = dataset.sourceFormat;
+
+Error in recalculate (line 88)
+            loadExperiment(dataDir, animalID, unit, fileName, sourceFormat);
+
+Error in recalculate_batch (line 95)
+                recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
+
+=================
+07-Jul-2017 14:16:58
+=================
+Preparing run...
+R1518	[1 2 3 4 5]
+R1520	[1 2 3 4 5 6 7 8 10 11 12 13 14 15 16]
+R1521	[1 2 4 5 6 7 10 11 12]
+R1522	[1 2 3 4 5]
+R1524	[4 5 6 7 8 9 10 11 12]
+R1525	[2 3]
+R1526	[7 8 9 11 12 13 14 15 16 17 18 19 20]
+R1527	3
+R1528	[3 4 5 6 7 8 9]
+R1536	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19]
+R1601	[1 2 3 4 5 6 7]
+R1603	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16]
+R1604	[1 2 3 4 5 6 7 8 9 10 11 12 13]
+R1605	[1 2 3 4 5 6 7 8 9]
+R1629	[1 2 3 4 5 6 7 8 9 10 11 12 13]
+R1701	[2 3 4 5 6 7 8 9 10 11]
+R1702	[1 2 3 4 5 6 7 8 9]
+------------------
+Run #1: R1518
+------------------
+Running units [1 2 3 4 5]...
+R1518#1[Ori]
+R1518#2[Ori]
+
+=================
+07-Jul-2017 14:18:41
+=================
+Preparing run...
+R1518	[1 2 3 4 5]
+R1520	[1 2 3 4 5 6 7 8 10 11 12 13 14 15 16]
+R1521	[1 2 4 5 6 7 10 11 12]
+R1522	[1 2 3 4 5]
+R1524	[4 5 6 7 8 9 10 11 12]
+R1525	[2 3]
+R1526	[7 8 9 11 12 13 14 15 16 17 18 19 20]
+R1527	3
+R1528	[3 4 5 6 7 8 9]
+R1536	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19]
+R1601	[1 2 3 4 5 6 7]
+R1603	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16]
+R1604	[1 2 3 4 5 6 7 8 9 10 11 12 13]
+R1605	[1 2 3 4 5 6 7 8 9]
+R1629	[1 2 3 4 5 6 7 8 9 10 11 12 13]
+R1701	[2 3 4 5 6 7 8 9 10 11]
+R1702	[1 2 3 4 5 6 7 8 9]
+------------------
+Run #1: R1518
+------------------
+Running units [1 2 3 4 5]...
+R1518#1[Ori]
+R1518#2[Ori]
+R1518#3[MouseSpatial]
+R1518#4[MouseTemporal]
+R1518#5[MouseAperture]
+R1518#6[MouseAperture]
+
+=================
+07-Jul-2017 14:34:43
+=================
+Preparing run...
+R1518	[1 2 3 4 5]
+R1520	[1 2 3 4 5 6 7 8 10 11 12 13 14 15 16]
+R1521	[1 2 4 5 6 7 10 11 12]
+R1522	[1 2 3 4 5]
+R1524	[4 5 6 7 8 9 10 11 12]
+R1525	[2 3]
+R1526	[7 8 9 11 12 13 14 15 16 17 18 19 20]
+R1527	3
+R1528	[3 4 5 6 7 8 9]
+R1536	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19]
+R1601	[1 2 3 4 5 6 7]
+R1603	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16]
+R1604	[1 2 3 4 5 6 7 8 9 10 11 12 13]
+R1605	[1 2 3 4 5 6 7 8 9]
+R1629	[1 2 3 4 5 6 7 8 9 10 11 12 13]
+R1701	[2 3 4 5 6 7 8 9 10 11]
+R1702	[1 2 3 4 5 6 7 8 9]
+------------------
+Run #1: R1518
+------------------
+Running units [1 2 3 4 5]...
+
+=================
+07-Jul-2017 14:35:56
+=================
+Preparing run...
+R1518	[1 2 3 4 5]
+R1520	[1 2 3 4 5 6 7 8 10 11 12 13 14 15 16]
+R1521	[1 2 4 5 6 7 10 11 12]
+R1522	[1 2 3 4 5]
+R1524	[4 5 6 7 8 9 10 11 12]
+R1525	[2 3]
+R1526	[7 8 9 11 12 13 14 15 16 17 18 19 20]
+R1527	3
+R1528	[3 4 5 6 7 8 9]
+R1536	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19]
+R1601	[1 2 3 4 5 6 7]
+R1603	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16]
+R1604	[1 2 3 4 5 6 7 8 9 10 11 12 13]
+R1605	[1 2 3 4 5 6 7 8 9]
+R1629	[1 2 3 4 5 6 7 8 9 10 11 12 13]
+R1701	[2 3 4 5 6 7 8 9 10 11]
+R1702	[1 2 3 4 5 6 7 8 9]
+------------------
+Run #1: R1518
+------------------
+Running units [1 2 3 4 5]...
+R1518#1[Ori]
+R1518#2[Ori]
+R1518#3[MouseSpatial]
+R1518#4[MouseTemporal]
+R1518#5[MouseAperture]
+R1518#6[MouseAperture]
+R1518#7[Contrast]
+R1518#8[Ori]
+R1518#9[MouseSpatial]
+R1518#10[MouseSpatial]
+R1518#11[MouseSpatial]
+R1518#11[MouseTemporal]
+R1518#12[Contrast]
+R1518#13[Contrast]
+R1518#14[Ori]
+R1518#15[WholeScreenMapLP]
+R1518#16[WholeScreenMapLP]
+R1518#17[Ori]
+R1518#18[MouseSpatial]
+R1518#19[MouseTemporal]
+R1518#20[Contrast]
+R1518#21[Ori]
+R1518#22[Ori]
+R1518#23[MouseSpatial]
+R1518#24[MouseSpatial]
+R1518#25[MouseTemporal]
+R1518#26[Contrast]
+R1518#27[Ori]
+End of run
+------------------
+Run #2: R1520
+------------------
+Running units [1 2 3 4 5 6 7 8 10 11 12 13 14 15 16]...
+R1520#1[LatencyTest]
+R1520#2[Ori]
+R1520#3[Ori]
+R1520#4[MouseSpatial]
+R1520#5[MouseTemporal]
+R1520#6[MouseAperture]
+R1520#7[Contrast]
+R1520#8[LatencyTest]
+R1520#9[Ori]
+
+
+Error for file R1520#10[LatencyTest]:
+Error using load
+Unable to read MAT-file C:\Users\leo\Google Drive\Matlab\data-analysis-toolbox\scripts\duration_log.mat. Not a binary MAT-file. Try load -ASCII to read as text.
+
+Error in recalculate (line 39)
+    load(DurationLogFile);
+
+Error in parallel_function>make_general_channel/channel_general (line 914)
+                    O = F(C{:});
+
+Error in remoteParallelFunction (line 38)
+        out = parallel.internal.pool.serialize(feval(channel, channelArgs{:}));
+R1520#11[Ori]
+R1520#12[MouseSpatial]
+R1520#13[MouseTemporal]
+R1520#14[MouseAperture]
+R1520#15[Contrast]
+R1520#16[Ori]
+R1520#17[LatencyTest]
+R1520#18[LatencyTest]
+R1520#19[LatencyTest]
+R1520#20[LatencyTest]
+R1520#21[LatencyTest]
+R1520#22[LatencyTest]
+R1520#23[LatencyTest]
+R1520#24[Ori]
+R1520#25[MouseSpatial]
+R1520#26[LatencyTest]
+R1520#27[LatencyTest]
+R1520#28[Ori]
+R1520#29[MouseSpatial]
+R1520#30[MouseTemporal]
+R1520#31[Ori]
+R1520#32[MouseSpatial]
+R1520#33[MouseTemporal]
+R1520#34[MouseAperture]
+R1520#35[Ori]
+R1520#36[MouseSpatial]
+R1520#37[MouseTemporal]
+R1520#38[MouseTemporal]
+R1520#39[MouseAperture]
+R1520#40[Contrast]
+R1520#41[MouseAperture]
+R1520#42[Annulus]
+R1520#43[Ori]
+R1520#44[Ori]
+R1520#45[WholeScreenMapLP]
+R1520#46[CatRFfast]
+R1520#47[LatencyTest]
+R1520#48[LatencyTest]
+R1520#51[LatencyTest]
+R1520#52[Ori]
+R1520#53[MouseSpatial]
+R1520#54[LatencyTest]
+R1520#55[Ori]
+R1520#56[LatencyTest]
+R1520#57[MouseSpatial]
+R1520#58[MouseTemporal]
+R1520#59[MouseAperture]
+R1520#60[Contrast]
+R1520#61[LatencyTest]
+R1520#62[LatencyTest]
+R1520#63[Ori]
+R1520#64[MouseSpatial]
+R1520#65[MouseTemporal]
+R1520#66[MouseAperture]
+R1520#67[Contrast]
+R1520#68[Ori]
+R1520#69[MouseAperture]
+R1520#70[MouseAperture]
+R1520#71[Contrast]
+R1520#72[LatencyTest]
+R1520#73[Ori]
+R1520#74[MouseSpatial]
+R1520#75[MouseTemporal]
+R1520#76[MouseAperture]
+R1520#77[Contrast]
+R1520#78[LatencyTest]
+R1520#79[LatencyTest]
+R1520#80[LatencyTest]
+R1520#81[Ori]
+R1520#82[LatencyTest]
+R1520#83[MouseSpatial]
+R1520#84[Ori]
+R1520#85[MouseSpatial]
+R1520#86[MouseTemporal]
+R1520#87[MouseAperture]
+R1520#88[Contrast]
+R1520#89[OriLowHighTwoApertures]
+End of run
+------------------
+Run #3: R1521
+------------------
+Running units [1 2 4 5 6 7 10 11 12]...
+R1521#1[Ori]
+R1521#2[Ori]
+R1521#3[MouseSpatial]
+R1521#4[MouseSpatial]
+R1521#5[Ori]
+R1521#6[Ori]
+R1521#7[MouseSpatial]
+R1521#8[MouseTemporal]
+R1521#9[MouseAperture]
+R1521#10[Contrast]
+R1521#11[LatencyTest]
+R1521#12[LatencyTest]
+R1521#21[LatencyTest]
+R1521#22[Ori]
+R1521#23[MouseSpatial]
+R1521#24[LatencyTest]
+R1521#25[Ori]
+R1521#26[MouseSpatial]
+R1521#27[MouseTemporal]
+R1521#28[LatencyTest]
+R1521#29[Ori]
+R1521#30[MouseSpatial]
+R1521#31[Ori]
+R1521#32[MouseSpatial]
+R1521#33[Ori]
+R1521#34[MouseSpatial]
+R1521#35[MouseTemporal]
+R1521#36[MouseAperture]
+R1521#37[Contrast]
+R1521#38[Ori]
+R1521#39[Ori]
+R1521#40[LatencyTest]
+R1521#61[LatencyTest]
+R1521#62[LatencyTest]
+R1521#63[LatencyTest]
+R1521#64[LatencyTest]
+R1521#65[LatencyTest]
+R1521#66[LatencyTest]
+R1521#67[LatencyTest]
+R1521#68[Lesion]
+R1521#68[LatencyTest]
+R1521#69[LatencyTest]
+R1521#70[Ori]
+R1521#71[MouseSpatial]
+R1521#72[MouseSpatial]
+R1521#73[MouseTemporal]
+R1521#74[Contrast]
+R1521#75[Ori]
+R1521#76[Ori]
+R1521#77[LatencyTest]
+R1521#78[Ori]
+R1521#79[Lesion]
+End of run
+------------------
+Run #4: R1522
+------------------
+Running units [1 2 3 4 5]...
+
+=================
+07-Jul-2017 15:21:41
+=================
+Preparing run...
+R1522	[1 2 3 4 5]
+R1524	[4 5 6 7 8 9 10 11 12]
+R1525	[2 3]
+R1526	[7 8 9 11 12 13 14 15 16 17 18 19 20]
+R1527	3
+R1528	[3 4 5 6 7 8 9]
+R1536	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19]
+R1601	[1 2 3 4 5 6 7]
+R1603	[1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16]
+R1604	[1 2 3 4 5 6 7 8 9 10 11 12 13]
+R1605	[1 2 3 4 5 6 7 8 9]
+R1629	[1 2 3 4 5 6 7 8 9 10 11 12 13]
+R1701	[2 3 4 5 6 7 8 9 10 11]
+R1702	[1 2 3 4 5 6 7 8 9]
+------------------
+Run #1: R1522
+------------------
+Running units [1 2 3 4 5]...
+R1522#2[Ori]
+R1522#3[MouseAperture]
+R1522#3[MouseSpatial]
+R1522#3[MouseTemporal]
+R1522#3[Ori]
+R1522#3[Contrast]
+R1522#3[MouseAperture]
+R1522#3[MouseSpatial]
+R1522#3[MouseTemporal]
+R1522#3[Ori]
+R1522#12[Ori]
+R1522#14[Ori]
+R1522#15[MouseSpatial]
+R1522#16[MouseTemporal]
+R1522#17[MouseAperture]
+R1522#18[Contrast]
+R1522#19[Contrast]
+R1522#20[MouseAperture]
+R1522#21[Ori]
+R1522#22[LatencyTest]
+R1522#23[LatencyTest]
+R1522#24[LatencyTest]
+R1522#25[Ori]
+R1522#26[MouseSpatial]
+R1522#27[LatencyTest]
+R1522#28[Ori]
+R1522#29[MouseSpatial]
+R1522#30[MouseTemporal]
+R1522#31[MouseAperture]
+R1522#32[Contrast]
+R1522#33[Ori]
+R1522#34[MouseSpatial]
+R1522#35[MouseTemporal]
+R1522#36[MouseAperture]
+R1522#37[Contrast]
+R1522#38[LatencyTest]
+R1522#39[Ori]
+R1522#40[Ori]
+R1522#41[LatencyTest]
+R1522#42[Ori]
+R1522#43[MouseSpatial]
+End of run
+------------------
+Run #2: R1524
+------------------
+Running units [4 5 6 7 8 9 10 11 12]...
+R1524#30[Ori]
+R1524#31[MouseSpatial]
+R1524#32[MouseTemporal]
+R1524#33[MouseAperture]
+R1524#34[CatAperture]
+R1524#35[MouseAperture]
+R1524#36[Ori]
+R1524#37[Contrast]
+R1524#38[MouseSpatial]
+R1524#39[MouseAperture]
+R1524#40[CatAperture]
+R1524#41[Ori]
+R1524#42[MouseSpatial]
+R1524#43[MouseTemporal]
+R1524#44[MouseAperture]
+R1524#45[LatencyTest]
+R1524#46[Contrast]
+R1524#47[Ori]
+R1524#48[MouseSpatial]
+R1524#49[LatencyTest]
+R1524#50[MouseTemporal]
+R1524#51[Ori]
+R1524#52[MouseSpatial]
+R1524#53[LatencyTest]
+R1524#54[LatencyTest]
+R1524#55[LatencyTest]
+R1524#56[Ori]
+R1524#57[MouseSpatial]
+R1524#58[LatencyTest]
+R1524#59[LatencyTest]
+R1524#60[Ori]
+R1524#61[MouseSpatial]
+R1524#62[MouseTemporal]
+R1524#63[MouseAperture]
+R1524#64[CatAperture]
+R1524#65[Contrast]
+R1524#66[Ori]
+R1524#67[Ori]
+R1524#68[MouseSpatial]
+R1524#69[MouseTemporal]
+R1524#70[Ori]
+R1524#71[Ori]
+R1524#72[MouseSpatial]
+R1524#73[MouseTemporal]
+R1524#74[MouseAperture]
+R1524#75[CatAperture]
+R1524#76[Contrast]
+R1524#77[Ori]
+R1524#78[Ori]
+R1524#79[MouseAperture]
+R1524#80[LatencyTest]
+R1524#81[LatencyTest]
+R1524#82[Ori]
+R1524#83[MouseSpatial]
+R1524#84[MouseTemporal]
+R1524#85[MouseAperture]
+R1524#86[Ori]
+R1524#87[Ori]
+R1524#88[MouseSpatial]
+R1524#89[MouseTemporal]
+R1524#90[LatencyTest]
+End of run
+------------------
+Run #3: R1525
+------------------
+Running units [2 3]...
+R1525#7[Ori]
+R1525#8[LatencyTest]
+R1525#9[Ori]
+R1525#10[MouseSpatial]
+R1525#11[Ori]
+R1525#12[Ori]
+R1525#13[MouseSpatial]
+R1525#14[MouseTemporal]
+R1525#15[MouseAperture]
+R1525#16[Ori]
+R1525#17[MouseSpatial]
+R1525#18[LatencyTest]
+R1525#19[Ori]
+R1525#20[MouseSpatial]
+R1525#21[MouseTemporal]
+R1525#22[Ori]
+R1525#23[MouseAperture]
+End of run
+------------------
+Run #4: R1526
+------------------
+Running units [7 8 9 11 12 13 14 15 16 17 18 19 20]...
+R1526#51[Ori]
+R1526#52[MouseSpatial]
+R1526#53[MouseTemporal]
+R1526#54[MouseAperture]
+R1526#55[Contrast]
+R1526#56[Ori]
+R1526#57[Ori]
+R1526#58[MouseAperture]
+R1526#59[LatencyTest]
+R1526#60[RFmap]
+R1526#61[RFmap]
+R1526#62[Ori]
+R1526#63[MouseSpatial]
+R1526#64[MouseTemporal]
+R1526#65[MouseAperture]
+R1526#66[Contrast]
+R1526#67[Ori]
+R1526#68[LatencyTest]
+R1526#69[RFmap]
+R1526#70[Ori]
+R1526#71[MouseSpatial]
+R1526#72[MouseTemporal]
+R1526#73[MouseAperture]
+R1526#74[Contrast]
+R1526#75[Ori]
+R1526#76[MouseSpatial]
+R1526#77[MouseTemporal]
+R1526#78[LatencyTest]
+R1526#79[RFmap]
+R1526#80[RFmap]
+R1526#87[Ori]
+R1526#88[MouseSpatial]
+R1526#89[MouseTemporal]
+R1526#90[MouseAperture]
+R1526#91[CatAperture]
+R1526#92[MouseTemporal]
+R1526#93[MouseAperture]
+R1526#94[Contrast]
+R1526#95[Ori]
+R1526#96[LatencyTest]
+R1526#97[RFmap]
+R1526#98[Ori]
+R1526#99[MouseSpatial]
+R1526#100[CatSpatial]
+R1526#101[MouseTemporal]
+R1526#102[MouseTemporal]
+R1526#103[MouseTemporal]
+R1526#104[MouseAperture]
+R1526#105[MouseAperture]
+R1526#106[MouseSpatial]
+R1526#107[MouseTemporal]
+R1526#108[Ori]
+R1526#109[LatencyTest]
+R1526#110[LatencyTest]
+R1526#111[RFmap]
+R1526#112[RFmap]
+R1526#113[Contrast]
+R1526#114[Ori]
+R1526#115[MouseSpatial]
+R1526#116[MouseTemporal]
+R1526#117[LatencyTest]
+R1526#118[Ori]
+R1526#119[Ori]
+R1526#120[Ori]
+R1526#121[MouseSpatial]
+R1526#122[MouseTemporal]
+R1526#123[MouseAperture]
+R1526#124[Ori]
+R1526#125[Contrast]
+R1526#126[LatencyTest]
+R1526#127[RFmap]
+R1526#128[Ori]
+R1526#129[MouseSpatial]
+R1526#130[MouseTemporal]
+R1526#131[MouseAperture]
+R1526#132[Ori]
+R1526#133[Contrast]
+R1526#134[LatencyTest]
+R1526#135[RFmap]
+R1526#136[RFmap]
+R1526#137[Ori]
+R1526#138[MouseSpatial]
+R1526#139[MouseTemporal]
+R1526#140[MouseAperture]
+R1526#141[Contrast]
+R1526#142[LatencyTest]
+R1526#143[Ori]
+R1526#144[MouseSpatial]
+R1526#145[MouseTemporal]
+R1526#146[MouseAperture]
+R1526#147[Ori]
+R1526#148[Contrast]
+R1526#149[Ori]
+R1526#150[Ori]
+R1526#151[Ori]
+R1526#152[MouseSpatial]
+End of run
+------------------
+Run #5: R1527
+------------------
+Running units 3...
+R1527#18[Ori]
+R1527#19[MouseSpatial]
+R1527#20[MouseSpatial]
+R1527#21[MouseTemporal]
+R1527#22[LatencyTest]
+End of run
+------------------
+Run #6: R1528
+------------------
+Running units [3 4 5 6 7 8 9]...
+R1528#16[Contrast]
+R1528#17[Ori]
+R1528#18[MouseSpatial]
+R1528#19[MouseTemporal]
+R1528#20[MouseAperture]
+R1528#21[Ori]
+R1528#22[Contrast]
+R1528#23[CatAperture]
+R1528#24[Ori]
+R1528#25[MouseSpatial]
+R1528#26[MouseTemporal]
+R1528#27[MouseTemporal]
+R1528#28[MouseAperture]
+R1528#29[Ori]
+R1528#30[Contrast]
+R1528#31[Ori]
+R1528#32[Ori]
+R1528#33[Ori]
+R1528#34[MouseSpatial]
+R1528#35[MouseTemporal]
+R1528#36[MouseAperture]
+R1528#37[Ori]
+R1528#38[Ori]
+R1528#39[MouseSpatial]
+R1528#40[Contrast]
+R1528#41[Ori]
+R1528#42[MouseSpatial]
+R1528#43[MouseTemporal]
+R1528#44[MouseAperture]
+R1528#45[Ori]
+R1528#46[Contrast]
+R1528#47[LatencyTest]
+R1528#48[LatencyTest]
+R1528#49[LatencyTest]
+R1528#50[Ori]
+R1528#51[MouseSpatial]
+R1528#52[MouseTemporal]
+R1528#53[MouseAperture]
+R1528#54[Ori]
+R1528#55[MouseSpatial]
+R1528#56[MouseTemporal]
+R1528#57[MouseAperture]
+R1528#58[Contrast]
+R1528#59[Ori]
+R1528#60[Ori]
+R1528#61[MouseSpatial]
+R1528#62[MouseTemporal]
+R1528#63[MouseAperture]
+R1528#64[Ori]
+R1528#65[Contrast]
+R1528#66[Ori]
+R1528#67[LatencyTest]
+End of run
+------------------
+Run #7: R1536
+------------------
+Running units [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19]...
+R1536#1[Ori]
+R1536#2[LatencyTest]
+R1536#3[Ori]
+R1536#4[LatencyTest]
+R1536#5[Ori]
+R1536#6[Ori]
+R1536#7[MouseSpatial]
+R1536#8[MouseTemporal]
+R1536#9[MouseAperture]
+R1536#10[Ori]
+R1536#11[Ori]
+R1536#12[PatternMotion]
+R1536#13[MouseSpatial]
+R1536#14[LatencyTest]
+
+
+Error for file R1536#15[PatternMotion]:
+Error using analyze (line 52)
+Assertion failed.
+
+Error in recalculate (line 154)
+                Results = analyze(dataPath, fileName, sourceFormat, ...
+
+Error in parallel_function>make_general_channel/channel_general (line 914)
+                    O = F(C{:});
+
+Error in remoteParallelFunction (line 38)
+        out = parallel.internal.pool.serialize(feval(channel, channelArgs{:}));
+R1536#16[Ori]
+R1536#17[MouseSpatial]
+R1536#18[MouseTemporal]
+R1536#19[PatternMotion]
+R1536#20[Ori]
+R1536#21[MouseSpatial]
+R1536#22[MouseTemporal]
+R1536#23[MouseAperture]
+R1536#24[PatternMotion]
+R1536#25[LatencyTest]
+R1536#26[LatencyTest]
+R1536#27[LatencyTest]
+R1536#28[LatencyTest]
+R1536#29[Ori]
+R1536#30[LatencyTest]
+R1536#31[LatencyTest]
+R1536#32[Ori]
+R1536#33[LatencyTest]
+R1536#34[Ori]
+R1536#35[MouseSpatial]
+R1536#36[PatternMotion]
+R1536#37[MouseSpatial]
+R1536#38[MouseTemporal]
+R1536#39[MouseAperture]
+R1536#40[Contrast]
+R1536#41[Ori]
+R1536#42[PatternMotion]
+R1536#43[Ori]
+R1536#44[LatencyTest]
+R1536#45[Ori]
+R1536#46[MouseSpatial]
+R1536#47[MouseTemporal]
+R1536#48[PatternMotion]
+R1536#49[MouseAperture]
+R1536#50[LatencyTest]
+R1536#51[Ori]
+R1536#52[MouseSpatial]
+R1536#53[MouseTemporal]
+R1536#54[MouseAperture]
+R1536#55[PatternMotion]
+R1536#56[LatencyTest]
+R1536#57[Ori]
+R1536#58[PatternMotion]
+R1536#59[LatencyTest]
+R1536#61[Ori]
+R1536#62[Ori]
+R1536#63[MouseSpatial]
+R1536#64[MouseTemporal]
+R1536#65[PatternMotion]
+R1536#66[MouseAperture]
+R1536#67[CatAperture]
+R1536#68[Contrast]
+R1536#69[Ori]
+R1536#70[LatencyTest]
+R1536#71[Ori]
+R1536#72[PatternMotion]
+R1536#73[MouseSpatial]
+R1536#73[PatternMotion]
+R1536#74[MouseTemporal]
+R1536#75[MouseTemporal]
+R1536#76[MouseAperture]
+R1536#77[Ori]
+R1536#78[PatternMotion]
+R1536#79[Contrast]
+R1536#80[MouseAperture]
+R1536#81[CatRFfast]
+R1536#82[CatRFfast]
+R1536#83[RFmap]
+R1536#84[PatternMotion]
+R1536#85[Ori]
+R1536#86[LatencyTest]
+R1536#87[Ori]
+R1536#88[PatternMotion]
+R1536#89[MouseSpatial]
+R1536#90[MouseTemporal]
+R1536#91[MouseAperture]
+R1536#92[Ori]
+R1536#93[Ori]
+R1536#94[CatRFfast]
+R1536#95[CatRFfast]
+R1536#96[Contrast]
+R1536#97[Ori]
+R1536#98[PatternMotion]
+R1536#99[Ori]
+R1536#100[PatternMotion]
+R1536#101[PatternMotion]
+R1536#102[RFmap]
+End of run
+------------------
+Run #8: R1601
+------------------
+Running units [1 2 3 4 5 6 7]...
+R1601#1[LatencyTest]
+R1601#2[Ori]
+R1601#3[MouseSpatial]
+R1601#4[MouseTemporal]
+R1601#5[MouseAperture]
+R1601#6[PatternMotion]
+R1601#7[Contrast]
+R1601#8[LatencyTest]
+R1601#9[Ori]
+R1601#10[MouseSpatial]
+R1601#11[MouseTemporal]
+R1601#12[MouseAperture]
+R1601#13[PatternMotion]
+R1601#14[Contrast]
+R1601#15[RFmap]
+R1601#16[Ori]
+R1601#17[LatencyTest]
+R1601#18[Ori]
+R1601#19[MouseSpatial]
+R1601#20[MouseTemporal]
+R1601#21[MouseAperture]
+R1601#22[LatencyTest]
+R1601#23[Ori]
+R1601#24[MouseSpatial]
+R1601#25[MouseTemporal]
+R1601#26[MouseAperture]
+R1601#27[Ori]
+R1601#28[LatencyTest]
+R1601#29[MouseSpatial]
+R1601#30[MouseTemporal]
+R1601#31[MouseAperture]
+R1601#32[Ori]
+R1601#33[PatternMotion]
+R1601#34[Ori]
+R1601#35[Contrast]
+R1601#36[RFmap]
+R1601#37[LatencyTest]
+R1601#38[LatencyTest]
+R1601#39[Ori]
+R1601#40[Ori]
+R1601#41[MouseSpatial]
+R1601#42[MouseTemporal]
+R1601#43[LatencyTest]
+R1601#44[LatencyTest]
+R1601#45[MouseSpatial]
+R1601#46[PatternMotion]
+R1601#47[LatencyTest]
+R1601#48[Ori]
+R1601#49[MouseSpatial]
+R1601#50[MouseTemporal]
+R1601#51[MouseAperture]
+R1601#52[PatternMotion]
+R1601#53[Ori]
+R1601#54[Contrast]
+End of run
+------------------
+Run #9: R1603
+------------------
+Running units [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16]...
+R1603#1[LatencyTest]
+R1603#2[LatencyTest]
+R1603#3[Ori]
+R1603#4[MouseSpatial]
+R1603#5[MouseTemporal]
+R1603#6[MouseAperture]
+R1603#7[PatternMotion]
+R1603#8[Ori]
+R1603#9[Ori]
+R1603#10[LatencyTest]
+R1603#11[Ori]
+R1603#12[MouseSpatial]
+R1603#13[MouseTemporal]
+R1603#14[MouseAperture]
+R1603#15[PatternMotion]
+R1603#16[PatternMotion]
+R1603#17[LatencyTest]
+R1603#18[LatencyTest]
+R1603#19[Ori]
+R1603#20[PatternMotion]
+R1603#21[MouseSpatial]
+R1603#22[MouseTemporal]
+R1603#23[MouseAperture]
+R1603#24[Contrast]
+R1603#25[Ori]
+R1603#26[LatencyTest]
+R1603#27[LatencyTest]
+R1603#28[Ori]
+R1603#29[MouseSpatial]
+R1603#30[MouseTemporal]
+R1603#31[MouseAperture]
+R1603#32[Contrast]
+R1603#33[Ori]
+R1603#34[PatternMotion]
+R1603#35[LatencyTest]
+R1603#36[LatencyTest]
+R1603#37[Ori]
+R1603#38[LatencyTest]
+R1603#39[Ori]
+R1603#40[LatencyTest]
+R1603#41[LatencyTest]
+R1603#42[Ori]
+
+
+Error for file R1603#43[PatternMotion]:
+Error using analyze (line 52)
+Assertion failed.
+
+Error in recalculate (line 154)
+                Results = analyze(dataPath, fileName, sourceFormat, ...
+
+Error in parallel_function>make_general_channel/channel_general (line 914)
+                    O = F(C{:});
+
+Error in remoteParallelFunction (line 38)
+        out = parallel.internal.pool.serialize(feval(channel, channelArgs{:}));
+R1603#44[PatternMotion]
+R1603#45[Ori]
+R1603#46[LatencyTest]
+R1603#47[LatencyTest]
+R1603#48[Ori]
+R1603#49[Ori]
+R1603#50[MouseSpatial]
+R1603#51[MouseSpatial]
+R1603#52[MouseTemporal]
+R1603#53[MouseAperture]
+R1603#54[Ori]
+R1603#55[PatternMotion]
+R1603#56[Ori]
+R1603#57[LatencyTest]
+R1603#58[PatternMotion]
+R1603#59[MouseSpatial]
+R1603#60[MouseTemporal]
+R1603#61[MouseAperture]
+R1603#62[Contrast]
+R1603#63[Ori]
+R1603#64[LatencyTest]
+R1603#65[Ori]
+R1603#66[MouseSpatial]
+R1603#67[MouseTemporal]
+R1603#68[MouseAperture]
+R1603#69[Ori]
+R1603#70[PatternMotion]
+R1603#71[Ori]
+R1603#72[Contrast]
+R1603#73[LatencyTest]
+R1603#74[Ori]
+R1603#75[PatternMotion]
+R1603#76[MouseSpatial]
+R1603#77[MouseTemporal]
+R1603#78[Contrast]
+R1603#79[MouseAperture]
+R1603#80[Ori]
+R1603#81[PatternMotion]
+R1603#82[RFmap]
+R1603#83[Ori]
+R1603#84[PatternMotion]
+R1603#85[LatencyTest]
+R1603#86[LatencyTest]
+R1603#87[LatencyTest]
+R1603#88[Ori]
+R1603#89[MouseSpatial]
+R1603#90[MouseTemporal]
+R1603#91[MouseAperture]
+R1603#92[MouseSpatial]
+R1603#93[Contrast]
+R1603#94[MouseTemporal]
+R1603#95[Ori]
+R1603#96[PatternMotion]
+R1603#97[PatternMotion]
+R1603#98[Ori]
+R1603#99[RFmap]
+R1603#100[Ori]
+R1603#101[MouseSpatial]
+R1603#102[LatencyTest]
+R1603#103[LatencyTest]
+R1603#104[RFmap]
+R1603#105[LatencyTest]
+R1603#106[Ori]
+R1603#107[RFmap]
+R1603#108[LatencyTest]
+R1603#109[Ori]
+R1603#110[MouseSpatial]
+R1603#111[MouseTemporal]
+R1603#112[MouseAperture]
+R1603#113[Ori]
+R1603#115[LatencyTest]
+R1603#117[LatencyTest]
+R1603#118[LatencyTest]
+R1603#119[Ori]
+R1603#120[PatternMotion]
+R1603#121[MouseSpatial]
+R1603#122[MouseTemporal]
+R1603#123[Contrast]
+End of run
+------------------
+Run #10: R1604
+------------------
+Running units [1 2 3 4 5 6 7 8 9 10 11 12 13]...
+R1604#1[Ori]
+R1604#2[MouseSpatial]
+R1604#3[MouseTemporal]
+R1604#4[MouseAperture]
+R1604#5[LatencyTest]
+R1604#6[Ori]
+R1604#7[MouseSpatial]
+R1604#8[MouseTemporal]
+R1604#9[MouseAperture]
+R1604#10[Contrast]
+R1604#11[Ori]
+R1604#13[Ori]
+R1604#14[PatternMotion]
+R1604#15[Ori]
+R1604#16[PatternMotion]
+R1604#17[LatencyTest]
+R1604#18[LatencyTest]
+R1604#19[Ori]
+R1604#20[PatternMotion]
+R1604#21[MouseSpatial]
+R1604#22[MouseTemporal]
+R1604#23[MouseAperture]
+R1604#24[Contrast]
+R1604#25[Ori]
+R1604#26[PatternMotion]
+R1604#30[PatternMotion]
+R1604#31[Ori]
+R1604#32[MouseSpatial]
+R1604#33[MouseTemporal]
+R1604#34[MouseAperture]
+R1604#35[Contrast]
+R1604#36[Ori]
+R1604#37[Ori]
+R1604#38[MouseSpatial]
+R1604#39[LatencyTest]
+R1604#40[Ori]
+R1604#41[MouseSpatial]
+R1604#42[MouseTemporal]
+R1604#43[MouseAperture]
+R1604#44[Contrast]
+R1604#45[Ori]
+R1604#46[PatternMotion]
+R1604#47[LatencyTest]
+R1604#48[Ori]
+R1604#49[MouseSpatial]
+R1604#50[MouseTemporal]
+R1604#51[MouseAperture]
+R1604#52[LatencyTest]
+R1604#53[RFmap]
+R1604#54[MouseAperture]
+R1604#55[Ori]
+R1604#56[PatternMotion]
+R1604#57[CatRFfast]
+R1604#58[LatencyTest]
+R1604#59[LatencyTest]
+R1604#60[Ori]
+R1604#61[MouseSpatial]
+R1604#62[MouseTemporal]
+R1604#63[MouseAperture]
+R1604#64[Ori]
+R1604#65[PatternMotion]
+R1604#66[Ori]
+R1604#67[LatencyTest]
+R1604#68[Ori]
+R1604#69[MouseSpatial]
+R1604#70[MouseTemporal]
+R1604#71[MouseTemporal]
+R1604#72[MouseAperture]
+R1604#73[MouseSpatial]
+R1604#74[LatencyTest]
+R1604#75[Ori]
+R1604#76[MouseSpatial]
+R1604#77[MouseTemporal]
+R1604#78[MouseAperture]
+R1604#79[Contrast]
+R1604#80[Ori]
+R1604#81[PatternMotion]
+R1604#82[Ori]
+R1604#83[Ori]
+R1604#84[MouseSpatial]
+R1604#85[MouseTemporal]
+R1604#86[Ori]
+R1604#87[MouseSpatial]
+R1604#88[MouseTemporal]
+R1604#90[CatAperture]
+R1604#91[Contrast]
+R1604#92[Ori]
+R1604#93[Ori]
+R1604#95[LatencyTest]
+R1604#96[PatternMotion]
+R1604#98[RFmap]
+R1604#99[Ori]
+R1604#100[MouseSpatial]
+R1604#101[MouseTemporal]
+R1604#102[MouseAperture]
+R1604#105[PatternMotion]
+R1604#106[LatencyTest]
+R1604#107[Ori]
+End of run
+------------------
+Run #11: R1605
+------------------
+Running units [1 2 3 4 5 6 7 8 9]...
+R1605#1[LatencyTest]
+R1605#2[Ori]
+R1605#3[PatternMotion]
+R1605#4[LatencyTest]
+R1605#5[Ori]
+R1605#6[PatternMotion]
+R1605#7[MouseSpatial]
+R1605#8[MouseTemporal]
+R1605#9[MouseAperture]
+R1605#10[Contrast]
+R1605#11[Ori]
+R1605#12[PatternMotion]
+R1605#13[CatRFfast]
+R1605#14[RFmap]
+R1605#15[LatencyTest]
+R1605#16[Ori]
+R1605#17[LatencyTest]
+R1605#18[Ori]
+R1605#19[MouseSpatial]
+R1605#20[MouseTemporal]
+R1605#21[LatencyTest]
+R1605#22[LatencyTest]
+R1605#23[Ori]
+R1605#24[Ori]
+R1605#25[Ori]
+R1605#26[MouseSpatial]
+R1605#27[MouseTemporal]
+R1605#28[MouseAperture]
+R1605#29[Ori]
+R1605#30[PatternMotion]
+R1605#31[Ori]
+R1605#32[Contrast]
+R1605#33[LatencyTest]
+R1605#34[Ori]
+R1605#35[MouseSpatial]
+R1605#36[MouseTemporal]
+R1605#37[MouseAperture]
+R1605#38[Ori]
+R1605#39[PatternMotion]
+R1605#40[Contrast]
+R1605#41[Ori]
+R1605#42[PatternMotion]
+R1605#43[LatencyTest]
+R1605#44[LatencyTest]
+R1605#45[Ori]
+R1605#46[MouseSpatial]
+R1605#47[MouseSpatial]
+R1605#48[Ori]
+R1605#49[LatencyTest]
+R1605#50[Ori]
+R1605#51[MouseSpatial]
+R1605#52[MouseTemporal]
+R1605#53[MouseAperture]
+End of run
+------------------
+Run #12: R1629
+------------------
+Running units [1 2 3 4 5 6 7 8 9 10 11 12 13]...
+R1629#1[LatencyTest]
+R1629#2[LatencyTest]
+R1629#3[Ori]
+R1629#4[MouseSpatial]
+R1629#5[MouseTemporal]
+R1629#6[Ori]
+R1629#7[MouseSpatial]
+R1629#8[MouseSpatial]
+R1629#9[MouseTemporal]
+R1629#10[Ori]
+R1629#11[PatternMotion]
+R1629#12[CatRFfast10x10]
+R1629#13[MouseAperture]
+R1629#14[LatencyTest]
+R1629#15[Ori]
+R1629#16[MouseSpatial]
+R1629#17[MouseTemporal]
+R1629#18[Ori]
+R1629#19[LatencyTest]
+R1629#20[LatencyTest]
+R1629#21[LatencyTest]
+R1629#22[Ori]
+R1629#23[LatencyTest]
+R1629#24[LatencyTest]
+R1629#25[LatencyTest]
+R1629#26[LatencyTest]
+R1629#27[Ori]
+R1629#28[MouseSpatial]
+R1629#29[MouseTemporal]
+R1629#30[Ori]
+R1629#31[PatternMotion]
+R1629#33[LatencyTest]
+R1629#34[Ori]
+R1629#35[Ori]
+R1629#36[MouseSpatial]
+R1629#37[MouseTemporal]
+R1629#38[Ori]
+R1629#39[PatternMotion]
+R1629#40[Ori]
+R1629#41[MouseSpatial]
+R1629#42[MouseTemporal]
+R1629#43[MouseSpatial]
+R1629#44[PatternMotion]
+R1629#45[LatencyTest]
+R1629#46[Ori]
+R1629#47[MouseSpatial]
+R1629#48[MouseTemporal]
+R1629#49[Ori]
+R1629#50[PatternMotion]
+R1629#51[CatRFfast10x10]
+R1629#52[LatencyTest]
+R1629#53[Ori]
+R1629#54[MouseSpatial]
+R1629#55[MouseTemporal]
+R1629#56[Ori]
+R1629#57[PatternMotion]
+R1629#58[LatencyTest]
+R1629#59[Ori]
+R1629#60[MouseSpatial]
+R1629#61[MouseSpatial]
+R1629#62[MouseTemporal]
+R1629#63[Ori]
+R1629#64[CatRFfast10x10]
+R1629#65[CatRFfast10x10]
+R1629#66[MouseAperture]
+R1629#67[MouseAperture]
+R1629#68[CatRFfast10x10]
+R1629#70[Ori]
+R1629#71[LatencyTest]
+R1629#72[Ori]
+R1629#73[MouseSpatial]
+R1629#74[MouseTemporal]
+R1629#75[Ori]
+R1629#76[MouseSpatial]
+R1629#77[PatternMotion]
+R1629#78[MouseSpatial]
+R1629#79[PatternMotion]
+R1629#80[LatencyTest]
+R1629#81[Ori]
+R1629#82[LatencyTest]
+R1629#83[MouseSpatial]
+R1629#84[MouseTemporal]
+R1629#85[LatencyTest]
+R1629#86[MouseSpatial]
+R1629#87[MouseTemporal]
+R1629#88[Ori]
+R1629#89[PatternMotion]
+R1629#90[LatencyTest]
+R1629#91[Ori]
+R1629#92[MouseSpatial]
+R1629#93[MouseTemporal]
+R1629#94[MouseTemporal]
+R1629#96[CatRFfast10x10]
+R1629#97[CatRFfast10x10]
+R1629#98[MouseAperture]
+R1629#99[PatternMotion]
+R1629#99[LatencyTest]
+R1629#100[Ori]
+R1629#101[Ori]
+R1629#102[LatencyTest]
+R1629#103[MouseSpatial]
+R1629#104[MouseTemporal]
+R1629#105[Ori]
+R1629#106[PatternMotion]
+R1629#108[Ori]
+R1629#109[MouseSpatial]
+R1629#110[MouseTemporal]
+R1629#111[Ori]
+R1629#112[MouseAperture]
+R1629#113[PatternMotion]
+R1629#115[MouseAperture]
+R1629#116[Contrast]
+R1629#117[Contrast]
+End of run
+------------------
+Run #13: R1701
+------------------
+Running units [2 3 4 5 6 7 8 9 10 11]...
+R1701#6[LatencyTest]
+R1701#7[LatencyTest]
+R1701#8[LatencyTest]
+R1701#9[LatencyTest]
+R1701#10[LatencyTest]
+R1701#11[LatencyTest]
+R1701#12[LatencyTest]
+R1701#13[LatencyTest]
+R1701#14[LatencyTest]
+R1701#15[Looming]
+R1701#16[LatencyTest]
+R1701#17[Ori]
+R1701#18[MouseSpatial]
+R1701#19[MouseTemporal]
+R1701#20[MouseAperture]
+R1701#21[Velocity]
+R1701#22[Looming]
+R1701#23[NaturalImages]
+R1701#24[NaturalVideos]
+R1701#25[LatencyTest]
+R1701#26[Ori]
+R1701#27[LatencyTest]
+R1701#28[Ori]
+R1701#29[MouseSpatial]
+R1701#30[LatencyTest]
+R1701#31[MouseTemporal]
+R1701#32[MouseAperture]
+R1701#33[Looming]
+R1701#34[Looming]
+R1701#35[Looming]
+R1701#36[Velocity]
+R1701#37[CatRFfast10x10]
+R1701#38[LatencyTest]
+R1701#39[NaturalImages]
+R1701#40[LatencyTest]
+R1701#41[LatencyTest]
+R1701#42[Ori]
+R1701#43[LatencyTest]
+R1701#44[LatencyTest]
+R1701#45[MouseSpatial]
+R1701#46[LatencyTest]
+R1701#47[LatencyTest]
+R1701#48[LatencyTest]
+R1701#49[Ori]
+R1701#50[PatternMotion]
+R1701#51[PatternMotion]
+R1701#52[Velocity]
+R1701#53[Velocity]
+R1701#54[Velocity]
+R1701#55[Velocity]
+R1701#56[Looming]
+R1701#57[LatencyTest]
+R1701#58[LatencyTest]
+R1701#59[LatencyTest]
+R1701#60[PatternMotion]
+R1701#61[Velocity]
+R1701#62[LatencyTest]
+R1701#63[LatencyTest]
+R1701#64[Ori]
+R1701#65[Ori]
+R1701#67[MouseSpatial]
+R1701#68[LatencyTest]
+R1701#69[Ori]
+R1701#70[MouseSpatial]
+R1701#71[LatencyTest]
+R1701#72[MouseTemporal]
+R1701#73[MouseSpatial]
+R1701#74[MouseSpatial]
+R1701#75[MouseTemporal]
+R1701#76[MouseTemporal]
+R1701#77[Ori]
+R1701#78[PatternMotion]
+R1701#79[Contrast]
+R1701#80[PatternMotion]
+R1701#81[Looming]
+R1701#82[Ori]
+R1701#83[VelocityConstantCycles]
+R1701#84[Looming]
+R1701#85[Looming]
+R1701#86[LatencyTest]
+R1701#87[NaturalImages]
+R1701#88[LatencyTest]
+R1701#89[LatencyTest]
+R1701#90[LatencyTest]
+R1701#91[LatencyTest]
+R1701#92[LatencyTest]
+R1701#93[Ori]
+R1701#94[MouseSpatial]
+R1701#95[MouseTemporal]
+R1701#96[MouseTemporal]
+R1701#97[Ori]
+R1701#98[PatternMotion]
+R1701#99[Looming]
+R1701#100[LatencyTest]
+R1701#101[LatencyTest]
+R1701#102[LatencyTest]
+R1701#103[NaturalImages]
+R1701#104[NaturalImages]
+R1701#105[Looming]
+R1701#106[LatencyTest]
+R1701#107[Ori]
+R1701#108[LatencyTest]
+R1701#109[LatencyTest]
+R1701#111[LatencyTest]
+R1701#112[LatencyTest]
+R1701#113[Ori]
+R1701#114[MouseSpatial]
+R1701#115[MouseSpatial]
+R1701#116[MouseTemporal]
+R1701#117[MouseTemporal]
+R1701#118[Ori]
+R1701#119[PatternMotion]
+R1701#120[Looming]
+R1701#121[Velocity]
+R1701#122[Velocity]
+R1701#123[NaturalImages]
+R1701#124[NaturalImages]
+R1701#125[Looming]
+R1701#126[LatencyTest]
+R1701#127[LatencyTest]
+R1701#128[MouseTemporal]
+R1701#129[VelocityConstantCyclesBar]
+R1701#130[LatencyTest]
+R1701#131[Ori]
+R1701#132[LatencyTest]
+R1701#133[LatencyTest]
+End of run
+------------------
+Run #14: R1702
+------------------
+Running units [1 2 3 4 5 6 7 8 9]...
+R1702#1[LatencyTest]
+R1702#2[LatencyTest]
+R1702#3[LatencyTest]
+R1702#4[Ori]
+R1702#5[MouseSpatial]
+R1702#6[MouseTemporal]
+R1702#7[LatencyTest]
+R1702#8[Velocity]
+R1702#9[Looming]
+R1702#10[CatRFfast10x10]
+R1702#11[LatencyTest]
+R1702#12[LatencyTest]
+R1702#13[LatencyTest]
+R1702#14[LatencyTest]
+R1702#15[Ori]
+R1702#16[MouseSpatial]
+R1702#17[MouseTemporal]
+R1702#18[Ori]
+R1702#19[Ori]
+R1702#20[PatternMotion]
+R1702#21[MouseTemporal]
+R1702#22[Velocity]
+R1702#23[Looming]
+R1702#24[Velocity]
+R1702#25[LatencyTest]
+R1702#26[NaturalImages]
+R1702#27[Velocity]
+R1702#28[LatencyTest]
+R1702#29[Ori]
+R1702#30[Ori]
+R1702#31[MouseSpatial]
+R1702#32[MouseTemporal]
+R1702#33[Ori]
+R1702#34[MouseAperture]
+R1702#35[Velocity]
+R1702#36[Looming]
+R1702#37[LatencyTest]
+R1702#38[Ori]
+R1702#39[MouseSpatial]
+R1702#40[MouseTemporal]
+R1702#41[MouseTemporal]
+R1702#42[MouseTemporal]
+R1702#43[Ori]
+R1702#44[Ori]
+R1702#45[Velocity]
+R1702#46[Velocity]
+R1702#47[Looming]
+R1702#48[LatencyTest]
+R1702#49[Ori]
+R1702#50[Ori]
+R1702#51[MouseSpatial]
+R1702#52[MouseTemporal]
+R1702#53[MouseSpatial]
+R1702#54[MouseTemporal]
+R1702#55[MouseTemporal]
+R1702#56[Ori]
+R1702#57[PatternMotion]
+R1702#58[MouseTemporal]
+R1702#59[Contrast]
+R1702#60[MouseAperture]
+R1702#61[Looming]
+R1702#62[Velocity]
+R1702#63[Velocity]
+R1702#64[Velocity]
+R1702#65[Velocity]
+R1702#66[NaturalImages]
+R1702#67[VelocityConstantCyclesBar]
+R1702#68[CatRFfast10x10]
+R1702#69[Retinotopy]
+R1702#70[Ori]
+R1702#71[MouseTemporal]
+R1702#72[PatternMotion]
+R1702#73[LatencyTest]
+R1702#74[Ori]
+R1702#75[LatencyTest]
+R1702#76[Ori]
+R1702#77[LatencyTest]
+R1702#78[Ori]
+R1702#79[Ori]
+R1702#80[MouseTemporal]
+R1702#81[MouseTemporal]
+R1702#82[MouseSpatial]
+R1702#83[MouseSpatial]
+R1702#84[MouseSpatial]
+R1702#85[MouseTemporal]
+R1702#86[VelocityGratingsConstantCycles]
+R1702#87[VelocityGratings]
+R1702#88[VelocityCircles]
+R1702#89[CatRFfast10x10]
+R1702#90[Ori]
+R1702#91[MouseSpatial]
+R1702#92[VelocityGratings]
+R1702#93[LatencyTest]
+R1702#94[LatencyTest]
+R1702#95[Ori]
+R1702#96[MouseSpatial]
+R1702#97[MouseTemporal]
+R1702#98[Ori]
+R1702#99[Ori]
+R1702#100[Ori]
+R1702#101[MouseAperture]
+R1702#102[VelocityGratings]
+R1702#103[MouseApertureLarge]
+R1702#103[VelocityGratings]
+R1702#104[MouseApertureLarge]
+R1702#105[LatencyTest]
+R1702#106[Ori]
+R1702#107[LatencyTest]
+R1702#108[Ori]
+R1702#109[MouseSpatial]
+R1702#110[MouseTemporal]
+R1702#111[VelocityGratings]
+R1702#112[Ori]
+R1702#113[VelocityGratingsConstantCycles]
+R1702#114[VelocityCircles]
+R1702#115[LatencyTest]
+
+
+Error for file R1702#116[LatencyTest]:
+Struct contents reference from a non-struct array object.
+
+Error in loadExperiment (line 71)
+elseif ~ismember('stimDuration', dataset.ex.Params.Data.Properties.VariableNames) || ...
+
+Error in recalculate (line 90)
+            loadExperiment(dataDir, animalID, unit, fileName, sourceFormat);
+
+Error in parallel_function>make_general_channel/channel_general (line 914)
+                    O = F(C{:});
+
+Error in remoteParallelFunction (line 38)
+        out = parallel.internal.pool.serialize(feval(channel, channelArgs{:}));
+R1702#117[LatencyTest]
+R1702#118[Ori]
+R1702#119[MouseSpatial]
+R1702#120[MouseTemporal]
+End of run
+End of all runs
+

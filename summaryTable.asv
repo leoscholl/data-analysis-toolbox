@@ -136,7 +136,6 @@ classdef summaryTable < handle
             
             for i = 1:size(obj.Units,1)
                 
-                unitNo = obj.Units.number(i);
                 data = obj.Units.data{i};
                 
                 Sum = cell2table(data);
@@ -150,6 +149,7 @@ classdef summaryTable < handle
                     cells = unique(Sum.cell(Sum.electrode == electrode));
                     for c = 1:length(cells)
                         track = [];
+                        obj.unitNo;
                         cell = cells(c);
                         CellSum = Sum(Sum.cell == cell & Sum.electrode == electrode,:);
                         ori = obj.pref(CellSum(CellSum.ori,{'pref', 'f1pref','corrpref'}));
@@ -166,17 +166,17 @@ classdef summaryTable < handle
                             oriFileNo = CellSum.file(CellSum.ori);
                             oriCell = CellSum.cell(CellSum.ori);
                             oriElec = CellSum.electrode(CellSum.ori);
-                            [Results] = loadResults(obj.dataDir, ...
-                                obj.animalID, unitNo, oriFileNo, {});
+                            [Params, Results] = loadResults(obj.dataDir, ...
+                                obj.animalID, obj.unitNo, oriFileNo);
                             Statistics = Results.StatisticsAll{oriElec};
                             Statistics = Statistics(Statistics.cell == oriCell,:);
-                            [ osi, di ] = calculateOsi(Statistics, Results.Params);
+                            [ osi, di ] = calculateOsi(Statistics, Params);
                         else
                             osi = [];
                             di = [];
                         end
                         
-                        Summary = [Summary; {track, unitNo, ...
+                        Summary = [Summary; {track, obj.Units.number(i), ...
                             electrode, cell, ...
                             ori, osi, di, sf, tf, apt, velocity, ...
                             latency, other, char(notes)}];
@@ -197,11 +197,7 @@ classdef summaryTable < handle
         
         % --- Choose the preferred condition based on priorities
         function r = pref(T)
-            r = [];
-            if isempty(T) || size(T,1) > 1
-                return;
-            end
-            if ~isempty(T.pref{1})
+            if ~isempty(T.pref)
                 r = T.pref;
             elseif ismember('f1pref',T.Properties.VariableNames) && ...
                     ~isempty(T.f1pref) && ~isnan(T.f1pref)
@@ -212,6 +208,8 @@ classdef summaryTable < handle
             elseif ismember('lat',T.Properties.VariableNames) && ...
                     ~isempty(T.lat) && ~isnan(T.lat)
                 r = T.lat;
+            else
+                r = [];
             end
         end
         

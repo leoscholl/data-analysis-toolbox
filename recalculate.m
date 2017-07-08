@@ -1,5 +1,5 @@
 function recalculate(dataDir, figuresDir, animalID, whichUnits, whichFiles, ...
-    whichElectrodes, plotFigures, plotLFP, summaryFig)
+    whichElectrodes, plotFigures, plotLFP, summaryFig, sourceFormat)
 %recalculate and replot all data
 % whichUnits is an array of unit numbers to calculate
 % whichFiles is an array of file numbers to calculate
@@ -26,17 +26,22 @@ end
 if nargin < 9 || isempty(summaryFig)
     summaryFig = 0;
 end
+if nargin < 10 || isempty(sourceFormat)
+    sourceFormat = [];
+end
 
 % Duration log file
 DurationLogFile = 'duration_log.mat';
-if ~exist('avgDur')
-    avgDur = 30; % assume 30 seconds per file
+avgDur = 30; % assume 30 seconds per file
+try
+    if exist(DurationLogFile,'file')
+        load(DurationLogFile);
+    else
+        save(DurationLogFile, 'avgDur');
+    end
+catch
 end
-if exist(DurationLogFile,'file')
-    load(DurationLogFile);
-else
-    save(DurationLogFile, 'avgDur');
-end
+
 smoothing = 0.2;
 
 if plotFigures
@@ -72,7 +77,7 @@ for f = 1:size(Files,1)
     dataPath = fullfile(dataDir,animalID,unit,filesep);
     figuresPath = fullfile(figuresDir,animalID,unit,filesep);
     
-    clear hasError Electrodes Paams StimTimes LFP AnalogIn
+    clear hasError Electrodes Params StimTimes LFP AnalogIn
     fileName = Files.fileName{f};
     disp(fileName);
 %     
@@ -80,8 +85,9 @@ for f = 1:size(Files,1)
 %         
         % Load experiment
         disp('Loading experiment files...');
-        [Electrodes, Params, StimTimes, LFP, AnalogIn, hasError, errorMsg] = ...
-            loadExperiment(dataDir, animalID, unit, fileName);
+        [Electrodes, Params, StimTimes, LFP, AnalogIn, sourceFormat, ...
+            hasError, errorMsg] = ...
+            loadExperiment(dataDir, animalID, unit, fileName, sourceFormat);
         
         if hasError
             plotStimTimes(StimTimes, AnalogIn, figuresPath, fileName, errorMsg);
@@ -139,20 +145,20 @@ for f = 1:size(Files,1)
                 fprintf(2, 'Center surround not yet implemented.\n');
             otherwise
                 
-                if ~summaryFig && isempty(gcp('nocreate'))
+                if ~summaryFig && isempty(gcp('nocreate')) && isempty(getCurrentTask())
                     parpool; % start the parallel pool
                 end
                 
                 % Binning and making rastergrams
                 disp('analyzing...');
-                [Params, Results] = analyze(dataPath, fileName, ...
+                Results = analyze(dataPath, fileName, sourceFormat, ...
                     Params, StimTimes, Electrodes, whichElectrodes);
                 
                 % Plotting tuning curves and maps
                 if plotFigures
                     disp('plotting...');
                     showFigures = 0;
-                    plotAllResults(figuresPath, fileName, Params, Results, ...
+                    plotAllResults(figuresPath, fileName, Results, ...
                         whichElectrodes, plotTCs, plotBars, plotRasters, ...
                         plotMaps, summaryFig, plotLFP, showFigures);
                 

@@ -1,8 +1,8 @@
-function [Params, Results] = analyze(dataPath, fileName, ...
+function [Results] = analyze(dataPath, fileName, sourceFormat, ...
     Params, StimTimes, Electrodes, whichElectrodes)
 %analyze Function making PSTH, rasters, and ISIs for data in Electrodes
 
-if nargin < 7 || isempty(whichElectrodes)
+if nargin < 8 || isempty(whichElectrodes)
     whichElectrodes = Electrodes.number;
 end
 
@@ -271,7 +271,7 @@ parfor i = 1:length(whichElectrodes)
 
 end % Electrodes loop
 
-% Save results
+% Accumulate results
 for i = 1:length(whichElectrodes)
     elecNo = whichElectrodes(i); 
     Results.SpikeDataAll{elecNo} = SpikeDataAll{i};
@@ -279,16 +279,31 @@ for i = 1:length(whichElectrodes)
 end
 Results.StimTimes = StimTimes;
 Results.Electrodes = Electrodes(:,{'name','number'});
+Results.Params = Params;
+Results.sourceFormat = sourceFormat;
+Results.source = fileName;
 
-
+% Save to mat file
 if ~exist(dataPath,'dir')
     mkdir(dataPath);
 end
-save(fullfile(dataPath,[fileName,'.mat']),...
-        'Params','Results', '-append');
-
+resultsFile = fullfile(dataPath,[fileName,'.mat']);
+r = matfile(resultsFile, 'Writable', true);
+if isfield(r, 'analysis')
+    analysis = r.analysis;
+    ind = find(strcmp(analysis.sourceFormat, sourceFormat));
+    if isempty(ind) || ind == 0
+        analysis(end+1) = Results;
+    else
+        analysis(ind) = Results;
+    end
+    r.analysis = analysis;
+else
+    r.analysis = Results;
+end
 end
 
+% Helper function for counting number of units for a given electrode
 function count = countUnits(spikes)
 if isempty(spikes)
     count = 0;

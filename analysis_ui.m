@@ -22,7 +22,7 @@ function varargout = analysis_ui(varargin)
 
 % Edit the above text to modify the response to help analysis_ui
 
-% Last Modified by GUIDE v2.5 29-Jun-2017 13:04:37
+% Last Modified by GUIDE v2.5 07-Jul-2017 13:20:53
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -68,7 +68,7 @@ global uiPrefsList
 uiPrefsList = {'PlotLFPCheck', 'PlotFiguresCheck', ...
     'SummaryFigsCheck', 'DataDirBox', 'FiguresDirBox', ...
     'AnimalIDBox', 'UnitNoBox', 'FileNoBox', 'SortingDirBox', ...
-    'SuffixBox'};
+    'SuffixBox', 'SourceFormatMenu'};
 loadPrefs(handles);
 
 % Set the title
@@ -135,12 +135,20 @@ plotFigures = get(handles.PlotFiguresCheck, 'Value');
 summaryFigs = get(handles.SummaryFigsCheck, 'Value');
 dataDir = get(handles.DataDirBox, 'String');
 figuresDir = get(handles.FiguresDirBox, 'String');
+sourceFormatMenu = cellstr(get(handles.SourceFormatMenu, 'String'));
+sourceFormat = sourceFormatMenu{get(handles.SourceFormatMenu, 'Value')};
+switch sourceFormat
+    case 'Ripple'
+        figuresDir = fullfile(figuresDir, 'unsorted');
+    otherwise
+        figuresDir = fullfile(figuresDir, lower(sourceFormat));
+end
 
 setStatus(handles, 'recalculating...');
 switch expType
     case 'Spikes'
         recalculate(dataDir, figuresDir, animalID, unitNo, fileNo, whichElectrodes, ...
-            plotFigures, plotLFP, summaryFigs);
+            plotFigures, plotLFP, summaryFigs, sourceFormat);
     case 'ECoG'
         
 end
@@ -183,7 +191,15 @@ unitNo = eval(get(handles.UnitNoBox, 'String'));
 fileNo = eval(get(handles.FileNoBox, 'String'));
 whichElectrodes = eval(get(handles.ElectrodeNoBox, 'String'));
 dataDir = get(handles.DataDirBox, 'String');
+sourceFormatMenu = cellstr(get(handles.SourceFormatMenu, 'String'));
+sourceFormat = sourceFormatMenu{get(handles.SourceFormatMenu, 'Value')};
 figuresDir = get(handles.FiguresDirBox, 'String');
+switch sourceFormat
+    case 'Ripple'
+        figuresDir = fullfile(figuresDir, 'unsorted');
+    otherwise
+        figuresDir = fullfile(figuresDir, lower(sourceFormat));
+end
 
 expTypeMenu = cellstr(get(handles.ExpTypeMenu, 'String'));
 expType = expTypeMenu{get(handles.ExpTypeMenu, 'Value')};
@@ -192,7 +208,7 @@ setStatus(handles, 'plotting...');
 switch expType
     case 'Spikes'
         plotIndividual(dataDir, figuresDir, animalID, unitNo, fileNo, ...
-            whichElectrodes, figureType)
+            whichElectrodes, figureType, sourceFormat)
     case 'ECoG'
         
 end
@@ -698,6 +714,29 @@ function RawDataBox_CreateFcn(hObject, eventdata, handles)
 % handles    empty - handles not created until after all CreateFcns called
 
 % Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on selection change in SourceFormatMenu.
+function SourceFormatMenu_Callback(hObject, eventdata, handles)
+% hObject    handle to SourceFormatMenu (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns SourceFormatMenu contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from SourceFormatMenu
+
+
+% --- Executes during object creation, after setting all properties.
+function SourceFormatMenu_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to SourceFormatMenu (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');

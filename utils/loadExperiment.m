@@ -1,8 +1,13 @@
-function [Electrodes, Params, StimTimes, LFP, AnalogIn, hasError, errorMsg] ...
+function [Electrodes, Params, StimTimes, LFP, AnalogIn, sourceFormat, ...
+    hasError, errorMsg] ...
     = loadExperiment(dataDir, animalID, unit, fileName, sourceFormat)
 
 if nargin < 5 || isempty(sourceFormat)
     sourceFormat = {'Plexon', 'Ripple'};
+end
+
+if ~iscell(sourceFormat)
+    sourceFormat = cellstr(sourceFormat);
 end
 
 [~, fileName, ~] = fileparts(fileName);
@@ -85,11 +90,10 @@ if ~isfield(dataset,'digital')
     warning(['No digital events for ', fileName]);
 end
 
-
-
 % Convert everything into a nice format
 [ Electrodes, LFP, AnalogIn, Events ] = convertDataset( dataset );
 Params = dataset.ex.Params;
+sourceFormat = dataset.sourceformat;
 
 % Adjust StimTimes
 if ~isempty(Events)

@@ -16,11 +16,14 @@ if isfield(StimTimes, 'photodiode') && ~isempty(StimTimes.photodiode)
     if ~isempty(photodiode)
         Analog = AnalogIn.Channels(strcmp(AnalogIn.Channels.name, ...
             'analog 1'),:);
-        rawPhotodiode = Analog.data{1};
-        fs = AnalogIn.sampleRate;
-        meanSignal = mean(rawPhotodiode);
-        maxSignal = meanSignal+3*std(rawPhotodiode);
-        minSignal = meanSignal-1*std(rawPhotodiode);
+        if ~isempty(Analog) && isfield(Analog, 'data') && ...
+                ~isempty(Analog.data)
+            rawPhotodiode = Analog.data{1};
+            fs = AnalogIn.sampleRate;
+            meanSignal = mean(rawPhotodiode);
+            maxSignal = meanSignal+3*std(rawPhotodiode);
+            minSignal = meanSignal-1*std(rawPhotodiode);
+        end
     end
 end
 
