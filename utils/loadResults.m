@@ -15,6 +15,10 @@ if ~isempty(files) && size(files, 1) == 1
     unit = fileUnits{1};
     filePath = fullfile(dataDir, animalID, unit, [fileName, '.mat']);
     load(filePath, 'analysis');
+    if isempty(analysis)
+        warning('No analysis for %s', char(sourceFormat));
+        return;
+    end
     % Pick which data to load
     whichData = [];
     i = 1;

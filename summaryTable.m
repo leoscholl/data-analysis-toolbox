@@ -117,6 +117,11 @@ classdef summaryTable < handle
             Summary = obj.summarize();
             notes = get(obj.handles.CaseNotes, 'String');
             
+            if isempty(Summary)
+                csvFile = 'empty summary table';
+                return;
+            end
+            
             % Export
             exportFile = fullfile(obj.dataDir, obj.animalID, 'summary.mat');
             save(exportFile, 'Summary', 'notes');
@@ -138,6 +143,10 @@ classdef summaryTable < handle
                 
                 unitNo = obj.Units.number(i);
                 data = obj.Units.data{i};
+                
+                if isempty(data)
+                    continue;
+                end
                 
                 Sum = cell2table(data);
                 Sum.Properties.VariableNames = obj.columns;
@@ -183,6 +192,11 @@ classdef summaryTable < handle
                     end % cells loop
                 end % Electrodes loop
             end % Units loop
+            
+            if isempty(Summary)
+                Summary = table;
+                return;
+            end
             
             Summary = cell2table(Summary);
             Summary.Properties.VariableNames = {'track', 'unit', 'electrode', 'cell', ...
@@ -253,23 +267,18 @@ classdef summaryTable < handle
             
             for f=1:size(Files,1)
                 
-                fileName = Files.fileName{f};
-                filePath = fullfile(dataDir, animalID, ...
-                    Files.unit{f}, [fileName, '.mat']);
-                if exist(filePath,'file')
-                    load(filePath, 'Params', 'Results');
-                end
-                
-                if ~exist('Params', 'var') || ~exist('Results', 'var')
-                    fprintf(2, 'Missing results for %s\n', fileName);
+                results = loadResults(dataDir, animalID, Files.unitNo(f), ...
+                    Files.fileNo(f));
+                if isempty(results)
                     continue;
                 end
-                Electrodes = Results.Electrodes(:,{'name', 'number'});
+                Electrodes = results.Electrodes(:,{'name', 'number'});
+                Params = results.Params;
 
                 cells = {};
                 
-                for i=1:length(Results.StatisticsAll)
-                    Stats = Results.StatisticsAll{i};
+                for i=1:length(results.StatisticsAll)
+                    Stats = results.StatisticsAll{i};
                     if isempty(Stats)
                         continue;
                     end
