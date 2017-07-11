@@ -267,11 +267,5 @@ elseif nOverlappingPairs && nOverlappingPairs < length(stimTimesCorrected)/2
     hasError = 2;
 end
 
-if hasError
-    fprintf(2, [msg, '\n']);
-else
-    disp(msg);
-end
-
 end
 

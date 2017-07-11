@@ -1,4 +1,4 @@
-function Params = convertLogMat( dataPath, fileName )
+function Params = convertLogFile( dataPath, fileName )
 %ConvertLogMats Reads the log matrix from visstim and creates a new
 %parameters file
 
@@ -15,8 +15,8 @@ seqDir = fullfile(home,'Dropbox','TunningCurvePlugin');
 altSeqDir = fullfile(home,'Dropbox','TunningCurvePlugin','NewSeq');
 addpath(seqDir);
 
-Params = [];
 
+% Locate the log file
 filePath = fullfile(dataPath, [fileName, '.mat']);
 if ~exist(filePath, 'file')
     warning('Cannot convert empty file');
@@ -24,6 +24,7 @@ if ~exist(filePath, 'file')
     return;
 end
 
+% What to load?
 fileVars = who('-file', filePath);
 vars = {'data','GridSize',...
     'MonitorDistance','MonRes','MonSize','RFposition'};
@@ -36,7 +37,67 @@ end
 if ismember('StimDuration',fileVars)
     vars{end+1} = 'StimDuration';
 end
+if ismember('Params',fileVars)
+    vars{end+1} = 'Params';
+end
+Params = [];
 load(filePath, vars{:});
+
+% Fix any Params that have CamelCase naming
+if ~isempty(Params)
+    
+    oldParams = Params;
+    Params = [];
+    fields = {{'AnimalID', 'animalID'}, {'Unit', 'unit'}, ...
+        {'ExpNo', 'expNo'}, {'StimType', 'stimType'}, {'Ori', 'ori'}, ...
+        {'SF', 'sf'}, {'C', 'contrast'}, {'PPD', 'ppd'}, ...
+        {'StimDuration', 'stimDuration'}, ...
+        {'RFposition', 'rfPosition'}, {'BarWidth', 'barWidth'},...
+        {'BarLength', 'barLength'}, {'BarHeight', 'barLength'}, ...
+        {'CircleSize', 'circleSize'}, ...
+        {'BlankColorString', 'blankColorString'},...
+        {'StimColorString', 'stimColorString'}, {'Aperture', 'aperture'},... 
+        {'DrawMask', 'drawMask'}, {'SquareGratings', 'squareGratings'}, ...
+        {'ScreenNumber', 'screenNumber'}, {'ScreenRect', 'screenRect'},...
+        {'MonitorSize', 'monitorSize'}, {'GridSize', 'gridSize'}, ...
+        {'MonitorDistance', 'monitorDistance'}, ...
+        {'MonitorResolution', 'monitorResolution'}, ...
+        {'StimInterval', 'stimInterval'}, ...
+        {'StimIntervalMax', 'stimIntervalMax'},...
+        {'StimDuration', 'stimDuration'},...
+        {'StartTimePTB', 'startTimePTB'}, {'EndTimePTB', 'endTimePTB'},...
+        {'StartTimeRipple', 'startTimeRipple'},...
+        {'EndTimeRipple', 'endTimeRipple'}, ...
+        'nTrials', 'expNo', 'animalID', 'stimType', 'unit', ...
+        'ppd', 'monitorSize', 'gridSize', 'monitorDistance', ...
+        'monitorResolution', 'rfPosition', 'stimDuration', ...
+        'stimInterval', 'stimInvervalMax', 'nConds', 'nTrials'};
+    
+    Params = copyStructFields(oldParams, Params, fields);
+
+    % Some newer files have the Data table already filled out, but with
+    % CamelCase property names
+
+    if isfield(oldParams, 'Data') && ~isempty(oldParams.Data)
+        columns = oldParams.Data.Properties.VariableNames;
+        Params.Data = oldParams.Data;
+        if ismember('CircleSize', columns) && length(columns) == 17
+            Params.Data.Properties.VariableNames = {'conditionNo','stimTime',...
+                'velocity','apterture','ori','contrast','stimDuration','trialNo',...
+                'stimInterval','stimOffTime','stimTimePTB', 'stimOffTimePTB',...
+                'condition', 'circleSize', 'barWidth', 'barLength', 'nObjects'};
+        else
+            Params.Data.Properties.VariableNames = {'conditionNo','stimTime','sf','tf',...
+                'apterture','ori','contrast','stimDuration','trialNo','velocity',...
+                'stimInterval','stimOffTime','stimTimePTB','stimOffTimePTB','condition'};
+        end
+        rmpath(seqDir);
+        return;
+    end
+end
+
+
+% Start adding parameters
 [animalID, expNo, stimType] = parseFileName(fileName);
 Params.expNo = expNo;
 Params.animalID = animalID;
@@ -91,7 +152,7 @@ end
 if isempty(data)
     Params.Data = [];
     Params.nTrials = 0;
-    disp(['no trials for ',FileName]);
+    disp(['no trials for ',fileName]);
     rmpath(seqDir);
     return
 end

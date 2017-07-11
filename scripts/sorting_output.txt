@@ -59998,3 +59998,3335 @@ This file took 0 minutes and 28 seconds
 Time remaining: 0 minutes and 0 seconds
 
 Total elapsed time: 0 minutes and 28 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 10 seconds
+
+R1604#66[Ori]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 10 seconds
+
+R1604#38[MouseSpatial]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 10 seconds
+
+R1604#18[LatencyTest]
+Loading experiment files...
+Parallel port caught 198 out of 200 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 10 seconds
+
+R1604#54[MouseAperture]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 4 seconds
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 4 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 4 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 9 seconds
+
+R1604#65[PatternMotion]
+Loading experiment files...
+Parallel port caught 318 out of 320 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 5 seconds
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 6 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 4 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 9 seconds
+
+R1604#37[Ori]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 5 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 9 seconds
+
+R1604#17[LatencyTest]
+Loading experiment files...
+Parallel port caught 196 out of 200 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 2 seconds
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 4 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 7 seconds
+
+R1604#36[Ori]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 4 units
+This file took 0 minutes and 1 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 6 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 9 seconds
+
+R1604#53[RFmap]
+Loading experiment files...
+Could not correct PTB stim times for timer drift. Parallel port caught 2846 out of 8000 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 4 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 8 seconds
+
+R1604#64[Ori]
+Loading experiment files...
+Parallel port caught 318 out of 320 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1604#35[Contrast]
+Loading experiment files...
+Parallel port caught 128 out of 130 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+analyzing...
+1 electrodes (out of 1) with 4 units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 7 seconds
+
+R1604#16[PatternMotion]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 2 seconds
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 3 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 5 seconds
+
+R1604#34[MouseAperture]
+Loading experiment files...
+Parallel port caught 266 out of 270 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1604#15[Ori]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 7 seconds
+
+R1604#63[MouseAperture]
+Loading experiment files...
+Parallel port caught 534 out of 540 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+1 electrodes (out of 1) with 4 units
+This file took 0 minutes and 3 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1604#14[PatternMotion]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 5 seconds
+
+R1604#33[MouseTemporal]
+Loading experiment files...
+Parallel port caught 118 out of 120 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+1 electrodes (out of 1) with 4 units
+This file took 0 minutes and 1 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 5 seconds
+
+R1604#13[Ori]
+Loading experiment files...
+Parallel port caught 254 out of 256 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 4 seconds
+
+R1604#32[MouseSpatial]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 4 units
+This file took 0 minutes and 1 seconds
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 6 seconds
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 3 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 6 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 7 seconds
+
+R1604#62[MouseTemporal]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1604#31[Ori]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 4 units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 4 seconds
+
+R1604#11[Ori]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1604#30[PatternMotion]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 4 units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1604#61[MouseSpatial]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 3 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 4 seconds
+
+R1604#10[Contrast]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 5 seconds
+
+R1604#60[Ori]
+Loading experiment files...
+Parallel port caught 318 out of 320 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1604#26[PatternMotion]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 3 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 4 seconds
+
+R1604#9[MouseAperture]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 3 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1604#25[Ori]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 3 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 5 seconds
+
+R1604#59[LatencyTest]
+Loading experiment files...
+Parallel port caught 196 out of 200 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 2 seconds
+This file took 0 minutes and 4 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 4 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 4 seconds
+
+R1604#8[MouseTemporal]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 1 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 4 seconds
+
+R1604#58[LatencyTest]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 1 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1604#24[Contrast]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 3 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1604#7[MouseSpatial]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 1 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1604#23[MouseAperture]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1604#57[CatRFfast]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1604#56[PatternMotion]
+Loading experiment files...
+Parallel port caught 314 out of 320 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1604#6[Ori]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1604#5[LatencyTest]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 1 seconds
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 3 seconds
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 5 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1604#55[Ori]
+Loading experiment files...
+Parallel port caught 318 out of 320 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 5 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1604#22[MouseTemporal]
+Loading experiment files...
+Parallel port caught 234 out of 240 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 3 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 3 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1604#4[MouseAperture]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 3 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1604#3[MouseTemporal]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 1 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1604#75[Ori]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 1 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1604#21[MouseSpatial]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 3 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1604#2[MouseSpatial]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1604#74[LatencyTest]
+Loading experiment files...
+Parallel port caught 192 out of 200 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1604#73[MouseSpatial]
+Loading experiment files...
+Parallel port caught 144 out of 150 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1604#1[Ori]
+Loading experiment files...
+Parallel port caught 318 out of 320 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 3 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1604#20[PatternMotion]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 3 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1604#72[MouseAperture]
+Loading experiment files...
+Parallel port caught 538 out of 540 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1604#82[Ori]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 2 units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1604#19[Ori]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 3 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1604#81[PatternMotion]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 2 seconds
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 5 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1604#87[MouseSpatial]
+Loading experiment files...
+Parallel port caught 234 out of 240 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+1 electrodes (out of 1) with 2 units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1604#80[Ori]
+Loading experiment files...
+Parallel port caught 252 out of 256 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+1 electrodes (out of 1) with 2 units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1604#86[Ori]
+Loading experiment files...
+Parallel port caught 254 out of 256 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+1 electrodes (out of 1) with 3 units
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 50 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 5 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1604#71[MouseTemporal]
+Loading experiment files...
+Parallel port caught 238 out of 240 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 2 seconds
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1604#79[Contrast]
+Loading experiment files...
+Parallel port caught 206 out of 208 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1604#85[MouseTemporal]
+Loading experiment files...
+Parallel port caught 188 out of 192 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+1 electrodes (out of 1) with 3 units
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 50 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 17 seconds
+
+R1604#52[LatencyTest]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 1 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1604#70[MouseTemporal]
+Loading experiment files...
+Parallel port caught 236 out of 240 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 2 seconds
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1604#78[MouseAperture]
+Loading experiment files...
+Parallel port caught 424 out of 432 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1604#69[MouseSpatial]
+Loading experiment files...
+Parallel port caught 294 out of 300 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1604#84[MouseSpatial]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 1 seconds
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 4 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 14 seconds
+
+R1604#51[MouseAperture]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 3 seconds
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 3 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1604#83[Ori]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 1 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 4 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1604#77[MouseTemporal]
+Loading experiment files...
+Parallel port caught 190 out of 192 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 12 seconds
+
+R1604#50[MouseTemporal]
+Loading experiment files...
+Parallel port caught 190 out of 192 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1604#92[Ori]
+Loading experiment files...
+Parallel port caught 208 out of 210 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+1 electrodes (out of 1) with 2 units
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 2 seconds
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1604#76[MouseSpatial]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 1 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1604#68[Ori]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 3 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 10 seconds
+
+R1604#49[MouseSpatial]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1604#91[Contrast]
+Loading experiment files...
+Parallel port caught 204 out of 208 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+1 electrodes (out of 1) with 2 units
+This file took 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1604#96[PatternMotion]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 2 units
+This file took 0 minutes and 1 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1604#67[LatencyTest]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 1 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 8 seconds
+
+R1604#48[Ori]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1604#100[MouseSpatial]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 4 units
+This file took 0 minutes and 1 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1604#90[CatAperture]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 2 units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1604#95[LatencyTest]
+Loading experiment files...
+Parallel port caught 194 out of 200 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+1 electrodes (out of 1) with 2 units
+This file took 0 minutes and 1 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1604#88[MouseTemporal]
+Loading experiment files...
+Parallel port caught 188 out of 192 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 7 seconds
+
+R1604#47[LatencyTest]
+Loading experiment files...
+Parallel port caught 198 out of 200 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1604#93[Ori]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 2 units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+1 electrodes (out of 1) with 2 units
+This file took 0 minutes and 1 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1604#99[Ori]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 4 units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1604#98[RFmap]
+Loading experiment files...
+Could not correct PTB stim times for timer drift. Parallel port caught 2762 out of 8000 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1604#105[PatternMotion]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 4 units
+This file took 0 minutes and 1 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1604#46[PatternMotion]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1604#107[Ori]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 4 units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1604#102[MouseAperture]
+Loading experiment files...
+Parallel port caught 426 out of 432 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 5 seconds
+
+R1604#45[Ori]
+Loading experiment files...
+Parallel port caught 254 out of 256 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1604#106[LatencyTest]
+Loading experiment files...
+Parallel port caught 198 out of 200 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+1 electrodes (out of 1) with 4 units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 3 seconds
+1 electrodes (out of 1) with 4 units
+This file took 0 minutes and 3 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 4 seconds
+
+R1604#44[Contrast]
+Loading experiment files...
+Parallel port caught 206 out of 208 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1604#101[MouseTemporal]
+Loading experiment files...
+Parallel port caught 188 out of 192 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+1 electrodes (out of 1) with 4 units
+This file took 0 minutes and 1 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 4 seconds
+
+R1604#43[MouseAperture]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 4 seconds
+
+R1604#42[MouseTemporal]
+Loading experiment files...
+Parallel port caught 190 out of 192 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 1 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1604#41[MouseSpatial]
+Loading experiment files...
+Parallel port caught 238 out of 240 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1604#40[Ori]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 1 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1604#39[LatencyTest]
+Loading experiment files...
+Parallel port caught 198 out of 200 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 1 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+1 electrodes (out of 1) with 2 units
+This file took 0 minutes and 25 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 25 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1605#9[MouseAperture]
+Loading experiment files...
+Parallel port caught 430 out of 432 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1605#27[MouseTemporal]
+Loading experiment files...
+Parallel port caught 238 out of 240 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1605#34[Ori]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1605#18[Ori]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 5 units
+This file took 0 minutes and 2 seconds
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1605#17[LatencyTest]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 5 units
+This file took 0 minutes and 0 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 0 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 5 seconds
+
+R1605#16[Ori]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1605#26[MouseSpatial]
+Loading experiment files...
+Parallel port caught 296 out of 300 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+1 electrodes (out of 1) with 3 units
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1605#33[LatencyTest]
+Loading experiment files...
+Parallel port caught 198 out of 200 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 1 seconds
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 1 seconds
+1 electrodes (out of 1) with 4 units
+This file took 0 minutes and 5 seconds
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 5 seconds
+
+R1605#32[Contrast]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 1 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 4 seconds
+
+R1605#15[LatencyTest]
+Loading experiment files...
+Parallel port caught 98 out of 100 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 1 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1605#14[RFmap]
+Loading experiment files...
+Could not correct PTB stim times for timer drift. Parallel port caught 704 out of 2000 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 5 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1605#8[MouseTemporal]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 4 units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 5 seconds
+
+R1605#25[Ori]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 4 seconds
+
+R1605#31[Ori]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 5 seconds
+
+R1605#7[MouseSpatial]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 4 units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 4 seconds
+
+R1605#24[Ori]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 4 seconds
+
+R1605#30[PatternMotion]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 5 seconds
+
+R1605#6[PatternMotion]
+Loading experiment files...
+Parallel port caught 254 out of 256 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+1 electrodes (out of 1) with 4 units
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 4 seconds
+
+R1605#23[Ori]
+Loading experiment files...
+Warning: No digital events for R1605#23[Ori]
+> In loadExperiment (line 86)
+  In recalculate (line 90)
+  In parallel_function>make_general_channel/channel_general (line 914)
+  In remoteParallelFunction (line 38)
+Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 2 seconds
+This file took 0 minutes and 3 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1605#29[Ori]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1605#22[LatencyTest]
+Loading experiment files...
+Parallel port caught 199 out of 200 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 1 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1605#21[LatencyTest]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 4 units
+This file took 0 minutes and 0 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 0 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1605#20[MouseTemporal]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 5 units
+This file took 0 minutes and 1 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1605#28[MouseAperture]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 3 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 4 seconds
+
+R1605#5[Ori]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 4 units
+This file took 0 minutes and 3 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 4 seconds
+
+R1605#4[LatencyTest]
+Loading experiment files...
+Parallel port caught 198 out of 200 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1605#19[MouseSpatial]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 5 units
+This file took 0 minutes and 1 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1605#39[PatternMotion]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 2 seconds
+1 electrodes (out of 1) with 4 units
+This file took 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1605#43[LatencyTest]
+Loading experiment files...
+Warning: No digital events for R1605#43[LatencyTest]
+> In loadExperiment (line 86)
+  In recalculate (line 90)
+  In parallel_function>make_general_channel/channel_general (line 914)
+  In remoteParallelFunction (line 38)
+Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+1 electrodes (out of 1) with 4 units
+This file took 0 minutes and 1 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1605#42[PatternMotion]
+Loading experiment files...
+Parallel port caught 254 out of 256 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+1 electrodes (out of 1) with 4 units
+This file took 0 minutes and 16 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1605#38[Ori]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 2 seconds
+1 electrodes (out of 1) with 0 units
+No spikes for elec 1...This file took 0 minutes and 1 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1605#41[Ori]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 0 units
+No spikes for elec 1...This file took 0 minutes and 1 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1605#37[MouseAperture]
+Loading experiment files...
+Parallel port caught 536 out of 540 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+1 electrodes (out of 1) with 3 units
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 4 seconds
+
+R1605#3[PatternMotion]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 3 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 1 seconds
+
+R1605#40[Contrast]
+Loading experiment files...
+Parallel port caught 254 out of 260 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 16 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1605#13[CatRFfast]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 4 units
+This file took 0 minutes and 3 seconds
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+This file took 0 minutes and 3 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 5 seconds
+
+R1605#12[PatternMotion]
+Loading experiment files...
+Parallel port caught 254 out of 256 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 4 seconds
+
+R1605#2[Ori]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1605#46[MouseSpatial]
+Loading experiment files...
+Parallel port caught 294 out of 300 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1605#1[LatencyTest]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 1 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1605#36[MouseTemporal]
+Loading experiment files...
+Parallel port caught 238 out of 240 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 2 seconds
+1 electrodes (out of 1) with 4 units
+This file took 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1605#48[Ori]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 4 units
+This file took 0 minutes and 1 seconds
+1 electrodes (out of 1) with 4 units
+This file took 0 minutes and 3 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1605#35[MouseSpatial]
+Loading experiment files...
+Parallel port caught 292 out of 300 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1605#47[MouseSpatial]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 4 units
+This file took 0 minutes and 1 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 3 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 5 seconds
+
+R1605#11[Ori]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 4 units
+This file took 0 minutes and 3 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1605#45[Ori]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 4 units
+This file took 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1605#50[Ori]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1605#44[LatencyTest]
+Loading experiment files...
+Parallel port caught 198 out of 200 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+1 electrodes (out of 1) with 4 units
+This file took 0 minutes and 1 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 4 seconds
+
+R1605#10[Contrast]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+1 electrodes (out of 1) with 4 units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1605#52[MouseTemporal]
+Loading experiment files...
+Parallel port caught 236 out of 240 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1605#49[LatencyTest]
+Loading experiment files...
+Parallel port caught 198 out of 200 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 1 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1605#53[MouseAperture]
+Loading experiment files...
+Parallel port caught 428 out of 432 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1605#51[MouseSpatial]
+Loading experiment files...
+Parallel port caught 294 out of 300 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+1 electrodes (out of 1) with 3 units
+This file took 0 minutes and 3 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1701#69[Ori]
+Loading experiment files...
+StimTimesParallel are too small. Photodiode caught 254 out of 256 StimTimes. Using matlab timestamps (corrected with photodiode). 
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1701#26[Ori]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [3 3 2 3 3] units
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1701#47[LatencyTest]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [2 2 1 1 2] units
+This file took 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1701#85[Looming]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [3 3 1 3 4] units
+This file took 0 minutes and 5 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 5 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1701#84[Looming]
+Loading experiment files...
+Photodiode caught 136 out of 134 StimTimes. Could not correct timestamps with photodiode. Assuming 0.141 latency. Using parallel port timestamps (corrected with photodiode). 
+analyzing...
+This file took 0 minutes and 6 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1701#46[LatencyTest]
+Loading experiment files...
+Photodiode caught 198 out of 200 StimTimes. Using parallel port timestamps (corrected with photodiode) and parallel port + stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [2 2 1 1 2] units
+This file took 0 minutes and 3 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 6 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1701#25[LatencyTest]
+Loading experiment files...
+Photodiode caught 196 out of 200 StimTimes. Using parallel port timestamps (corrected with photodiode) and parallel port + stim duration for off times. 
+analyzing...
+analyzing...
+5 electrodes (out of 5) with [3 3 1 3 4] units
+This file took 0 minutes and 7 seconds
+5 electrodes (out of 5) with [3 3 1 3 4] units
+This file took 0 minutes and 5 seconds
+5 electrodes (out of 5) with [3 3 2 3 3] units
+This file took 0 minutes and 5 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 7 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1701#68[LatencyTest]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [3 3 1 3 4] units
+This file took 0 minutes and 4 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1701#45[MouseSpatial]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [3 4 3 1 3] units
+This file took 0 minutes and 6 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 4 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1701#67[MouseSpatial]
+Loading experiment files...
+Parallel port caught 284 out of 300 StimTimes. Photodiode caught 298 out of 300 StimTimes. Using matlab timestamps (corrected with photodiode). 
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 5 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1701#24[NaturalVideos]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [2 4 2 2 1] units
+This file took 0 minutes and 3 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 5 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1701#83[VelocityConstantCycles]
+Loading experiment files...
+Photodiode caught 164 out of 160 StimTimes. Could not correct timestamps with photodiode. Assuming 0.141 latency. Using parallel port timestamps (corrected with photodiode) and parallel port + stim duration for off times. 
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1701#23[NaturalImages]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 6 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1701#44[LatencyTest]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [3 4 3 3 3] units
+This file took 0 minutes and 4 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 4 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1701#43[LatencyTest]
+Loading experiment files...
+StimTimesParallel are too big. StimTimesPhotodiode are too big. Using matlab timestamps (corrected with photodiode). StimTimes fall outside of the possible range. Aborting. 
+Warning: Loading experiment failed. Skipping.
+> In recalculate (line 98)
+analyzing...
+5 electrodes (out of 5) with [2 2 2 2 2] units
+This file took 0 minutes and 8 seconds
+  In parallel_function>make_general_channel/channel_general (line 914)
+  In remoteParallelFunction (line 38)
+Total elapsed time: 0 minutes and 0 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1701#42[Ori]
+Loading experiment files...
+StimTimesParallel are too small. StimTimesPhotodiode are too big. Using matlab timestamps (corrected with photodiode). StimTimes fall outside of the possible range. Aborting. 
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 8 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 4 seconds
+
+R1701#65[Ori]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+Warning: Loading experiment failed. Skipping.
+> In recalculate (line 98)
+  In parallel_function>make_general_channel/channel_general (line 914)
+  In remoteParallelFunction (line 38)
+Total elapsed time: 0 minutes and 0 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 4 seconds
+
+R1701#41[LatencyTest]
+Loading experiment files...
+StimTimesParallel are too big. Photodiode caught 198 out of 200 StimTimes. Using matlab timestamps (corrected with photodiode). StimTimes fall outside of the possible range. Aborting. 
+Warning: Loading experiment failed. Skipping.
+> In recalculate (line 98)
+  In parallel_function>make_general_channel/channel_general (line 914)
+  In remoteParallelFunction (line 38)
+Total elapsed time: 0 minutes and 0 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 4 seconds
+
+R1701#40[LatencyTest]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [2 4 2 2 1] units
+This file took 0 minutes and 10 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 10 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 5 seconds
+
+R1701#22[Looming]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [2 2 2 2 2] units
+This file took 0 minutes and 7 seconds
+analyzing...
+5 electrodes (out of 5) with [3 3 1 3 4] units
+This file took 0 minutes and 18 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 7 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 5 seconds
+
+R1701#64[Ori]
+Loading experiment files...
+Parallel port caught 314 out of 320 StimTimes. StimTimesPhotodiode are too small. Using matlab timestamps (corrected with photodiode). 
+analyzing...
+analyzing...
+5 electrodes (out of 5) with [2 4 2 2 1] units
+This file took 0 minutes and 5 seconds
+analyzing...
+5 electrodes (out of 5) with [4 3 3 3 3] units
+This file took 0 minutes and 8 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 8 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 5 seconds
+
+R1701#39[NaturalImages]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+5 electrodes (out of 5) with [2 2 2 2 2] units
+This file took 0 minutes and 6 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 5 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 5 seconds
+
+R1701#21[Velocity]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [2 4 2 2 1] units
+This file took 0 minutes and 3 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 6 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 5 seconds
+
+R1701#63[LatencyTest]
+Loading experiment files...
+Photodiode caught 196 out of 200 StimTimes. Using parallel port timestamps (corrected with photodiode) and parallel port + stim duration for off times. 
+analyzing...
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 18 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1701#82[Ori]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [3 3 1 3 4] units
+This file took 0 minutes and 6 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 4 seconds
+
+R1701#20[MouseAperture]
+Loading experiment files...
+Parallel port caught 268 out of 270 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 6 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1701#81[Looming]
+Loading experiment files...
+Photodiode caught 162 out of 160 StimTimes. Could not correct timestamps with photodiode. Assuming 0.141 latency. Using parallel port timestamps (corrected with photodiode) and parallel port + stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [2 2 2 2 2] units
+This file took 0 minutes and 3 seconds
+5 electrodes (out of 5) with [2 4 2 2 1] units
+This file took 0 minutes and 5 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 5 seconds
+
+R1701#62[LatencyTest]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [2 2 2 2 2] units
+This file took 0 minutes and 3 seconds
+5 electrodes (out of 5) with [3 3 1 3 4] units
+This file took 0 minutes and 6 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 5 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 5 seconds
+
+R1701#19[MouseTemporal]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [2 3 2 2 1] units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 4 seconds
+
+R1701#61[Velocity]
+Loading experiment files...
+Parallel port caught 194 out of 200 StimTimes. using photodiode stim times with stim duration for off times. 
+analyzing...
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 4 seconds
+
+R1701#18[MouseSpatial]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+4 electrodes (out of 4) with [2 3 2 2] units
+This file took 0 minutes and 2 seconds
+5 electrodes (out of 5) with [2 2 2 2 2] units
+This file took 0 minutes and 4 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 6 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1701#80[PatternMotion]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [3 3 1 3 4] units
+This file took 0 minutes and 6 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 4 seconds
+
+R1701#17[Ori]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [2 4 2 2 1] units
+This file took 0 minutes and 3 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 6 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1701#79[Contrast]
+Loading experiment files...
+Photodiode caught 210 out of 208 StimTimes. Using parallel port timestamps (corrected with photodiode) and parallel port + stim duration for off times. 
+analyzing...
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 4 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 4 seconds
+
+R1701#60[PatternMotion]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [2 2 2 2 1] units
+This file took 0 minutes and 4 seconds
+analyzing...
+5 electrodes (out of 5) with [4 3 3 3 3] units
+This file took 0 minutes and 20 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1701#16[LatencyTest]
+Loading experiment files...
+Using parallel port timestamps and parallel port + stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [2 4 2 2 1] units
+This file took 0 minutes and 3 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1701#15[Looming]
+Loading experiment files...
+Could not correct PTB stim times for timer drift. Parallel port caught 22 out of 24 StimTimes. Photodiode caught 26 out of 24 StimTimes. Could not correct timestamps with photodiode. Assuming 0.141 latency. Using matlab timestamps (corrected with photodiode). 
+analyzing...
+Not enough trials
+This file took 0 minutes and 0 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 0 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1701#14[LatencyTest]
+Loading experiment files...
+Photodiode caught 198 out of 200 StimTimes. Using parallel port timestamps (corrected with photodiode) and parallel port + stim duration for off times. 
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 4 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 4 seconds
+
+R1701#59[LatencyTest]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [1 1 3 3 1] units
+This file took 0 minutes and 3 seconds
+5 electrodes (out of 5) with [3 3 1 3 4] units
+This file took 0 minutes and 5 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 20 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 8 seconds
+
+R1701#38[LatencyTest]
+Loading experiment files...
+Photodiode caught 198 out of 200 StimTimes. Using parallel port timestamps (corrected with photodiode) and parallel port + stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [4 3 3 3 3] units
+This file took 0 minutes and 4 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 4 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 7 seconds
+
+R1701#37[CatRFfast10x10]
+Loading experiment files...
+Photodiode caught 1212 out of 1210 StimTimes. Could not correct timestamps with photodiode. Assuming 0.141 latency. Using parallel port timestamps (corrected with photodiode) and parallel port + stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [2 1 2 2 1] units
+This file took 0 minutes and 4 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 4 seconds
+
+R1701#58[LatencyTest]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [1 1 3 3 1] units
+This file took 0 minutes and 3 seconds
+analyzing...
+5 electrodes (out of 5) with [4 3 3 3 3] units
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 4 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1701#13[LatencyTest]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [2 1 2 2 1] units
+This file took 0 minutes and 3 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 4 seconds
+
+R1701#57[LatencyTest]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [2 2 2 2 2] units
+This file took 0 minutes and 3 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 5 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1701#78[PatternMotion]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [3 3 1 3 4] units
+This file took 0 minutes and 7 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 4 seconds
+
+R1701#56[Looming]
+Loading experiment files...
+Parallel port caught 150 out of 160 StimTimes. StimTimesPhotodiode are too small. Using matlab timestamps (corrected with photodiode). 
+analyzing...
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 7 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1701#77[Ori]
+Loading experiment files...
+StimTimesParallel are too small. Photodiode caught 254 out of 256 StimTimes. Using matlab timestamps (corrected with photodiode). 
+analyzing...
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1701#12[LatencyTest]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [3 1 2 2 1] units
+This file took 0 minutes and 3 seconds
+5 electrodes (out of 5) with [2 2 2 2 2] units
+This file took 0 minutes and 4 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1701#11[LatencyTest]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [3 1 2 2 2] units
+This file took 0 minutes and 3 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 4 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 4 seconds
+
+R1701#55[Velocity]
+Loading experiment files...
+Parallel port caught 38 out of 40 StimTimes. using photodiode stim times with stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [2 2 2 2 2] units
+This file took 0 minutes and 1 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1701#10[LatencyTest]
+Loading experiment files...
+Photodiode caught 198 out of 200 StimTimes. Using parallel port timestamps (corrected with photodiode) and parallel port + stim duration for off times. 
+analyzing...
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1701#54[Velocity]
+Loading experiment files...
+Parallel port caught 194 out of 200 StimTimes. Photodiode caught 202 out of 200 StimTimes. Using matlab timestamps (corrected with photodiode). 
+analyzing...
+5 electrodes (out of 5) with [3 3 1 3 4] units
+This file took 0 minutes and 7 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 7 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1701#76[MouseTemporal]
+Loading experiment files...
+StimTimesParallel are too small. using photodiode stim times with stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [4 1 2 2 1] units
+This file took 0 minutes and 4 seconds
+5 electrodes (out of 5) with [2 2 2 2 2] units
+This file took 0 minutes and 4 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 4 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1701#9[LatencyTest]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [1 1 1 1 2] units
+This file took 0 minutes and 1 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1701#8[LatencyTest]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [1 1 1 1 1] units
+This file took 0 minutes and 1 seconds
+5 electrodes (out of 5) with [3 3 1 3 4] units
+This file took 0 minutes and 6 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1701#7[LatencyTest]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [1 1 1 1 1] units
+This file took 0 minutes and 1 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 6 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1701#75[MouseTemporal]
+Loading experiment files...
+Parallel port caught 180 out of 192 StimTimes. Photodiode caught 196 out of 192 StimTimes. Using matlab timestamps (corrected with photodiode). 
+analyzing...
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1701#6[LatencyTest]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [1 1 1 1 1] units
+This file took 0 minutes and 1 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1701#97[Ori]
+Loading experiment files...
+StimTimesParallel are too small. Photodiode caught 254 out of 256 StimTimes. Using matlab timestamps (corrected with photodiode). 
+analyzing...
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 4 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1701#53[Velocity]
+Loading experiment files...
+Parallel port caught 382 out of 400 StimTimes. Photodiode caught 402 out of 400 StimTimes. Using matlab timestamps (corrected with photodiode). 
+analyzing...
+5 electrodes (out of 5) with [2 2 2 2 2] units
+This file took 0 minutes and 6 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 6 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 4 seconds
+
+R1701#52[Velocity]
+Loading experiment files...
+Parallel port caught 196 out of 200 StimTimes. using photodiode stim times with stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [3 3 1 3 4] units
+This file took 0 minutes and 5 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 5 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1701#74[MouseSpatial]
+Loading experiment files...
+Parallel port caught 234 out of 240 StimTimes. using photodiode stim times with stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [3 1 2 3 2] units
+This file took 0 minutes and 5 seconds
+5 electrodes (out of 5) with [2 2 2 1 2] units
+This file took 0 minutes and 4 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 4 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 4 seconds
+
+R1701#51[PatternMotion]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 5 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 2 seconds
+
+R1701#96[MouseTemporal]
+Loading experiment files...
+StimTimesParallel are too small. using photodiode stim times with stim duration for off times. 
+analyzing...
+This file took 0 minutes and 31 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 31 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 12 seconds
+
+R1701#36[Velocity]
+Loading experiment files...
+Photodiode caught 162 out of 160 StimTimes. Using parallel port timestamps (corrected with photodiode) and parallel port + stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [3 1 2 3 2] units
+This file took 0 minutes and 5 seconds
+5 electrodes (out of 5) with [3 3 1 3 4] units
+This file took 0 minutes and 8 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 5 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1701#95[MouseTemporal]
+Loading experiment files...
+Photodiode caught 194 out of 192 StimTimes. Could not correct timestamps with photodiode. Assuming 0.141 latency. Using parallel port timestamps (corrected with photodiode). 
+analyzing...
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 8 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1701#73[MouseSpatial]
+Loading experiment files...
+Parallel port caught 232 out of 240 StimTimes. At least one pair of StimTimesPhotodiode are too close together. Using matlab timestamps (corrected with photodiode). 
+analyzing...
+analyzing...
+5 electrodes (out of 5) with [2 2 2 1 2] units
+This file took 0 minutes and 7 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 7 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 5 seconds
+
+R1701#50[PatternMotion]
+Loading experiment files...
+Parallel port caught 318 out of 320 StimTimes. using photodiode stim times with stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [4 3 3 3 3] units
+This file took 0 minutes and 5 seconds
+5 electrodes (out of 5) with [3 1 2 3 2] units
+This file took 0 minutes and 4 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 5 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 10 seconds
+
+R1701#35[Looming]
+Loading experiment files...
+Could not correct PTB stim times for timer drift. Parallel port caught 158 out of 160 StimTimes. Photodiode caught 162 out of 160 StimTimes. Could not correct timestamps with photodiode. Assuming 0.141 latency. Using matlab timestamps (corrected with photodiode). 
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 4 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1701#94[MouseSpatial]
+Loading experiment files...
+Photodiode caught 242 out of 240 StimTimes. Using parallel port timestamps (corrected with photodiode) and parallel port + stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [3 3 1 3 4] units
+This file took 0 minutes and 6 seconds
+5 electrodes (out of 5) with [2 2 2 1 2] units
+This file took 0 minutes and 5 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 6 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1701#72[MouseTemporal]
+Loading experiment files...
+Parallel port caught 188 out of 192 StimTimes. Photodiode caught 194 out of 192 StimTimes. Could not correct timestamps with photodiode. Assuming 0.141 latency. Using matlab timestamps (corrected with photodiode). 
+analyzing...
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 5 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 5 seconds
+
+R1701#49[Ori]
+Loading experiment files...
+Parallel port caught 318 out of 320 StimTimes. Photodiode caught 174 out of 320 StimTimes. Using matlab timestamps (corrected with photodiode). StimTimes fall outside of the possible range. Aborting. 
+Warning: Loading experiment failed. Skipping.
+> In recalculate (line 98)
+5 electrodes (out of 5) with [3 1 2 3 2] units
+This file took 0 minutes and 5 seconds
+  In parallel_function>make_general_channel/channel_general (line 914)
+  In remoteParallelFunction (line 38)
+Total elapsed time: 0 minutes and 0 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1701#48[LatencyTest]
+Loading experiment files...
+Parallel port caught 198 out of 200 StimTimes. Using matlab timestamps (corrected with 0.141000). 
+analyzing...
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 5 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 4 seconds
+
+R1701#93[Ori]
+Loading experiment files...
+StimTimesParallel are too small. Photodiode caught 254 out of 256 StimTimes. Using matlab timestamps (corrected with photodiode). 
+analyzing...
+analyzing...
+5 electrodes (out of 5) with [4 3 3 3 3] units
+This file took 0 minutes and 8 seconds
+5 electrodes (out of 5) with [3 3 1 3 4] units
+This file took 0 minutes and 5 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 8 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 10 seconds
+
+R1701#34[Looming]
+Loading experiment files...
+StimTimesParallel are too small. At least one pair of StimTimesPhotodiode are too close together. Using matlab timestamps (corrected with photodiode). 
+analyzing...
+5 electrodes (out of 5) with [2 2 1 2 2] units
+This file took 0 minutes and 4 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 4 seconds
+5 electrodes (out of 5) with [3 1 2 3 2] units
+This file took 0 minutes and 5 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1701#106[LatencyTest]
+Loading experiment files...
+Photodiode caught 198 out of 200 StimTimes. Using parallel port timestamps (corrected with photodiode). 
+analyzing...
+5 electrodes (out of 5) with [4 3 3 3 3] units
+This file took 0 minutes and 3 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 5 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 4 seconds
+
+R1701#92[LatencyTest]
+Loading experiment files...
+Photodiode caught 194 out of 200 StimTimes. Using parallel port timestamps (corrected with photodiode). 
+analyzing...
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 9 seconds
+
+R1701#33[Looming]
+Loading experiment files...
+Photodiode caught 162 out of 160 StimTimes. Could not correct timestamps with photodiode. Assuming 0.141 latency. Using parallel port timestamps (corrected with photodiode) and parallel port + stim duration for off times. 
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 5 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1701#71[LatencyTest]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [3 3 1 3 4] units
+This file took 0 minutes and 4 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 4 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1701#70[MouseSpatial]
+Loading experiment files...
+Parallel port caught 224 out of 240 StimTimes. using photodiode stim times with stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [4 1 2 2 3] units
+This file took 0 minutes and 5 seconds
+5 electrodes (out of 5) with [3 1 2 3 2] units
+This file took 0 minutes and 4 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 5 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1701#105[Looming]
+Loading experiment files...
+Photodiode caught 104 out of 100 StimTimes. Could not correct timestamps with photodiode. Assuming 0.141 latency. Using parallel port timestamps (corrected with photodiode). 
+analyzing...
+analyzing...
+5 electrodes (out of 5) with [3 3 2 3 2] units
+This file took 0 minutes and 5 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 5 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 8 seconds
+
+R1701#32[MouseAperture]
+Loading experiment files...
+Photodiode caught 430 out of 432 StimTimes. Using parallel port timestamps (corrected with photodiode) and parallel port + stim duration for off times. 
+analyzing...
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 4 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 4 seconds
+
+R1701#91[LatencyTest]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [2 1 2 1 2] units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 4 seconds
+
+R1701#90[LatencyTest]
+Loading experiment files...
+Photodiode caught 398 out of 400 StimTimes. Using parallel port timestamps (corrected with photodiode). 
+analyzing...
+5 electrodes (out of 5) with [4 1 2 2 3] units
+This file took 0 minutes and 4 seconds
+5 electrodes (out of 5) with [3 3 1 3 4] units
+This file took 0 minutes and 6 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 6 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 4 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 5 seconds
+
+R1701#104[NaturalImages]
+Loading experiment files...
+Warning: Missing Params for R1701#104[NaturalImages]
+> In loadExperiment (line 68)
+  In recalculate (line 90)
+  In parallel_function>make_general_channel/channel_general (line 914)
+  In remoteParallelFunction (line 38)
+Warning: Loading experiment failed. Skipping.
+> In recalculate (line 98)
+  In parallel_function>make_general_channel/channel_general (line 914)
+  In remoteParallelFunction (line 38)
+Total elapsed time: 0 minutes and 0 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 5 seconds
+
+R1701#103[NaturalImages]
+Loading experiment files...
+Photodiode caught 342 out of 340 StimTimes. Using parallel port timestamps (corrected with photodiode). 
+5 electrodes (out of 5) with [3 3 2 3 2] units
+This file took 0 minutes and 9 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 9 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 8 seconds
+
+R1701#31[MouseTemporal]
+Loading experiment files...
+Parallel port caught 190 out of 192 StimTimes. Photodiode caught 194 out of 192 StimTimes. Could not correct timestamps with photodiode. Assuming 0.141 latency. Using matlab timestamps (corrected with photodiode). 
+analyzing...
+5 electrodes (out of 5) with [3 2 2 3 4] units
+This file took 0 minutes and 9 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1701#114[MouseSpatial]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [3 3 3 3 3] units
+This file took 0 minutes and 8 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 9 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 5 seconds
+
+R1701#89[LatencyTest]
+Loading experiment files...
+Photodiode caught 196 out of 200 StimTimes. Using parallel port timestamps (corrected with photodiode). 
+analyzing...
+analyzing...
+5 electrodes (out of 5) with [4 1 2 2 3] units
+This file took 0 minutes and 10 seconds
+5 electrodes (out of 5) with [3 3 2 3 2] units
+This file took 0 minutes and 4 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 10 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1701#102[LatencyTest]
+Loading experiment files...
+Photodiode caught 198 out of 200 StimTimes. Using parallel port timestamps (corrected with photodiode). 
+analyzing...
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 4 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 7 seconds
+
+R1701#30[LatencyTest]
+Loading experiment files...
+Photodiode caught 198 out of 200 StimTimes. Using parallel port timestamps (corrected with photodiode) and parallel port + stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [3 2 2 3 4] units
+This file took 0 minutes and 4 seconds
+5 electrodes (out of 5) with [4 1 2 2 3] units
+This file took 0 minutes and 4 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 8 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1701#113[Ori]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [3 3 3 3 3] units
+This file took 0 minutes and 8 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 4 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1701#101[LatencyTest]
+Loading experiment files...
+At least one pair of StimTimesPhotodiode are too close together. Using parallel port timestamps (corrected with photodiode). 
+analyzing...
+5 electrodes (out of 5) with [3 3 3 3 3] units
+This file took 0 minutes and 5 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 4 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 5 seconds
+
+R1701#88[LatencyTest]
+Loading experiment files...
+Photodiode caught 198 out of 200 StimTimes. Using parallel port timestamps (corrected with photodiode) and parallel port + stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [3 3 1 3 4] units
+This file took 0 minutes and 5 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 5 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 5 seconds
+
+R1701#87[NaturalImages]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+5 electrodes (out of 5) with [3 1 2 2 3] units
+This file took 0 minutes and 4 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 4 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1701#100[LatencyTest]
+Loading experiment files...
+Photodiode caught 198 out of 200 StimTimes. Using parallel port timestamps (corrected with photodiode). 
+analyzing...
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 8 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1701#112[LatencyTest]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [3 3 3 3 3] units
+This file took 0 minutes and 5 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 5 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 7 seconds
+
+R1701#29[MouseSpatial]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [3 3 2 3 3] units
+This file took 0 minutes and 5 seconds
+5 electrodes (out of 5) with [3 1 2 2 2] units
+This file took 0 minutes and 4 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 5 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 7 seconds
+
+R1701#28[Ori]
+Loading experiment files...
+StimTimesParallel are too small. Photodiode caught 254 out of 256 StimTimes. Using matlab timestamps (corrected with photodiode). 
+analyzing...
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 5 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1701#111[LatencyTest]
+Loading experiment files...
+Photodiode caught 196 out of 200 StimTimes. Using parallel port timestamps (corrected with photodiode). 
+analyzing...
+5 electrodes (out of 5) with [3 3 3 3 3] units
+This file took 0 minutes and 4 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 4 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 5 seconds
+
+R1701#99[Looming]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [3 1 2 3 2] units
+This file took 0 minutes and 3 seconds
+5 electrodes (out of 5) with [3 3 2 3 3] units
+This file took 0 minutes and 6 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 4 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1701#109[LatencyTest]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [3 1 3 3 3] units
+This file took 0 minutes and 4 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 4 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 5 seconds
+
+R1701#108[LatencyTest]
+Loading experiment files...
+StimTimesParallel are too big. Photodiode caught 199 out of 200 StimTimes. Using matlab timestamps (corrected with photodiode). StimTimes fall outside of the possible range. Aborting. 
+Warning: Loading experiment failed. Skipping.
+> In recalculate (line 98)
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 3 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 5 seconds
+
+R1701#98[PatternMotion]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [3 1 2 3 2] units
+This file took 0 minutes and 5 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 5 seconds
+  In parallel_function>make_general_channel/channel_general (line 914)
+  In remoteParallelFunction (line 38)
+Total elapsed time: 0 minutes and 0 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 5 seconds
+
+R1701#107[Ori]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 6 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1701#27[LatencyTest]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [3 3 3 3 3] units
+This file took 0 minutes and 4 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 4 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 5 seconds
+
+R1701#119[PatternMotion]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1701#123[NaturalImages]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [3 3 1 3 4] units
+This file took 0 minutes and 18 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 18 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 7 seconds
+
+R1701#86[LatencyTest]
+Loading experiment files...
+Photodiode caught 198 out of 200 StimTimes. Using parallel port timestamps (corrected with photodiode) and parallel port + stim duration for off times. 
+analyzing...
+analyzing...
+5 electrodes (out of 5) with [3 1 2 2 3] units
+This file took 0 minutes and 6 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 6 seconds
+5 electrodes (out of 5) with [3 3 1 3 4] units
+This file took 0 minutes and 5 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 5 seconds
+analyzing...
+5 electrodes (out of 5) with [3 3 3 3 3] units
+This file took 0 minutes and 8 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 5 seconds
+
+R1701#127[LatencyTest]
+Loading experiment files...
+Using photodiode timestamps. 
+analyzing...
+5 electrodes (out of 5) with [3 3 3 3 3] units
+This file took 0 minutes and 4 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 4 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 5 seconds
+
+R1701#126[LatencyTest]
+Loading experiment files...
+Using photodiode timestamps. 
+analyzing...
+5 electrodes (out of 5) with [3 3 3 3 3] units
+This file took 0 minutes and 4 seconds
+analyzing...
+5 electrodes (out of 5) with [3 3 3 3 3] units
+This file took 0 minutes and 13 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 4 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 5 seconds
+
+R1701#125[Looming]
+Loading experiment files...
+Using photodiode timestamps. 
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 7 seconds
+
+R1701#131[Ori]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [3 3 3 3 3] units
+This file took 0 minutes and 8 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 8 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 5 seconds
+
+R1701#118[Ori]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [3 3 3 3 3] units
+This file took 0 minutes and 8 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 13 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 8 seconds
+
+R1701#122[Velocity]
+Loading experiment files...
+Using photodiode timestamps. 
+analyzing...
+5 electrodes (out of 5) with [3 3 3 3 3] units
+This file took 0 minutes and 4 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 8 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1701#117[MouseTemporal]
+Loading experiment files...
+Photodiode caught 242 out of 240 StimTimes. Could not correct timestamps with photodiode. Assuming 0.141 latency. Using parallel port timestamps (corrected with photodiode). 
+analyzing...
+analyzing...
+5 electrodes (out of 5) with [3 3 3 3 3] units
+This file took 0 minutes and 6 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 6 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 5 seconds
+
+R1701#124[NaturalImages]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+analyzing...
+Not enough trials
+This file took 0 minutes and 0 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 0 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 4 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 7 seconds
+
+R1701#121[Velocity]
+Loading experiment files...
+Photodiode caught 2 out of 54 StimTimes. Could not correct timestamps with photodiode. Assuming 0.141 latency. Using parallel port timestamps (corrected with photodiode). 
+analyzing...
+5 electrodes (out of 5) with [3 3 3 3 3] units
+This file took 0 minutes and 2 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 8 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 7 seconds
+
+R1701#130[LatencyTest]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [3 3 3 3 3] units
+This file took 0 minutes and 4 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 4 seconds
+
+R1701#133[LatencyTest]
+Loading experiment files...
+Could not correct PTB stim times for timer drift. Parallel port caught 8 out of 6 StimTimes. Photodiode caught 10 out of 6 StimTimes. Using matlab timestamps (corrected with photodiode). 
+analyzing...
+5 electrodes (out of 5) with [3 2 3 3 3] units
+This file took 0 minutes and 1 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 1 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 3 seconds
+
+R1701#132[LatencyTest]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 4 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1701#129[VelocityConstantCyclesBar]
+Loading experiment files...
+Photodiode caught 164 out of 160 StimTimes. Could not correct timestamps with photodiode. Assuming 0.141 latency. Using parallel port timestamps (corrected with photodiode) and parallel port + stim duration for off times. 
+5 electrodes (out of 5) with [3 3 3 3 3] units
+This file took 0 minutes and 7 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 2 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1701#120[Looming]
+Loading experiment files...
+Using photodiode timestamps. 
+analyzing...
+5 electrodes (out of 5) with [3 3 3 3 3] units
+This file took 0 minutes and 4 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 4 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 7 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1701#116[MouseTemporal]
+Loading experiment files...
+Photodiode caught 241 out of 240 StimTimes. Could not correct timestamps with photodiode. Assuming 0.141 latency. Using parallel port timestamps (corrected with photodiode). 
+analyzing...
+analyzing...
+5 electrodes (out of 5) with [3 3 3 3 3] units
+This file took 0 minutes and 5 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 5 seconds
+5 electrodes (out of 5) with [3 3 3 3 3] units
+This file took 0 minutes and 6 seconds
+analyzing...
+5 electrodes (out of 5) with [3 3 3 3 3] units
+This file took 0 minutes and 12 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 6 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 6 seconds
+
+R1701#115[MouseSpatial]
+Loading experiment files...
+using photodiode stim times with stim duration for off times. 
+analyzing...
+5 electrodes (out of 5) with [3 3 3 3 3] units
+This file took 0 minutes and 6 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 6 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 12 seconds
+There are 1 files to be recalculated.
+Time remaining: 0 minutes and 8 seconds
+
+R1701#128[MouseTemporal]
+Loading experiment files...
+Photodiode caught 196 out of 192 StimTimes. Could not correct timestamps with photodiode. Assuming 0.141 latency. Using parallel port timestamps (corrected with photodiode). 
+analyzing...
+5 electrodes (out of 5) with [3 3 3 3 3] units
+This file took 0 minutes and 4 seconds
+Time remaining: 0 minutes and 0 seconds
+
+Total elapsed time: 0 minutes and 4 seconds

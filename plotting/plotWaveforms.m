@@ -66,7 +66,6 @@ for ch = 1:size(Electrodes,1)
     print(fig1,figureName,'-dpng');
     hgsave(fig1,figureName);
     close(fig1);
-    disp(['Waveforms saved for ch ', num2str(elecNo)]);
 end
 
 end

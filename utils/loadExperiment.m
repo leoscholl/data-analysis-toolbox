@@ -1,5 +1,5 @@
 function [Electrodes, Params, StimTimes, LFP, AnalogIn, sourceFormat, ...
-    hasError, errorMsg] ...
+    hasError, msg] ...
     = loadExperiment(dataDir, animalID, unit, fileName, sourceFormat)
 
 if nargin < 5 || isempty(sourceFormat)
@@ -23,7 +23,7 @@ Params = [];
 StimTimes = [];
 LFP = [];
 AnalogIn = [];
-errorMsg = '';
+msg = '';
 
 % Load the file
 if ~exist(filePath)
@@ -63,15 +63,11 @@ end
 
 
 % Check params
-if ~isfield(dataset,'ex') || ~isfield(dataset.ex, 'Params') ...
-        || ~isfield(dataset.ex.Params,'Data')
+if ~isfield(dataset,'ex') || ~isfield(dataset.ex, 'Data') ...
+        || isempty(dataset.ex.Data)
     warning(['Missing Params for ', fileName]);
     hasError = 2;
     return;
-elseif ~ismember('stimDuration', dataset.ex.Params.Data.Properties.VariableNames) || ...
-        isempty(dataset.ex.Params.Data.stimDuration)
-    dataset.ex.Params.Data.stimDuration = ...
-        dataset.ex.Params.stimDuration*ones(size(dataset.ex.Params.Data,1),1);
 end
 
 % Check LFP
@@ -92,7 +88,7 @@ end
 
 % Convert everything into a nice format
 [ Electrodes, LFP, AnalogIn, Events ] = convertDataset( dataset );
-Params = dataset.ex.Params;
+Params = dataset.ex;
 sourceFormat = dataset.sourceformat;
 
 % Adjust StimTimes
@@ -102,7 +98,7 @@ end
 StimTimes.matlab = Params.Data.stimTime;
 
 Params.unitNo = unitNo;
-[stimOnTimes, stimOffTimes, source, latency, variation, hasError, errorMsg] = ...
+[stimOnTimes, stimOffTimes, source, latency, variation, hasError, msg] = ...
     adjustStimTimes(Params, Events);
 
 StimTimes.on = stimOnTimes;

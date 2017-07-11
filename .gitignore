@@ -1,0 +1,7 @@
+scripts/duration_log.mat
+*.asv
+scripts/batch_log.txt
+scripts/batch_output.txt
+scripts/duration_log.mat
+scripts/sorting_log.txt
+scripts/sorting_output.txt

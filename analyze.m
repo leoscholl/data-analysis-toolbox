@@ -1,9 +1,13 @@
 function [Results] = analyze(dataPath, fileName, sourceFormat, ...
-    Params, StimTimes, Electrodes, whichElectrodes)
+    Params, StimTimes, Electrodes, whichElectrodes, verbose)
 %analyze Function making PSTH, rasters, and ISIs for data in Electrodes
 
 if nargin < 8 || isempty(whichElectrodes)
     whichElectrodes = Electrodes.number;
+end
+
+if nargin < 9 || isempty(verbose)
+    verbose = false;
 end
 
 % Parameters
@@ -100,10 +104,12 @@ gaussFilter = exp(-x .^ 2 / (2 * sigma ^ 2));
 gaussFilter = gaussFilter / sum (gaussFilter); % normalize
 
 % All electrodes
-spikes = Electrodes.spikes(ismember(Electrodes.number, whichElectrodes));
-nUnits = cellfun(@countUnits, spikes)';
-fprintf('%d electrodes (out of %d) with %s units\n', ...
-    length(whichElectrodes), Params.nElectrodes, mat2str(nUnits));
+if verbose
+    spikes = Electrodes.spikes(ismember(Electrodes.number, whichElectrodes));
+    nUnits = cellfun(@countUnits, spikes)';
+    fprintf('%d electrodes (out of %d) with %s units\n', ...
+        length(whichElectrodes), Params.nElectrodes, mat2str(nUnits));
+end
 SpikeDataAll = cell(1,length(whichElectrodes));
 StatisticsAll = cell(1,length(whichElectrodes));
 parfor i = 1:length(whichElectrodes)

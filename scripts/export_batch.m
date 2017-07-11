@@ -1,7 +1,7 @@
 %% Parameters
 
 % Maintenance variables
-rawDataDir = '\\Studentlyonlab\f\Data';
+rawDataDir = 'I:\Data';
 dataDir = 'I:\DataExport';
 
 logFilename = 'batch_log.txt';
@@ -23,8 +23,8 @@ overwrite = 0; % for exporting data
 % units = {[1:5], [1:8,10:16], [1:2,4:7,10:12], [1:5], [4:12], [2:3], [7:9, 11:20], ...
 %         [3], [3:9], [1:19], [1:7], [1:16], [1:13], [1:9], [1:13], [2:11], [1:9]};
 
-animals = {'C1611'};
-units = {[18]};
+animals = {'R1518'};
+units = {[2]};
 
 fileType = 'unsorted'; % bin, osort, unsorted
 

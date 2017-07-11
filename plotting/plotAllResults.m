@@ -316,8 +316,6 @@ if summaryFig
     end
 end
 
-disp('...done');
-
 end
 
 function count = cellCount(x)

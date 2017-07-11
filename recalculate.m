@@ -4,9 +4,6 @@ function recalculate(dataDir, figuresDir, animalID, whichUnits, whichFiles, ...
 % whichUnits is an array of unit numbers to calculate
 % whichFiles is an array of file numbers to calculate
 
-% addpath('C:\Program Files (x86)\Ripple\Trellis\Tools\neuroshare\');
-tic;
-
 % Default parameters
 if nargin < 4
     whichUnits = [];
@@ -31,13 +28,13 @@ if nargin < 10 || isempty(sourceFormat)
 end
 
 % Duration log file
-DurationLogFile = 'duration_log.mat';
+durationLogFile = 'duration_log.mat';
 avgDur = 30; % assume 30 seconds per file
 try
-    if exist(DurationLogFile,'file')
-        load(DurationLogFile);
+    if exist(durationLogFile,'file')
+        load(durationLogFile);
     else
-        save(DurationLogFile, 'avgDur');
+        save(durationLogFile, 'avgDur');
     end
 catch
 end
@@ -53,151 +50,47 @@ end
 % Figure out which files need to be recalculated
 [~, ~, Files] = ...
     findFiles(dataDir, animalID, whichUnits, '*', whichFiles);
-
-% Display some info about duration
 nFiles = size(Files,1);
-progress = 0;
-elapsedTime = 0;
-timeRemaining = avgDur * (nFiles - progress);
-fprintf('There are %d files to be recalculated.\n', nFiles);
-fprintf('Time remaining: %d minutes and %d seconds\n\n', ...
-    floor(timeRemaining/60), floor(rem(timeRemaining,60)));
-
-if nFiles < 1
-    return;
-end
 
 % Recalculate all files
-for f = 1:size(Files,1)
+if nFiles < 1
+    return;
+elseif nFiles > 1
+    pool = gcp('nocreate');
+    if ~summaryFig && isempty(pool) && isempty(getCurrentTask())
+        parpool; % start the parallel pool
+    end
     
-    tic; % start the clock
-    
-    % Data comes from the DataDir, results go into the ResultsDir
-    unit = Files.unit{f};
-    dataPath = fullfile(dataDir,animalID,unit,filesep);
-    figuresPath = fullfile(figuresDir,animalID,unit,filesep);
-    
-    clear hasError Electrodes Params StimTimes LFP AnalogIn
-    fileName = Files.fileName{f};
-    disp(fileName);
-%     
-%     try
-%         
-        % Load experiment
-        disp('Loading experiment files...');
-        [Electrodes, Params, StimTimes, LFP, AnalogIn, sourceFormat, ...
-            hasError, errorMsg] = ...
-            loadExperiment(dataDir, animalID, unit, fileName, sourceFormat);
-        
-        if hasError
-            plotStimTimes(StimTimes, AnalogIn, figuresPath, fileName, errorMsg);
-        end
-
-        
-        if hasError > 1
-            warning('Loading experiment failed. Skipping.');
-            continue;
-        end
-
-        % Number of bins or size of bins?
-        switch Params.stimType
-            case {'VelocityConstantCycles', 'VelocityConstantCyclesBar',...
-                    'Looming', 'ConstantCycles'}
-                Params.binType = 'number'; % constant number of bins
-            otherwise
-                Params.binType = 'size'; % constant size of bins (for F1)
-        end
-        
-        % What to plot?
-        switch Params.stimType
-            case {'LatencyTest', 'LaserON', 'LaserGratings', ...
-                    'NaturalImages', 'NaturalVideos'}
-                plotMaps = 0;
-                plotTCs = 0;
-                plotBars = 1;
-                plotRasters = 1;
-                if strcmp(animalID, 'R1702')
-                    plotWFs = 0;
-                else
-                    plotWFs = 1;
-                end
-                plotISI = 1;
-            case {'RFmap', 'CatRFdetailed', 'CatRFfast', 'CatRFfast10x10'}
-                plotMaps = 1;
-                plotTCs = 0;
-                plotBars = 0;
-                plotRasters = 0;
-                plotWFs = 0;
-                plotISI = 0;
-            otherwise
-                plotMaps = 0;
-                plotTCs = 1;
-                plotBars = 0;
-                plotRasters = 1;
-                plotWFs = 0;
-                plotISI = 0;
-        end
-        
-        
-        % Do the analysis / plotting
-        switch Params.stimType
-            case {'OriLowHighTwoApertures', 'CenterNearSurround'}
-                fprintf(2, 'Center surround not yet implemented.\n');
-            otherwise
-                
-                if ~summaryFig && isempty(gcp('nocreate')) && isempty(getCurrentTask())
-                    parpool; % start the parallel pool
-                end
-                
-                % Binning and making rastergrams
-                disp('analyzing...');
-                Results = analyze(dataPath, fileName, sourceFormat, ...
-                    Params, StimTimes, Electrodes, whichElectrodes);
-                
-                % Plotting tuning curves and maps
-                if plotFigures
-                    disp('plotting...');
-                    showFigures = 0;
-                    plotAllResults(figuresPath, fileName, Results, ...
-                        whichElectrodes, plotTCs, plotBars, plotRasters, ...
-                        plotMaps, summaryFig, plotLFP, showFigures);
-                
-                
-                    % Plot waveforms?
-                    if plotWFs
-                        disp('Plotting waveforms...');
-                        plotWaveforms(figuresPath, fileName, Electrodes);
-                    end
-
-                    % Plot ISIs?
-                    if plotISI && ~isempty(Results)
-                        disp('Plotting ISIs...');
-                        plotISIs(figuresPath, fileName, Results);
-                    end
-                end
-        end
-        
-%     catch e
-%         disp(['This file didnt work ',fileName])
-%         warning(getReport(e,'extended','hyperlinks','off'),'Error');
-%     end
-    
-    % Update duration log
-    fileDuration = toc;
-    progress = progress + 1;
-    elapsedTime = elapsedTime + fileDuration;
-    avgDur = smoothing * fileDuration + (1 - smoothing) * avgDur;
-    save(DurationLogFile, 'avgDur');
-    
-    % Display time remaining
-    fprintf('This file took %d minutes and %d seconds\n', ...
-        floor(fileDuration/60), floor(rem(fileDuration,60)));
-    timeRemaining = avgDur * (nFiles - progress);
+    % Display some info about duration
+    timeRemaining = avgDur * nFiles / min(nFiles, pool.NumWorkers);
+    fprintf('There are %d files to be recalculated.\n', nFiles);
     fprintf('Time remaining: %d minutes and %d seconds\n\n', ...
         floor(timeRemaining/60), floor(rem(timeRemaining,60)));
+    
+    tic;
+    parfor f = 1:size(Files,1)
+        fileDuration(f) = recalculateSingle(dataDir, figuresDir, animalID, ...
+            Files.unit{f}, Files.fileName{f}, sourceFormat, whichElectrodes, ...
+            summaryFig, plotLFP, plotFigures, false);
+    end
+    elapsedTime = toc;
+    avgDur = smoothing * mean(fileDuration) + (1 - smoothing) * avgDur;
+else
+    
+    % Display some info about duration
+    timeRemaining = avgDur;
+    disp('There is 1 file to be recalculated.');
+    fprintf('Time remaining: %d minutes and %d seconds\n\n', ...
+        floor(timeRemaining/60), floor(rem(timeRemaining,60)));
+    
+    fileDuration = recalculateSingle(dataDir, figuresDir, animalID, ...
+        Files.unit{1}, Files.fileName{1}, sourceFormat, whichElectrodes, ...
+        summaryFig, plotLFP, plotFigures, true);
+    
+    elapsedTime = fileDuration;
+    avgDur = smoothing * fileDuration + (1 - smoothing) * avgDur;
 end
-
-
+save(durationLogFile, 'avgDur');
 fprintf('Total elapsed time: %d minutes and %d seconds\n', ...
     floor(elapsedTime/60), floor(rem(elapsedTime,60)));
 

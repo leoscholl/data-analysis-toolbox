@@ -18,7 +18,7 @@ for ch = 1:size(Electrodes,1)
     end
        
     % ISIs
-    figure('Visible','off');
+    fig = figure('Visible','off');
     cells = unique(SpikeData.cell);
     for u = 1:length(cells)
         unit = cells(u);
@@ -50,10 +50,9 @@ for ch = 1:size(Electrodes,1)
   
 
     figureName = fullfile(figuresPath,elecDir,[fileName, '_','El', num2str(elecNo),'-isi']);
-    print(gcf,figureName,'-dpng');
-    hgsave(gcf,figureName);
-    close;
-    disp(['ISIs saved for ', elecDir]);
+    print(fig,figureName,'-dpng');
+    hgsave(fig,figureName);
+    close(fig);
 end
 
 end
