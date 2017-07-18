@@ -4,8 +4,6 @@ function plotISIs(figuresPath, fileName, Results)
 Electrodes = Results.Electrodes;
 
 centers = 0:0.0002:0.1;
-nCells = cellfun(@countUnits, Results.SpikeDataAll);
-colors = makeDefaultColors(nCells);
 
 for ch = 1:size(Electrodes,1)
     
@@ -20,6 +18,7 @@ for ch = 1:size(Electrodes,1)
     % ISIs
     fig = figure('Visible','off');
     cells = unique(SpikeData.cell);
+    colors = makeDefaultColors(cells);
     for u = 1:length(cells)
         unit = cells(u);
         h = subplot(ceil(length(cells)/2),2,u);
@@ -55,13 +54,4 @@ for ch = 1:size(Electrodes,1)
     close(fig);
 end
 
-end
-
-
-function count = countUnits(spikes)
-if isempty(spikes)
-    count = 0;
-else
-    count = length(unique(spikes.cell));
-end
 end

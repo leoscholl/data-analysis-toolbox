@@ -45,11 +45,8 @@ switch Params.stimType
         plotTCs = 0;
         plotBars = 1;
         plotRasters = 1;
-        if strcmp(animalID, 'R1702')
-            plotWFs = 0;
-        else
-            plotWFs = 1;
-        end
+        
+        plotWFs = 1;
         plotISI = 1;
     case {'RFmap', 'CatRFdetailed', 'CatRFfast', 'CatRFfast10x10'}
         plotMaps = 1;

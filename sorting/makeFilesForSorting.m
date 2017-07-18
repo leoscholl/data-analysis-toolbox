@@ -57,11 +57,13 @@ parfor un = 1:length(units)
                 delete([destPath,filesep,animalID,unit,'.bin']);
             end
         case 'spikes'
-            waveforms = cell(100,1);
+            spikes = cell(100,1);
+            index = cell(100,1);
+            electrodeid = [];
             if exist(destPath,'dir') && ...
                     exist(fullfile(destPath,[animalID,unit,'.mat']),'file')
                 %overwrite
-                delete(fullfile(destPath,[animalID,unit,'.mat'],'file'));
+                delete(fullfile(destPath,[animalID,unit,'.mat']));
             end
     end
     
@@ -80,7 +82,6 @@ parfor un = 1:length(units)
     end
 
 
-    
     nextEnd = 0;
     endTimes = [];
     sampleRate = 30000; % just in case
@@ -190,7 +191,7 @@ parfor un = 1:length(units)
                 
             case 'spikes'
                 
-                % save all the unsorted spikes into a file for plexon
+                % save all the unsorted spikes into a file for waveclus
                 fileName = Files.fileName{fi};
                 filePath = fullfile(dataPath, fileName);
                 disp(fileName);
@@ -198,14 +199,30 @@ parfor un = 1:length(units)
                 % if the file has been exported, then use that data
                 fileVars = who('-file', filePath);
                 if ismember('dataset', fileVars)
+                    sourceFormat = {'Ripple'};
                     file = load(filePath, 'dataset');
-                    nChannels = size(file.dataset.spike, 1);
-                    for i = 1:nChannels
-                        waveforms{i} = [waveforms{i};
-                            file.dataset.spike(i).data'];
+                    whichData = [];
+                    i = 1;
+                    while isempty(whichData)
+                        if i > length(sourceFormat)
+                            warning('Unsupported filetype');
+                            continue;
+                        end
+                        whichData = find(strcmp({file.dataset.sourceformat}, sourceFormat{i}), ...
+                            1, 'last');
+                        i = i + 1;
                     end
-                    spikeCount = length(file.dataset.spike(1).time);
-                    endTime = file.dataset.spike(1).time(end);
+                    dataset = file.dataset(:,whichData);
+                    nChannels = length(dataset.spike);
+                    for i = 1:nChannels
+                        spikes{i} = [spikes{i};
+                            dataset.spike(i).data'];
+                        index{i} = [index{i};
+                            1000*dataset.spike(i).time' + nextEnd];
+                        electrodeid(i) = dataset.spike(i).electrodeid;
+                    end
+                    spikeCount = length(dataset.spike(1).time);
+                    endTime = 1000*dataset.spike(1).time(end)+10000; % add some artificial separation
                     nextEnd = nextEnd + endTime;
                     endTimes(fi,:) = [endTime(1),spikeCount,nextEnd];
                 else
@@ -218,9 +235,13 @@ parfor un = 1:length(units)
     Files.duration = endTimes(:,1);
     Files.samples = endTimes(:,2);
     Files.time = [endTimes(:,3) - endTimes(:,1), endTimes(:,3)];
+    if ~exist(destPath, 'dir')
+        mkdir(destPath);
+    end
     if strcmp(fileType, 'spikes')
-        waveforms = waveforms(~cellfun(@isempty,waveforms));
-        parsave2([destPath,animalID,unit,'.mat'],Files, waveforms);
+        spikes = spikes(~cellfun(@isempty,spikes));
+        index = index(~cellfun(@isempty,index));
+        parsave2([destPath,animalID,unit],Files, spikes, index, electrodeid);
     else
         parsave1([destPath,animalID,unit,'.mat'],Files);
     end
@@ -232,6 +253,13 @@ function parsave1(filename, Files)
 save(filename, 'Files');
 end
 
-function parsave2(filename, Files, waveforms)
-save(filename, 'Files', 'waveforms');
+function parsave2(filename, Files, waveforms, indices, electrodeid)
+for ch = 1:length(electrodeid)
+    spikes = waveforms{ch};
+    index = indices{ch};
+    sr = 30000;
+    save([filename, '-', num2str(electrodeid(ch)), 'ch.mat'], ...
+        'spikes', 'index', 'sr');
+end
+save([filename, '.mat'], 'Files');
 end

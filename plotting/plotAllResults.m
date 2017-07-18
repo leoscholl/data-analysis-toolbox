@@ -1,7 +1,6 @@
 function plotAllResults(figuresPath, fileName, Results,...
                         whichElectrodes, plotTCs, plotBars, plotRasters,...
-                        plotMaps, summaryFig, plotLFP, showFigures, ...
-                        clumpRasters)
+                        plotMaps, summaryFig, plotLFP, showFigures)
 %plotAllResults Function plotting Tuning Curves for different stimuli
 
 % Check arguments
@@ -45,9 +44,6 @@ SpikeDataAll = Results.SpikeDataAll;
 StatisticsAll = Results.StatisticsAll;
 Params = Results.Params;
 
-% Set up colors
-nCells = cellfun(@cellCount, SpikeDataAll);
-cellColors = makeDefaultColors(nCells);
 
 % If summary figures are requested, then cannot run in parallel
 if summaryFig
@@ -66,6 +62,7 @@ parfor i = 1:length(whichElectrodes)
         continue;
     end
     cells = unique(SpikeData.cell);
+    cellColors = makeDefaultColors(cells);
     
     % Plotting Figures
     elecDir = sprintf('Ch%02d',elecNo);
@@ -203,7 +200,7 @@ parfor i = 1:length(whichElectrodes)
         end
         
         % Plotting rasters and histograms
-        if plotRasters && size(tmpParams.Conditions,1) <= 20 && ~clumpRasters
+        if plotRasters == 1 % one raster per condition
             
             [hRaster, hPSTH] = plotRastergrams( SpikeDataUnit, tmpParams, ...
                 cellColors(j,:), showFigures, elecNo, u);
@@ -219,14 +216,12 @@ parfor i = 1:length(whichElectrodes)
             saveas(hPSTH,fullfile(figuresPath,elecDir,[figBaseName,'_PSTHs.png']));
             close(hPSTH);
             
-        elseif plotRasters
+        elseif plotRasters == 2 % clump all conditions into one raster
             
             % Lump conditions together for stimuli with many conditions
            [hRaster, hPSTH] = plotRastersAll( SpikeDataUnit, tmpParams, ...
                 cellColors(j,:), showFigures, elecNo, u );
 
-          
-            
 %             export_fig(fullfile(ResultsPath,ElecDir,[FigBaseName,'_raster']),...
 %                 '-png', '-m3', '-p0.05', hRaster);
             saveas(hRaster,fullfile(figuresPath,elecDir,[figBaseName,'_raster_all.png']));
@@ -316,12 +311,4 @@ if summaryFig
     end
 end
 
-end
-
-function count = cellCount(x)
-if isempty(x)
-    count = 0;
-else
-    count = length(unique(x.cell));
-end
 end

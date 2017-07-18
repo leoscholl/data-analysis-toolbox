@@ -1,4 +1,4 @@
-function [ colors ] = makeDefaultColors( nColors )
+function [ colors ] = makeDefaultColors( units )
 %makeDefaultColors Generates n colors for plotting
 
 basicColors = ['k';'b';'g';'c';'r'];
@@ -10,7 +10,14 @@ for c = 1:length(basicColors)
         [0.25 0.5 1]), 2);
 end
 
-colors = [colors; hsv(max(nColors) - size(colors, 1))];
+valueSet = num2cell([colors; hsv(max(units) - size(colors, 1))], 2);
+keySet = 0:length(colors)-1;
+
+map = containers.Map(keySet, valueSet);
+map(-1) = colors(1,:);
+
+colors = values(map, num2cell(units));
+colors = vertcat(colors{:});
 
 end
 

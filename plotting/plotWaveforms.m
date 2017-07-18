@@ -5,9 +5,6 @@ function plotWaveforms(figuresPath, fileName, Electrodes)
 fill_between_lines = @(X,Y1,Y2,C) patch( [X fliplr(X)],  [Y1 fliplr(Y2)], ...
     1, 'FaceColor', C, 'EdgeColor', 'none');
 
-nUnits = cellfun(@(x) length(unique(x(:,2))), Electrodes.waveforms);
-colors = makeDefaultColors(nUnits);
-
 for ch = 1:size(Electrodes,1)
     
     elecNo = Electrodes.number(ch);
@@ -22,6 +19,8 @@ for ch = 1:size(Electrodes,1)
     end
     
     units = unique(wf(:,2));
+    colors = makeDefaultColors(units);
+
     numSpikes = [];
     
     % Plot the waveforms

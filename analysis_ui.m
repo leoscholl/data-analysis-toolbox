@@ -22,7 +22,7 @@ function varargout = analysis_ui(varargin)
 
 % Edit the above text to modify the response to help analysis_ui
 
-% Last Modified by GUIDE v2.5 07-Jul-2017 13:20:53
+% Last Modified by GUIDE v2.5 14-Jul-2017 13:32:56
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -68,7 +68,7 @@ global uiPrefsList
 uiPrefsList = {'PlotLFPCheck', 'PlotFiguresCheck', ...
     'SummaryFigsCheck', 'DataDirBox', 'FiguresDirBox', ...
     'AnimalIDBox', 'UnitNoBox', 'FileNoBox', 'SortingDirBox', ...
-    'SuffixBox', 'SourceFormatMenu'};
+    'SuffixBox', 'SourceFormatMenu', 'RawDataBox'};
 loadPrefs(handles);
 
 % Set the title
@@ -81,6 +81,9 @@ if state
     toggleSummaryVisibility(handles, 0);
     set(handles.ShowSummary, 'Value', 0);
 end
+
+% Hide the sorting buttons
+SourceFormatMenu_Callback(hObject, eventdata, handles)
 
 
 % --- Outputs from this function are returned to the command line.
@@ -154,19 +157,26 @@ switch expType
 end
 setStatus(handles, '');
 
-% --- Executes on button press in MakeBinFile.
-function MakeBinFile_Callback(hObject, eventdata, handles)
-% hObject    handle to MakeBinFile (see GCBO)
+% --- Executes on button press in MakeSortFile.
+function MakeSortFile_Callback(hObject, eventdata, handles)
+% hObject    handle to MakeSortFile (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 animalID = get(handles.AnimalIDBox, 'String');
 unitNo = eval(get(handles.UnitNoBox, 'String'));
-dataDir = get(handles.RawDataBox, 'String');
 sortingDir = get(handles.SortingDirBox, 'String');
-
-setStatus(handles, 'generating files...');
-makeFilesForSorting(dataDir, sortingDir, animalID, unitNo, 'bin');
-setStatus(handles, '');
+sourceFormatMenu = cellstr(get(handles.SourceFormatMenu, 'String'));
+sourceFormat = sourceFormatMenu{get(handles.SourceFormatMenu, 'Value')};
+switch sourceFormat
+    case 'Plexon'
+        dataDir = get(handles.RawDataBox, 'String');
+        setStatus(handles, 'generating files...');
+        makeFilesForSorting(dataDir, sortingDir, animalID, unitNo, 'bin');
+        setStatus(handles, '');
+    otherwise
+        setStatus(handles, ['no sorting method for ', sourceFormat]);
+        return;
+end
 
 % --- Executes on button press in DoneSorting.
 function DoneSorting_Callback(hObject, eventdata, handles)
@@ -182,6 +192,34 @@ suffix = get(handles.SuffixBox, 'String');
 setStatus(handles, 'converting sorted files...');
 convertPlexonSpikes(sortingDir, dataDir, animalID, unitNo, suffix);
 setStatus(handles, '');
+
+
+% --- Executes on button press in DoneSorting.
+function AutomaticSorting_Callback(hObject, eventdata, handles)
+% hObject    handle to DoneSorting (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+animalID = get(handles.AnimalIDBox, 'String');
+unitNo = eval(get(handles.UnitNoBox, 'String'));
+dataDir = get(handles.DataDirBox, 'String');
+sortingDir = get(handles.SortingDirBox, 'String');
+sourceFormatMenu = cellstr(get(handles.SourceFormatMenu, 'String'));
+sourceFormat = sourceFormatMenu{get(handles.SourceFormatMenu, 'Value')};
+switch sourceFormat
+    case 'WaveClus'
+        setStatus(handles, 'generating files...');
+        makeFilesForSorting(dataDir, sortingDir, animalID, unitNo, 'spikes');
+                
+        setStatus(handles, 'sorting...');
+        sortWithWaveclus(sortingDir, animalID, unitNo);
+
+        setStatus(handles, 'splitting files...');
+        convertWavSpikes(dataDir, sortingDir, animalID, unitNo);
+        setStatus(handles, '');
+    otherwise
+        setStatus(handles, ['no sorting method for ', sourceFormat]);
+        return;
+end
 
 % --- Helper function for plotting buttons
 function plotHelper(handles, figureType)
@@ -359,6 +397,45 @@ set(handles.SummaryControlPanel, 'Position', panelPos(3,:));
 set(handles.SortingPanel, 'Position', panelPos(4,:));
 set(handles.FiguresPanel, 'Position', panelPos(5,:));
 
+
+% --- Executes on selection change in SourceFormatMenu.
+function SourceFormatMenu_Callback(hObject, eventdata, handles)
+% hObject    handle to SourceFormatMenu (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns SourceFormatMenu contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from SourceFormatMenu
+contents = cellstr(get(handles.SourceFormatMenu,'String'));
+sourceFormat = contents{get(handles.SourceFormatMenu,'Value')};
+
+switch sourceFormat
+    case 'Ripple'
+        set(handles.MakeSortFile, 'Visible', 'off');
+        set(handles.DoneSorting, 'Visible', 'off');
+    case 'Plexon'
+        set(handles.MakeSortFile, 'String', 'Make bin file');
+        set(handles.MakeSortFile, 'Callback', ...
+            @(hObject,eventdata)analysis_ui('MakeSortFile_Callback',...
+            hObject,eventdata,guidata(hObject)));
+        set(handles.DoneSorting, 'String', 'Done Sorting');
+        set(handles.DoneSorting, 'Callback', ...
+            @(hObject,eventdata)analysis_ui('DoneSorting_Callback',...
+            hObject,eventdata,guidata(hObject)));
+        set(handles.MakeSortFile, 'Visible', 'on');
+        set(handles.DoneSorting, 'Visible', 'on');
+    case 'WaveClus'
+        set(handles.DoneSorting, 'String', 'Do Sorting');
+        set(handles.DoneSorting, 'Callback', ...
+            @(hObject,eventdata)analysis_ui('AutomaticSorting_Callback',...
+            hObject,eventdata,guidata(hObject)));
+        set(handles.MakeSortFile, 'Visible', 'off');
+        set(handles.DoneSorting, 'Visible', 'on');
+    otherwise
+        set(handles.MakeSortFile, 'Visible', 'off');
+        set(handles.DoneSorting, 'Visible', 'off');
+end
+
 % --- Sets the title with a status indication
 function setStatus(handles, text)
 if isempty(text)
@@ -513,7 +590,9 @@ function UnitNoBox_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of UnitNoBox as text
 %        str2double(get(hObject,'String')) returns contents of UnitNoBox as a double
-
+if isempty(get(hObject, 'String'))
+    set(hObject, 'String', '[]');
+end
 
 % --- Executes during object creation, after setting all properties.
 function UnitNoBox_CreateFcn(hObject, eventdata, handles)
@@ -536,7 +615,9 @@ function FileNoBox_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of FileNoBox as text
 %        str2double(get(hObject,'String')) returns contents of FileNoBox as a double
-
+if isempty(get(hObject, 'String'))
+    set(hObject, 'String', '[]');
+end
 
 % --- Executes during object creation, after setting all properties.
 function FileNoBox_CreateFcn(hObject, eventdata, handles)
@@ -613,7 +694,9 @@ function ElectrodeNoBox_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of ElectrodeNoBox as text
 %        str2double(get(hObject,'String')) returns contents of ElectrodeNoBox as a double
-
+if isempty(get(hObject, 'String'))
+    set(hObject, 'String', '[]');
+end
 
 % --- Executes during object creation, after setting all properties.
 function ElectrodeNoBox_CreateFcn(hObject, eventdata, handles)
@@ -718,16 +801,6 @@ function RawDataBox_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
-
-
-% --- Executes on selection change in SourceFormatMenu.
-function SourceFormatMenu_Callback(hObject, eventdata, handles)
-% hObject    handle to SourceFormatMenu (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns SourceFormatMenu contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from SourceFormatMenu
 
 
 % --- Executes during object creation, after setting all properties.
