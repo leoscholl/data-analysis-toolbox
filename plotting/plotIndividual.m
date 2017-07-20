@@ -19,11 +19,10 @@ for f = 1:size(Files,1)
     fileName = Files.fileName{f};
     disp(fileName);
     unit = Files.unit{f};
-    unitNo = Files.unitNo(f);
     fileNo = Files.fileNo(f);
-    figuresPath = fullfile(figuresDir, animalID, unit);
-    analysis = loadResults(dataDir, animalID, unitNo, fileNo, ...
-        sourceFormat);
+    analysis = loadResults(dataDir, animalID, fileNo, sourceFormat);
+    figuresPath = fullfile(figuresDir, animalID, unit, ...
+        sourceFormat, filesep);
 
     % Start the parallel pool if one isn't already opened
     if isempty(gcp('nocreate'))
@@ -32,9 +31,9 @@ for f = 1:size(Files,1)
     
     switch figureType
         case 'waveforms'
-            Electrodes = loadExperiment(dataDir, animalID, unit, ...
-                fileName, sourceFormat);
-            plotWaveforms(figuresPath, fileName, Electrodes);
+            dataset = loadExperiment(dataDir, animalID, ...
+                fileNo, sourceFormat);
+            plotWaveforms(figuresPath, fileName, dataset);
         case 'isi'
             plotISIs(figuresPath, fileName, analysis);
         case 'rasters'

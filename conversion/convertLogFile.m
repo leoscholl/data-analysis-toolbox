@@ -104,6 +104,7 @@ Params.animalID = animalID;
 Params.stimType = stimType;
 pathParts = strsplit(dataPath,filesep);
 Params.unit = char(pathParts{end});
+Params.unitNo = sscanf(Params.unit, 'Unit%d');
 
 % Monitor resolution, size, PPD, etc.
 if exist('MonRes','var')

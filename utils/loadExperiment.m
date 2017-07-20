@@ -1,34 +1,26 @@
-function [Electrodes, Params, StimTimes, LFP, AnalogIn, sourceFormat, ...
-    hasError, msg] ...
-    = loadExperiment(dataDir, animalID, unit, fileName, sourceFormat)
+function [dataset] = loadExperiment(dataDir, animalID, fileNo, sourceFormat)
 
-if nargin < 5 || isempty(sourceFormat)
+if nargin < 4 || isempty(sourceFormat)
     sourceFormat = {'Plexon', 'Ripple'};
-end
-
-if ~iscell(sourceFormat)
+elseif ~iscell(sourceFormat)
     sourceFormat = cellstr(sourceFormat);
 end
 
-[~, fileName, ~] = fileparts(fileName);
-[~, fileNo, stimType] = parseFileName(fileName);
-fileName = createFileName(animalID, fileNo, stimType);
-unitNo = str2num(unit(5:end));
-dataPath = fullfile(dataDir, animalID, unit, filesep);
-filePath = fullfile(dataPath,[fileName,'.mat']);
+dataset = [];
 
-% Make sure some variables exist in case they are non-existent in the file
-Electrodes = [];
-Params = [];
-StimTimes = [];
-LFP = [];
-AnalogIn = [];
-msg = '';
+[~, ~, Files] = findFiles(dataDir, animalID, [], '*.mat', fileNo);
+if size(Files, 1) > 1
+    warning('Too many files with the same file number (#%d)', fileNo);
+    return;
+elseif isempty(Files)
+    warning('File no %d not found', fileNo);
+    return;
+end
+filePath = Files.rawFileName{1};
 
 % Load the file
-if ~exist(filePath)
-    warning(['No data for ', fileName]);
-    hasError = 2;
+if ~exist(filePath, 'file')
+    warning('No data for file %d', fileNo);
     return;
 end
 file = load(filePath, 'dataset');
@@ -38,8 +30,7 @@ whichData = [];
 i = 1;
 while isempty(whichData)
     if i > length(sourceFormat)
-        warning('Unsupported filetype');
-        hasError = 2;
+        warning('No dataset for %s', char(sourceFormat));
         return;
     end
     whichData = find(strcmp({file.dataset.sourceformat}, sourceFormat{i}), ...
@@ -47,64 +38,28 @@ while isempty(whichData)
     i = i + 1;
 end
 dataset = file.dataset(:,whichData);
+dataset.source = filePath;
 
 % Check data
-if ~exist('dataset','var')
-    warning(['No data for ', fileName]);
-    hasError = 2;
-    return;
-end
 if ~isfield(dataset,'spike')
-    warning(['No spikes for ', fileName]);
-    hasError = 2;
-    return;
+    warning('No spikes for file %d', fileNo);
 end
-
-
-
 % Check params
 if ~isfield(dataset,'ex') || ~isfield(dataset.ex, 'Data') ...
         || isempty(dataset.ex.Data)
-    warning(['Missing Params for ', fileName]);
-    hasError = 2;
-    return;
+    warning('Missing Params for file %d', fileNo);
 end
-
 % Check LFP
 if ~isfield(dataset,'lfp')
-    warning(['No LFP for ', fileName]);
+    warning('No LFP for file %d', fileNo);
 end
-
 % Check Analog
 if ~isfield(dataset,'analog1k')
-    warning(['No analog data for ', fileName]);
+    warning('No analog data for file %d', fileNo);
 end
-
-
 % Check Events
 if ~isfield(dataset,'digital')
-    warning(['No digital events for ', fileName]);
+    warning('No digital events for file %d', fileNo);
 end
-
-% Convert everything into a nice format
-[ Electrodes, LFP, AnalogIn, Events ] = convertDataset( dataset );
-Params = dataset.ex;
-sourceFormat = dataset.sourceformat;
-
-% Adjust StimTimes
-if ~isempty(Events)
-    StimTimes = Events.StimTimes;
-end
-StimTimes.matlab = Params.Data.stimTime;
-
-Params.unitNo = unitNo;
-[stimOnTimes, stimOffTimes, source, latency, variation, hasError, msg] = ...
-    adjustStimTimes(Params, Events);
-
-StimTimes.on = stimOnTimes;
-StimTimes.off = stimOffTimes;
-StimTimes.latency = latency;
-StimTimes.variation = variation;
-StimTimes.source = source;
 
 end

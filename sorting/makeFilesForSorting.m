@@ -193,26 +193,12 @@ parfor un = 1:length(units)
                 
                 % save all the unsorted spikes into a file for waveclus
                 fileName = Files.fileName{fi};
-                filePath = fullfile(dataPath, fileName);
+                fileNo = Files.fileNo(fi);
                 disp(fileName);
 
                 % if the file has been exported, then use that data
-                fileVars = who('-file', filePath);
-                if ismember('dataset', fileVars)
-                    sourceFormat = {'Ripple'};
-                    file = load(filePath, 'dataset');
-                    whichData = [];
-                    i = 1;
-                    while isempty(whichData)
-                        if i > length(sourceFormat)
-                            warning('Unsupported filetype');
-                            continue;
-                        end
-                        whichData = find(strcmp({file.dataset.sourceformat}, sourceFormat{i}), ...
-                            1, 'last');
-                        i = i + 1;
-                    end
-                    dataset = file.dataset(:,whichData);
+                dataset = loadExperiment(dataDir, animalID, fileNo, 'Ripple');
+                if ~isempty(dataset)
                     nChannels = length(dataset.spike);
                     for i = 1:nChannels
                         spikes{i} = [spikes{i};

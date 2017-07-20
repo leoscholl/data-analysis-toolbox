@@ -1,7 +1,7 @@
 disp('copying files...')
 
-dataDir = '\\STUDENTLYONLAB\Users\LyonLab\Desktop\Unsorted_LP_Rat\New Folder copy\';
-destDir = 'I:\Sorting\';
+dataDir = 'I:\Figures\';
+destDir = 'I:\Figures\';
 
 animalIDs = findAnimals(dataDir);
 % animalID = '';
@@ -9,10 +9,10 @@ whichUnits = [];
 
 for a = 1:length(animalIDs)
     animalID = animalIDs{a};
-    %     units = findUnits(dataDir, animalID, whichUnits);
-    %
-    %     for i=1:length(units)
-    %         unit = units{i};
+    units = findUnits(dataDir, animalID, whichUnits);
+    
+    for i=1:length(units)
+        unit = units{i};
     
     %% Delete direcories
     %     dataPath = fullfile(dataDir, animalID, unit);
@@ -51,17 +51,26 @@ for a = 1:length(animalIDs)
     % CopyFiles('*.bin', DataPath, DestPath);
     
     %% Copy sorted files
-    dataPath = fullfile(dataDir, animalID);
-    destPath = fullfile(destDir, animalID);
-    if ~exist(destPath,'dir')
-        mkdir(destPath);
-    end
-    copyFiles('*.mat', dataPath, destPath);
+%     dataPath = fullfile(dataDir, animalID);
+%     destPath = fullfile(destDir, animalID);
+%     if ~exist(destPath,'dir')
+%         mkdir(destPath);
+%     end
+%     copyFiles('*.mat', dataPath, destPath);
     
     %% Delete files
     %     delete(fullfile(dataPath,'*]-spikes.mat'));
     %     delete(fullfile(dataPath,'*]-params.mat'));
     %     delete(fullfile(dataPath,'*]-lfp.mat'));
+    
+    %% Move folders
+        channels = dir(fullfile(dataDir, animalID, unit, 'Ch*'));
+        channels = {channels([channels.isdir]).name};
+        for ch = 1:length(channels)
+            movefile(fullfile(dataDir, animalID, unit, channels{ch}), ...
+                fullfile(dataDir, animalID, unit, 'Ripple', channels{ch}));
+        end
+    end
 end
 
 disp('...done');

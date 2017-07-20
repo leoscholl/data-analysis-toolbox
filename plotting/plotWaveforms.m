@@ -1,24 +1,26 @@
-function plotWaveforms(figuresPath, fileName, Electrodes)
+function plotWaveforms(figuresPath, fileName, dataset)
 %PlotWaveforms plots mean waveform for each unit
 
 % helper function to fill std error
 fill_between_lines = @(X,Y1,Y2,C) patch( [X fliplr(X)],  [Y1 fliplr(Y2)], ...
     1, 'FaceColor', C, 'EdgeColor', 'none');
 
-for ch = 1:size(Electrodes,1)
+for ch = 1:length(dataset.spike)
     
-    elecNo = Electrodes.number(ch);
+    elecNo = dataset.spike(ch).electrodeid;
     elecDir = sprintf('Ch%02d', elecNo);
     
     % Waveforms could be empty for this channel
-    wf = Electrodes.waveforms{ch};
+    wf = dataset.spike(ch).data;
+    unitid = dataset.spike(ch).unitid;
+    
     fs = 30000;
     if isempty(wf)
         disp(['No waveforms in ch ',num2str(elecNo)]);
         continue;
     end
     
-    units = unique(wf(:,2));
+    units = unique(dataset.spike(ch).unitid);
     colors = makeDefaultColors(units);
 
     numSpikes = [];
@@ -29,7 +31,7 @@ for ch = 1:size(Electrodes,1)
     fig1 = figure('Visible','off');
     hold on;
     for t = 1:length(units)
-        wf_unit = wf(wf(:,2) == units(t),3:end);
+        wf_unit = wf(:,unitid == units(t))';
         numSpikes(t) = size(wf_unit,1);
         x = 1000*(1/fs:1/fs:size(wf_unit,2)/fs);
         wf_mean = mean(wf_unit,1);

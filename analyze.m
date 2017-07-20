@@ -1,29 +1,58 @@
-function [Results] = analyze(dataPath, fileName, sourceFormat, ...
-    Params, StimTimes, Electrodes, whichElectrodes, verbose)
+function [Results] = analyze(dataset, whichElectrodes, verbose)
 %analyze Function making PSTH, rasters, and ISIs for data in Electrodes
 
-if nargin < 8 || isempty(whichElectrodes)
-    whichElectrodes = Electrodes.number;
+Results = struct;
+Results.status = 0;
+Results.error = '';
+if isempty(dataset) || ~isfield(dataset, 'spike') || isempty(dataset.spike)
+    Results.error = 'No spike data';
+    return; % not enough data for this file
+elseif ~isfield(dataset, 'ex') || isempty(dataset.ex) || ...
+        ~isfield(dataset.ex, 'Data') || isempty(dataset.ex.Data)
+    Results.error = 'Empty parameters structure';
+    return;
 end
 
-if nargin < 9 || isempty(verbose)
+if nargin < 2 || isempty(whichElectrodes)
+    whichElectrodes = [dataset.spike.electrodeid];
+end
+if nargin < 3 || isempty(verbose)
     verbose = false;
 end
 
 % Parameters
+Params = dataset.ex;
 Params.blankPeriod = 0.5; % how much time to consider blank (only if
 % stimInterval >= blankPeriod)
 Params.responseLag = 0.1; % delay between stimulus and response (ms)
 
 % Which electrodes to processes
-Params.nElectrodes = size(Electrodes,1);
+Params.nElectrodes = length(dataset.spike);
 Params.whichElectrodes = whichElectrodes;
-Results = [];
+Params.unitNo = sscanf(Params.unit, 'Unit%d');
+
+% Load all possible stim times
+Events = loadDigitalEvents(dataset);
+if ~isempty(Events)
+    StimTimes = Events.StimTimes;
+end
+StimTimes.matlab = Params.Data.stimTime;
+
+[stimOnTimes, stimOffTimes, source, latency, variation, hasError, msg] = ...
+    adjustStimTimes(Params, Events);
+
+StimTimes.on = stimOnTimes;
+StimTimes.off = stimOffTimes;
+StimTimes.latency = latency;
+StimTimes.variation = variation;
+StimTimes.source = source;
+StimTimes.hasError = hasError;
+StimTimes.msg = msg;
 
 % Add stimulus offsets to Data table
 nTrials = Params.nTrials;
 if nTrials < 2
-    fprintf(2, 'Not enough trials\n');
+    Results.error = 'Not enough trials\n';
     return;
 end
 nConds = Params.nConds;
@@ -104,31 +133,27 @@ gaussFilter = exp(-x .^ 2 / (2 * sigma ^ 2));
 gaussFilter = gaussFilter / sum (gaussFilter); % normalize
 
 % All electrodes
+rawSpikes = dataset.spike(ismember([dataset.spike.electrodeid], whichElectrodes));
 if verbose
-    spikes = Electrodes.spikes(ismember(Electrodes.number, whichElectrodes));
-    nUnits = cellfun(@countUnits, spikes)';
+    nUnits = arrayfun(@(x)length(unique(x.unitid)), rawSpikes);
     fprintf('%d electrodes (out of %d) with %s units\n', ...
         length(whichElectrodes), Params.nElectrodes, mat2str(nUnits));
 end
-SpikeDataAll = cell(1,length(whichElectrodes));
-StatisticsAll = cell(1,length(whichElectrodes));
+spike = struct;
 parfor i = 1:length(whichElectrodes)
-    elecNo = whichElectrodes(i);
+    elecNo = rawSpikes(i).electrodeid;
     if elecNo == 0
         continue;
     end
     
-    % Collect spike times for this electrode
-    spikeTimes = Electrodes.spikes{Electrodes.number == elecNo};
+    % Collect spike times for this electrode  
     
-    electrodeName = Electrodes.name{Electrodes.number == elecNo};
-    
-    if isempty(spikeTimes)
-        fprintf(2, 'No spikes for %s...', electrodeName);
+    if isempty(rawSpikes(i))
+        fprintf(2, 'No spikes for electrode %d...', elecNo);
         continue;
     end
     
-    cells = unique(spikeTimes(:,2));
+    cells = unique(rawSpikes(i).unitid);
     
     % Initialize the data structures
     SpikeData = table([],[],[],cell(0),cell(0),cell(0),[]);
@@ -141,16 +166,6 @@ parfor i = 1:length(whichElectrodes)
         'tCurve','tCurveSEM','blank','blankSEM',...
         'tCurveCorr','tCurveCorrSEM','f1Rep','f1RepSD', ...
         'latency'};
-    meanTrials = cell(length(conditionNo),length(cells));
-    blankTrials = cell(length(conditionNo),length(cells));
-    tCurveAll = zeros(length(conditionNo),length(cells));
-    tCurveSEMAll = zeros(length(conditionNo),length(cells));
-    blankAll = zeros(length(conditionNo),length(cells));
-    blankSEMAll = zeros(length(conditionNo),length(cells));
-    tCurveCorrAll = zeros(length(conditionNo),length(cells));
-    tCurveCorrSEMAll = zeros(length(conditionNo),length(cells));
-    f1RepAll = nan(length(conditionNo),length(cells));
-    f1RepSDAll = nan(length(conditionNo),length(cells));
     
     %% Analysis
     for j = 1:length(conditionNo)
@@ -174,9 +189,10 @@ parfor i = 1:length(whichElectrodes)
                 % Raster plots, histograms and ISIs
                 stimTime = Stimuli.stimTime(t);
                 stimOffTime = Stimuli.stimOffTime(t);
-                spikes = spikeTimes(spikeTimes(:,2) == u & ...
-                    spikeTimes(:,1) >= stimTime-Condition.timeFrom & ...
-                    spikeTimes(:,1) < stimTime+Condition.stimDiffTime);
+                whichSpikes = rawSpikes(i).unitid == u & ...
+                    rawSpikes(i).time  >= stimTime-Condition.timeFrom & ...
+                    rawSpikes(i).time < stimTime+Condition.stimDiffTime;
+                spikes = rawSpikes(i).time(whichSpikes)';
                 if ~isempty(spikes)
                     raster = spikes - stimTime;
                     hist = histcounts(raster,cell2mat(Condition.time));
@@ -216,18 +232,18 @@ parfor i = 1:length(whichElectrodes)
             if isempty(latency); latency = NaN; end;
             
             % Calculate mean firing
-            meanTrials{j,k} = numCounts./(binSize*size(psth,1)); % average over time
-            blankTrials{j,k} = numCountsBlank./(binSize*size(preStimulus,1)); % average over time
-            tCurveAll(j,k) = mean(meanTrials{j,k}); % average over time and trials
-            blankAll(j,k) = mean(blankTrials{j,k}); % average over time and trials
+            meanTrials = numCounts./(binSize*size(psth,1)); % average over time
+            blankTrials = numCountsBlank./(binSize*size(preStimulus,1)); % average over time
+            tCurve = mean(meanTrials); % average over time and trials
+            blank = mean(blankTrials); % average over time and trials
             
             % SEMs
-            tCurveSEMAll(j,k) = std(meanTrials{j,k})/sqrt(nTrials); % average over time and STD over trials
-            blankSEMAll(j,k) = std(blankTrials{j,k})/sqrt(nTrials);% average over time and STD over trials
+            tCurveSEM = std(meanTrials)/sqrt(nTrials); % average over time and STD over trials
+            blankSEM = std(blankTrials)/sqrt(nTrials);% average over time and STD over trials
             
             % Corrected mean firing rates
-            tCurveCorrAll(j,k) = tCurveAll(j,k)-blankAll(j,k);
-            tCurveCorrSEMAll(j,k) = std(meanTrials{j,k}-blankTrials{j,k})/sqrt(nTrials);
+            tCurveCorr = tCurve-blank;
+            tCurveCorrSEM = std(meanTrials-blankTrials)/sqrt(nTrials);
             
             % FFT analysis
             if ismember('tf', Params.Data.Properties.VariableNames)
@@ -242,78 +258,36 @@ parfor i = 1:length(whichElectrodes)
                 specFreq = 0:1/T:floor((N-1)/T/2);
                 f1 = psthSpectra(find(specFreq>=min(Stimuli.tf)-0.05,1),:);
                 if isempty(f1); f1 = NaN; end
-                f1RepAll(j,k) = mean(f1);
-                f1RepSDAll(j,k) = std(f1)/sqrt(nTrials);
+                f1Rep = mean(f1);
+                f1RepSD = std(f1)/sqrt(nTrials);
             else
-                f1RepAll(j,k) = NaN;
-                f1RepSDAll(j,k) = NaN;
+                f1Rep = NaN;
+                f1RepSD = NaN;
             end
             
             Statistics((j-1)*length(cells)+k,:) = ...
                 {c, u, ...
-                tCurveAll(j,k),tCurveSEMAll(j,k), ...
-                blankAll(j,k),blankSEMAll(j,k), ...
-                tCurveCorrAll(j,k),tCurveCorrSEMAll(j,k), ...
-                f1RepAll(j,k),f1RepSDAll(j,k), ...
+                tCurve,tCurveSEM, ...
+                blank,blankSEM, ...
+                tCurveCorr,tCurveCorrSEM, ...
+                f1Rep,f1RepSD, ...
                 latency};
         end
     end
         
-    % Merge all statistics into a table (faster to do like this at the end)
-%     [u,c] = meshgrid(units,conditionNo);
-%     Statistics = table(c(:), u(:),...
-%         meanTrials(:),blankTrials(:),tCurveAll(:),tCurveSEMAll(:),...
-%         blankAll(:),blankSEMAll(:),tCurveCorrAll(:),tCurveCorrSEMAll(:),...
-%         f1RepAll(:),f1RepSDAll(:));
-%     Statistics.Properties.VariableNames = ...
-%         {'conditionNo','unit',...
-%         'meanTrials','blankTrials',...
-%         'tCurve','tCurveSEM','blank','blankSEM',...
-%         'tCurveCorr','tCurveCorrSEM','f1Rep','f1RepSD'};
-
     % Save everything
-    SpikeDataAll{i} = SpikeData;
-    StatisticsAll{i} = Statistics;
+    spike(i).Data = SpikeData;
+    spike(i).Statistics = Statistics;
+    spike(i).electrodeid = elecNo;
 
 end % Electrodes loop
 
 % Accumulate results
-for i = 1:length(whichElectrodes)
-    elecNo = whichElectrodes(i); 
-    Results.SpikeDataAll{elecNo} = SpikeDataAll{i};
-    Results.StatisticsAll{elecNo} = StatisticsAll{i};
-end
+Results.spike = spike;
 Results.StimTimes = StimTimes;
-Results.Electrodes = Electrodes(:,{'name','number'});
 Results.Params = Params;
-Results.sourceFormat = sourceFormat;
-Results.source = fileName;
+Results.status = 1;
+Results.source = dataset.source;
+Results.sourceFormat = dataset.sourceformat;
 
-% Save to mat file
-if ~exist(dataPath,'dir')
-    mkdir(dataPath);
-end
-resultsFile = fullfile(dataPath,[fileName,'.mat']);
-r = matfile(resultsFile, 'Writable', true);
-if isfield(r, 'analysis')
-    analysis = r.analysis;
-    ind = find(strcmp(analysis.sourceFormat, sourceFormat));
-    if isempty(ind) || ind == 0
-        analysis(end+1) = Results;
-    else
-        analysis(ind) = Results;
-    end
-    r.analysis = analysis;
-else
-    r.analysis = Results;
-end
-end
-
-% Helper function for counting number of units for a given electrode
-function count = countUnits(spikes)
-if isempty(spikes)
-    count = 0;
-else
-    count = length(unique(spikes(:,2)));
-end
 end

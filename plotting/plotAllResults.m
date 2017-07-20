@@ -10,9 +10,6 @@ if isempty(Results)
     return; % Can't do anything. 
 end
 
-if nargin < 12 || isempty(clumpRasters)
-    clumpRasters = 0;
-end
 if nargin < 11 || isempty(showFigures)
     showFigures = 0;
 end
@@ -35,15 +32,13 @@ if nargin < 5 || isempty(plotTCs)
     plotTCs = 0;
 end
 if nargin < 4 || isempty(whichElectrodes)
-    whichElectrodes = Results.Electrodes.number;
+    whichElectrodes = [Results.spike.electrodeid];
 end
 if showFigures; showFigures = 'on'; else; showFigures = 'off'; end
 
-% Set up results
-SpikeDataAll = Results.SpikeDataAll;
-StatisticsAll = Results.StatisticsAll;
+% Set up broadcast variables
 Params = Results.Params;
-
+spike = Results.spike;
 
 % If summary figures are requested, then cannot run in parallel
 if summaryFig
@@ -53,10 +48,10 @@ end
 
 % Go through each electrode
 parfor i = 1:length(whichElectrodes)
-    elecNo = whichElectrodes(i);
+    elecNo = spike(i).electrodeid;
 
-    SpikeData = SpikeDataAll{elecNo};
-    Statistics = StatisticsAll{elecNo};
+    SpikeData = spike(i).Data;
+    Statistics = spike(i).Statistics;
     
     if isempty(SpikeData) || isempty(Statistics)
         continue;
@@ -76,12 +71,7 @@ parfor i = 1:length(whichElectrodes)
         % TC plots
         figBaseName = [fileName,'_',num2str(u),'El',num2str(elecNo)];
         
-        tmpParams = Params;
-
         StatsUnit = Statistics(Statistics.cell == u,:);
-        tCurve = StatsUnit.tCurve(StatsUnit.conditionNo); % sort properly
-        blank = StatsUnit.blank(StatsUnit.conditionNo);
-        
         SpikeDataUnit = SpikeData(SpikeData.cell == u,:);
         
         % Plot tuning curves
@@ -89,11 +79,11 @@ parfor i = 1:length(whichElectrodes)
             
             % Basic tuning curve
             [tCurveFig, OSI, DI] = plotTCurve(StatsUnit, ...
-                tmpParams, showFigures, elecNo, u);
+                Params, showFigures, elecNo, u);
             
             % Set the x-scale
-            if ~isempty(strfind(tmpParams.stimType,'Looming')) || ...
-                    ~isempty(strfind(tmpParams.stimType,'velocity'))
+            if ~isempty(strfind(Params.stimType,'Looming')) || ...
+                    ~isempty(strfind(Params.stimType,'velocity'))
                 set(gca,'xscale','log');
             end
             
@@ -106,16 +96,16 @@ parfor i = 1:length(whichElectrodes)
             % velocity tunning curves for preffered spatial and temporal
             % frequencies
             if ~(isempty(findstr(fileName,'R')) || ...
-                    isempty(findstr(tmpParams.stimType,'Temporal')) && ...
-                    isempty(findstr(tmpParams.stimType,'Spatial'))) %#ok<*FSTR>
+                    isempty(findstr(Params.stimType,'Temporal')) && ...
+                    isempty(findstr(Params.stimType,'Spatial'))) %#ok<*FSTR>
                 
                 % Take velocities from the params file
-                velParams = tmpParams;
-                velConditions = unique(tmpParams.Data.velocity);
+                velParams = Params;
+                velConditions = unique(Params.Data.velocity);
                 velConditionNo = zeros(length(velConditions),1);
                 for k = 1:length(velConditions)
                     velConditionNo(k) = ...
-                        unique(tmpParams.Data.conditionNo(tmpParams.Data.velocity == ...
+                        unique(Params.Data.conditionNo(Params.Data.velocity == ...
                         velConditions(k))); % should only be one!
                 end
                 velParams.Conditions.condition = velConditions;
@@ -134,7 +124,7 @@ parfor i = 1:length(whichElectrodes)
             end
             
             % Making subplots of TC's for all electrodes
-            if summaryFig == 1 && tmpParams.nElectrodes>1
+            if summaryFig == 1 && Params.nElectrodes>1
                 
                 % Bring up a figure for this unit, separate from the tuning
                 % curve figure that is open
@@ -148,12 +138,12 @@ parfor i = 1:length(whichElectrodes)
                 end
                 
                 % Set up subplots
-                if tmpParams.nElectrodes==2
+                if Params.nElectrodes==2
                     sub = subplot(1,2,i);
-                elseif tmpParams.nElectrodes==3 || tmpParams.nElectrodes==4
+                elseif Params.nElectrodes==3 || Params.nElectrodes==4
                     sub = subplot(2,2,i);
                 else
-                    sub = subplot(ceil((tmpParams.nElectrodes)/4),4,i);
+                    sub = subplot(ceil((Params.nElectrodes)/4),4,i);
                 end
                 
                 % Copy the tuning curve figure axis
@@ -164,16 +154,16 @@ parfor i = 1:length(whichElectrodes)
                 titleStr = sprintf('Ch%d', elecNo);
                 title(titleStr,'FontSize',3,'FontWeight','Normal');
                 set(sub,'FontSize',3);
-                if strfind(tmpParams.stimType, 'Ori')
-                    set(sub,'XTick',[tmpParams.Conditions.condition; 360]);
+                if strfind(Params.stimType, 'Ori')
+                    set(sub,'XTick',[Params.Conditions.condition; 360]);
                 else
-                    set(sub,'XTick',tmpParams.Conditions.condition);
+                    set(sub,'XTick',Params.Conditions.condition);
                 end
                 box off;
                 axis tight;
                 
                 % Set the x-scale
-                switch tmpParams.stimType
+                switch Params.stimType
                     case {'velocity', 'VelocityConstantCycles', ...
                             'VelocityConstantCyclesBar',...
                             'Looming'}
@@ -190,7 +180,7 @@ parfor i = 1:length(whichElectrodes)
             
             % Basic tuning curve
             barFig = plotBarGraph(StatsUnit, ...
-                tmpParams, cellColors(j,:), showFigures, elecNo, u);
+                Params, cellColors(j,:), showFigures, elecNo, u);
             
             % File saving
 %             export_fig(fullfile(ResultsPath,ElecDir,[FigBaseName,'_bar']),...
@@ -202,7 +192,7 @@ parfor i = 1:length(whichElectrodes)
         % Plotting rasters and histograms
         if plotRasters == 1 % one raster per condition
             
-            [hRaster, hPSTH] = plotRastergrams( SpikeDataUnit, tmpParams, ...
+            [hRaster, hPSTH] = plotRastergrams( SpikeDataUnit, Params, ...
                 cellColors(j,:), showFigures, elecNo, u);
             
 %             export_fig(fullfile(ResultsPath,ElecDir,[FigBaseName,'_raster']),...
@@ -219,7 +209,7 @@ parfor i = 1:length(whichElectrodes)
         elseif plotRasters == 2 % clump all conditions into one raster
             
             % Lump conditions together for stimuli with many conditions
-           [hRaster, hPSTH] = plotRastersAll( SpikeDataUnit, tmpParams, ...
+           [hRaster, hPSTH] = plotRastersAll( SpikeDataUnit, Params, ...
                 cellColors(j,:), showFigures, elecNo, u );
 
 %             export_fig(fullfile(ResultsPath,ElecDir,[FigBaseName,'_raster']),...
@@ -237,10 +227,10 @@ parfor i = 1:length(whichElectrodes)
         % Plot maps
         if plotMaps
             
-            if strfind(tmpParams.stimType, 'BackProject')
+            if strfind(Params.stimType, 'BackProject')
                 
                 % Use the back-projection method to plot an RF map
-                binSize = min(tmpParams.Conditions.binSize);
+                binSize = min(Params.Conditions.binSize);
     
                 % Get the hists
                 histograms = cell2mat(SpikeDataUnit.hist);
@@ -274,10 +264,10 @@ parfor i = 1:length(whichElectrodes)
                 bestLatency = latencies(idx);
                 fprintf('Latency calculated to %d ms\n', bestLatency*1000);
                 bestMap = maps{idx};
-                hMap = plotBackProjection(bestMap, tmpParams, showFigures);
+                hMap = plotBackProjection(bestMap, Params, showFigures);
                 
             else
-                hMap = plotMap(StatsUnit, tmpParams, showFigures, elecNo, u);
+                hMap = plotMap(StatsUnit, Params, showFigures, elecNo, u);
             end
             
 %             export_fig(fullfile(ResultsPath,ElecDir,[FigBaseName,'_RFMap']), ...

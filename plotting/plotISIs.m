@@ -1,16 +1,14 @@
 function plotISIs(figuresPath, fileName, Results)
 %PlotWaveforms plots mean waveform for each unit
 
-Electrodes = Results.Electrodes;
-
 centers = 0:0.0002:0.1;
 
-for ch = 1:size(Electrodes,1)
+for ch = 1:length(Results.spike)
     
-    elecNo = Electrodes.number(ch);
+    elecNo = Results.spike(ch).electrodeid;
     elecDir = sprintf('Ch%02d', elecNo);
     
-    SpikeData = Results.SpikeDataAll{elecNo};
+    SpikeData =  Results.spike(ch).Data;
     if isempty(SpikeData)
         continue;
     end

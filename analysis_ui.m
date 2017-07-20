@@ -140,11 +140,11 @@ dataDir = get(handles.DataDirBox, 'String');
 figuresDir = get(handles.FiguresDirBox, 'String');
 sourceFormatMenu = cellstr(get(handles.SourceFormatMenu, 'String'));
 sourceFormat = sourceFormatMenu{get(handles.SourceFormatMenu, 'Value')};
-switch sourceFormat
-    case 'Ripple'
-        figuresDir = fullfile(figuresDir, 'unsorted');
-    otherwise
-        figuresDir = fullfile(figuresDir, lower(sourceFormat));
+
+if strcmp(sourceFormat, 'Plexon')
+    sourceFormat = {'Plexon', 'Ripple'};
+elseif strcmp(sourceFormat, 'WaveClus')
+    sourceFormat = {'WaveClus', 'Ripple'};
 end
 
 setStatus(handles, 'recalculating...');
@@ -201,21 +201,30 @@ function AutomaticSorting_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 animalID = get(handles.AnimalIDBox, 'String');
 unitNo = eval(get(handles.UnitNoBox, 'String'));
+fileNo = eval(get(handles.FileNoBox, 'String'));
+whichElectrodes = eval(get(handles.ElectrodeNoBox, 'String')); % TODO
+
 dataDir = get(handles.DataDirBox, 'String');
 sortingDir = get(handles.SortingDirBox, 'String');
 sourceFormatMenu = cellstr(get(handles.SourceFormatMenu, 'String'));
 sourceFormat = sourceFormatMenu{get(handles.SourceFormatMenu, 'Value')};
 switch sourceFormat
     case 'WaveClus'
-        setStatus(handles, 'generating files...');
-        makeFilesForSorting(dataDir, sortingDir, animalID, unitNo, 'spikes');
-                
-        setStatus(handles, 'sorting...');
-        sortWithWaveclus(sortingDir, animalID, unitNo);
+        if isempty(fileNo)
+            setStatus(handles, 'generating files...');
+            makeFilesForSorting(dataDir, sortingDir, animalID, unitNo, 'spikes');
 
-        setStatus(handles, 'splitting files...');
-        convertWavSpikes(dataDir, sortingDir, animalID, unitNo);
-        setStatus(handles, '');
+            setStatus(handles, 'sorting...');
+            sortWithWaveclus(sortingDir, animalID, unitNo);
+
+            setStatus(handles, 'splitting files...');
+            convertWavSpikes(dataDir, sortingDir, animalID, unitNo);
+            setStatus(handles, '');
+        else
+            setStatus(handles, 'sorting...');
+            sortWaveclusSingle(dataDir, sortingDir, animalID, unitNo, fileNo);
+            setStatus(handles, '');
+        end
     otherwise
         setStatus(handles, ['no sorting method for ', sourceFormat]);
         return;
@@ -232,12 +241,6 @@ dataDir = get(handles.DataDirBox, 'String');
 sourceFormatMenu = cellstr(get(handles.SourceFormatMenu, 'String'));
 sourceFormat = sourceFormatMenu{get(handles.SourceFormatMenu, 'Value')};
 figuresDir = get(handles.FiguresDirBox, 'String');
-switch sourceFormat
-    case 'Ripple'
-        figuresDir = fullfile(figuresDir, 'unsorted');
-    otherwise
-        figuresDir = fullfile(figuresDir, lower(sourceFormat));
-end
 
 expTypeMenu = cellstr(get(handles.ExpTypeMenu, 'String'));
 expType = expTypeMenu{get(handles.ExpTypeMenu, 'Value')};

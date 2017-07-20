@@ -1,4 +1,4 @@
-function plotStimTimes( StimTimes, AnalogIn, figuresPath, fileName, errorMsg )
+function plotStimTimes( StimTimes, dataset, figuresPath, fileName )
 %plotStimTimes Visualize stim times
 
 %% Collect all stim times
@@ -9,32 +9,35 @@ matlab = [];
 meanSignal = 0;
 maxSignal = 1;
 minSignal = -1;
+tStart = Inf;
+tEnd = 0;
 
 % Photodiode
 if isfield(StimTimes, 'photodiode') && ~isempty(StimTimes.photodiode)
     photodiode = StimTimes.photodiode;
-    if ~isempty(photodiode)
-        Analog = AnalogIn.Channels(strcmp(AnalogIn.Channels.name, ...
-            'analog 1'),:);
-        if ~isempty(Analog) && isfield(Analog, 'data') && ...
-                ~isempty(Analog.data)
-            rawPhotodiode = Analog.data{1};
-            fs = AnalogIn.sampleRate;
-            meanSignal = mean(rawPhotodiode);
-            maxSignal = meanSignal+3*std(rawPhotodiode);
-            minSignal = meanSignal-1*std(rawPhotodiode);
-        end
+    if ~isempty(photodiode) && isfield(dataset, 'analog1k')
+        fs = dataset.analog1k.fs;
+        rawPhotodiode = dataset.analog1k.data(:,dataset.analog1k.electrodeid == 10241)';
+        meanSignal = mean(rawPhotodiode);
+        maxSignal = meanSignal+3*std(rawPhotodiode);
+        minSignal = meanSignal-1*std(rawPhotodiode);
     end
+    tStart = min(tStart, photodiode(1));
+    tEnd = max(tEnd, photodiode(end));
 end
 
 % Parallel
 if isfield(StimTimes, 'parallel') && ~isempty(StimTimes.parallel)
     parallel = StimTimes.parallel;
+    tStart = min(tStart, parallel(1));
+    tEnd = max(tEnd, parallel(end));
 end
 
 % PTB
 if isfield(StimTimes, 'matlab')
     matlab = StimTimes.matlab;
+    tStart = min(tStart, matlab(1));
+    tEnd = max(tEnd, matlab(end));
 end
 
 %% Plotting
@@ -45,20 +48,14 @@ suptitle(fileName);
 subplot(10,1,[1:6]);
 hold on;
 if ~isempty(rawPhotodiode)
-    % Determine sample rate, tstart, and tend
-    if photodiode(1) > 0
-        tStart = ceil(photodiode(1)*fs);
-    else
-        tStart = 1;
-    end
-    tEnd = length(rawPhotodiode);
-    time = (tStart:tEnd)./fs;
-    
-    plot(time, rawPhotodiode(tStart:tEnd), 'LineWidth', 0.25);
+    ptStart = max(ceil((tStart - dataset.analog1k.time(1))*fs), 0);
+    ptEnd = min(ceil((tEnd - dataset.analog1k.time(1))*fs), length(rawPhotodiode));
+    time = (ptStart:ptEnd)./fs;
+    plot(time, rawPhotodiode(ptStart:ptEnd), 'LineWidth', 0.25);
 end
-axis tight
+xticks([])
+xlim([tStart-1 tEnd]);
 ylim([minSignal maxSignal]);
-xticks([]);
 ylabel('Photodiode signal (mV)');
 set(gca, 'FontSize', 6);
 box off
@@ -74,8 +71,8 @@ if ~isempty(photodiode)
         zeros(length(photodiode(2:2:end)),1),...
         'r.', 'MarkerSize', 3);
 end
-axis tight
 ylim([-1 2]);
+xlim([tStart-1 tEnd]);
 box off;
 xticks([])
 yticks([]);
@@ -93,8 +90,8 @@ if ~isempty(parallel)
         zeros(length(parallel(2:2:end)),1),...
         'r.', 'MarkerSize', 3);
 end
-axis tight
 ylim([-1 2]);
+xlim([tStart-1 tEnd]);
 box off;
 xticks([])
 yticks([]);
@@ -110,8 +107,8 @@ if ~isempty(matlab)
         'm.', 'MarkerSize', 3);
     legenditems = 'matlab';
 end
-axis tight
 ylim([-1 1]);
+xlim([tStart-1 tEnd]);
 box off;
 xlabel('Time (s)');
 yticks([]);
@@ -121,7 +118,7 @@ set(gca, 'FontSize', 6);
 
 % Text box with error message
 dim = [0.125 0.33 0.75 0.1];
-annotation('textbox',dim,'String',errorMsg,'FitBoxToText','off', ...
+annotation('textbox',dim,'String',StimTimes.msg,'FitBoxToText','off', ...
     'FontSize', 6, 'Color', 'r', 'LineStyle', 'none');
 
 

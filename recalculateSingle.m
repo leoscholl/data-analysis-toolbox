@@ -5,40 +5,24 @@ function [ fileDuration ] = recalculateSingle( dataDir, figuresDir, animalID, ..
 tic;
 fileDuration = 0;
 
-dataPath = fullfile(dataDir,animalID,unit,filesep);
-figuresPath = fullfile(figuresDir,animalID,unit,filesep);
+[~, fileNo, stimType] = parseFileName(fileName);
 if verbose
     disp('Loading experiment files...');
 end
 
-[Electrodes, Params, StimTimes, LFP, AnalogIn, sourceFormatOut, ...
-    hasError, msg] = ...
-    loadExperiment(dataDir, animalID, unit, fileName, sourceFormat);
-
-if hasError
-    plotStimTimes(StimTimes, AnalogIn, figuresPath, fileName, msg);
-    fprintf(2, 'Error in %s: %s\n', fileName, msg);
-elseif verbose
-    disp(msg);
-end
-
-
-if hasError > 1
-    warning('Loading experiment failed. Skipping %s.', fileName);
-    return;
-end
+dataset = loadExperiment(dataDir, animalID, fileNo, sourceFormat);
 
 % Number of bins or size of bins?
-switch Params.stimType
+switch stimType
     case {'VelocityConstantCycles', 'VelocityConstantCyclesBar',...
             'Looming', 'ConstantCycles'}
-        Params.binType = 'number'; % constant number of bins
+        dataset.ex.binType = 'number'; % constant number of bins
     otherwise
-        Params.binType = 'size'; % constant size of bins (for F1)
+        dataset.ex.binType = 'size'; % constant size of bins (for F1)
 end
 
 % What to plot?
-switch Params.stimType
+switch stimType
     case {'LatencyTest', 'LaserON', 'LaserGratings', ...
             'NaturalImages', 'NaturalVideos'}
         plotMaps = 0;
@@ -66,7 +50,7 @@ end
 
 
 % Do the analysis / plotting
-switch Params.stimType
+switch stimType
     case {'OriLowHighTwoApertures', 'CenterNearSurround'}
         fprintf(2, 'Center surround not yet implemented.\n');
     otherwise
@@ -79,14 +63,39 @@ switch Params.stimType
         if verbose
             disp('analyzing...');
         end
-        Results = analyze(dataPath, fileName, sourceFormatOut, ...
-            Params, StimTimes, Electrodes, whichElectrodes, verbose);
+        Results = analyze(dataset, whichElectrodes, verbose);
+
+        % Save results
+        if ~Results.status
+            warning('%s - %s', fileName, Results.error);
+            fileDuration = toc;
+            return;
+        else
+            Results.sourceFormat = dataset.sourceformat;
+            Results.source = dataset.source;
+            saveResults(Results);
+        end
+        
+        figuresPath = fullfile(figuresDir,animalID,unit,filesep);
+        
+        % Check the stim times
+        if Results.StimTimes.hasError
+            plotStimTimes(Results.StimTimes, dataset, figuresPath, fileName);
+            fprintf(2, 'Error in %s: %s\n', fileName, Results.StimTimes.msg);
+        elseif verbose
+            msg = strrep(Results.StimTimes.msg,'. ', '.\n');
+            fprintf([msg, '\n']);
+        end
         
         % Plotting tuning curves and maps
         if plotFigures
             if verbose
                 disp('plotting...');
             end
+
+            % Append source format to figures directory
+            figuresPath = fullfile(figuresPath, Results.sourceFormat, filesep);
+            
             showFigures = 0;
             plotAllResults(figuresPath, fileName, Results, ...
                 whichElectrodes, plotTCs, plotBars, plotRasters, ...
@@ -98,7 +107,7 @@ switch Params.stimType
                 if verbose
                     disp('Plotting waveforms...');
                 end
-                plotWaveforms(figuresPath, fileName, Electrodes);
+                plotWaveforms(figuresPath, fileName, dataset);
             end
             
             % Plot ISIs?

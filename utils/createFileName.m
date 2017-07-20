@@ -4,5 +4,5 @@ function fileName = createFileName (animalID, fileNo, stimType)
 % FileNo    integer for the file number
 % StimName  string describing the stimulus choice
 
-fileName = strcat(animalID,'#',num2str(fileNo),'[',stimType,']');
+fileName = [animalID,'#',num2str(fileNo),'[',stimType,']'];
 

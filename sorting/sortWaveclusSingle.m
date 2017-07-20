@@ -51,7 +51,7 @@ for f = 1:size(Files,1)
     
     % Convert back into database
     spike = struct;
-    for n = 1:length(electrodeid) % for each channel
+    for n = 1:nChannels % for each channel
         
         electrodeid = sscanf(files{n}, [Files.fileName{f}, '-%dch.mat']);
         waveclus = load(fullfile(sortingPath, ['times_', files{n}]));
@@ -64,11 +64,21 @@ for f = 1:size(Files,1)
     end
     
     % Save the new dataset
-    dataset = expFile.dataset(1,1);
-    dataset.spike = spike;
-    dataset.source = fullfile(sortingPath, Files.fileName{f});
-    dataset.sourceformat = 'WaveClus';
-    expFile.dataset(1,end+1) = dataset;
+    dataset = expFile.dataset;
+    whichData = find(strcmp({dataset.sourceformat}, 'Ripple'), ...
+        1, 'last');
+    newData = dataset(:,whichData);
+    newData.spike = spike;
+    newData.source = fullfile(sortingPath, Files.fileName{f});
+    newData.sourceformat = 'WaveClus';
+    
+    whichData = find(strcmp({dataset.sourceformat}, 'WaveClus'), ...
+        1, 'last');
+    if isempty(whichData)
+        expFile.dataset(1,end+1) = newData;
+    else
+        expFile.dataset(1,whichData) = newData;
+    end
 end
 
 end

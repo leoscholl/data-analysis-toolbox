@@ -33,6 +33,7 @@ if ~isnumeric(whichUnits) || ~isnumeric(whichFiles)
 end
 
 whichUnits = findUnits(baseDir, animalID, whichUnits);
+whichUnits{end+1} = ''; % in case some files are not organized by unit
 fileNames = {};
 for i = 1:length(whichUnits)
     
@@ -40,20 +41,31 @@ for i = 1:length(whichUnits)
     dataPath = fullfile(baseDir,animalID,whichUnits{i},filesep);
     newFiles = dir([dataPath,fileString]);
     newFiles = newFiles(~vertcat(newFiles.isdir)); % just for good measure
-    newFiles = cellfun(@stripFileName, {newFiles.name}, 'UniformOutput', false);
-    newFiles = unique(newFiles);
+    if isempty(newFiles)
+        continue;
+    end
+    rawFileNames = fullfile({newFiles.folder}, {newFiles.name});
+    % newFiles = cellfun(@stripFileName, {newFiles.name}, 'UniformOutput', false);
+    [newFiles, ind] = unique({newFiles.name});
+    rawFileNames = rawFileNames(ind);
     
     % Remove any files that aren't correctly formatted
     [newFileAnimals, newFileNos, newStimTypes] = ...
         cellfun(@parseFileName, newFiles, 'UniformOutput', false);
     valid = cellfun(@(x, y)~isnan(x) && ~isempty(y), newFileNos, newStimTypes);
-    newFiles = newFiles(valid);
+    newFileAnimals = newFileAnimals(valid);
     newFileNos = newFileNos(valid);
     newStimTypes = newStimTypes(valid);
+    newFiles = cellfun(@createFileName, newFileAnimals, ...
+        newFileNos, newStimTypes, 'UniformOutput', false);
+    rawFileNames = rawFileNames(valid);
+    if isempty(newFiles)
+        continue;
+    end
 
     % List all the files
     fileNames = [fileNames; newFiles', newFileAnimals', newFileNos', newStimTypes', ...
-        repmat(whichUnits(i),length(newFiles),1), ...
+        rawFileNames', repmat(whichUnits(i),length(newFiles),1), ...
         repmat({str2num(whichUnits{i}(5:end))},length(newFiles),1)];
 end
 
@@ -67,13 +79,14 @@ end
 if ~isempty(fileNames)
     [~,IX] = sort(vertcat(fileNames{:,3}));
     Files = cell2table(fileNames(IX,:));
-    fileUnits = fileNames(IX,5);
+    fileUnits = fileNames(IX,6);
     fileNames = fileNames(IX,1);
 else
-    Files = table(cell(0),cell(0),[],cell(0),cell(0),[]);
+    Files = table(cell(0),cell(0),[],cell(0),cell(0),cell(0),[]);
     fileUnits = '';
     fileNames = '';
 end
-Files.Properties.VariableNames = {'fileName','animalID','fileNo','stimType','unit','unitNo'};
+Files.Properties.VariableNames = {'fileName','animalID','fileNo',...
+    'stimType','rawFileName','unit','unitNo'};
 
 end
