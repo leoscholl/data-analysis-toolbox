@@ -46,6 +46,7 @@ for f = 1:size(Files,1)
             % clump rasters
              plotAllResults(figuresPath, fileName, analysis,...
                             whichElectrodes, 0, 0, 2, 0, 0, 0, 0);
-
+        otherwise
+            % do nothing
     end
 end

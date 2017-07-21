@@ -133,9 +133,9 @@ whichElectrodes = eval(get(handles.ElectrodeNoBox, 'String'));
 expTypeMenu = cellstr(get(handles.ExpTypeMenu, 'String'));
 expType = expTypeMenu{get(handles.ExpTypeMenu, 'Value')};
 
-plotLFP = get(handles.PlotLFPCheck, 'Value');
-plotFigures = get(handles.PlotFiguresCheck, 'Value');
-summaryFigs = get(handles.SummaryFigsCheck, 'Value');
+plotLFP = logical(get(handles.PlotLFPCheck, 'Value'));
+plotFigures = logical(get(handles.PlotFiguresCheck, 'Value'));
+summaryFigs = logical(get(handles.SummaryFigsCheck, 'Value'));
 dataDir = get(handles.DataDirBox, 'String');
 figuresDir = get(handles.FiguresDirBox, 'String');
 sourceFormatMenu = cellstr(get(handles.SourceFormatMenu, 'String'));

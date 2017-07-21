@@ -1,16 +1,28 @@
-function [ fileDuration ] = recalculateSingle( dataDir, figuresDir, animalID, ...
-    unit, fileName, sourceFormat, whichElectrodes, ...
-    summaryFig, plotLFP, plotFigures, verbose)
+function [ result ] = recalculateSingle( dataset, figuresDir, varargin)
+
+p = inputParser();
+p.addRequired('dataset', @isstruct);
+p.addRequired('figuresDir', @ischar);
+p.addOptional('whichElectrodes', [], @isnumeric);
+p.addOptional('summaryFig', false, @islogical);
+p.addOptional('plotLFP', false, @islogical);
+p.addOptional('plotFigures', true, @islogical);
+p.addOptional('verbose', false, @islogical);
+p.parse(dataset, figuresDir, varargin{:});
+dataset = p.Results.dataset;
+figuresDir = p.Results.figuresDir;
+verbose = p.Results.verbose;
 
 tic;
-fileDuration = 0;
+result.status = 0;
+result.fileDuration = 0;
 
-[~, fileNo, stimType] = parseFileName(fileName);
-if verbose
-    disp('Loading experiment files...');
+if isempty(dataset) || ~isfield(dataset, 'ex') || isempty(dataset.ex)
+    return;
 end
 
-dataset = loadExperiment(dataDir, animalID, fileNo, sourceFormat);
+fileNo = dataset.ex.expNo;
+stimType = dataset.ex.stimType;
 
 % Number of bins or size of bins?
 switch stimType
@@ -55,7 +67,7 @@ switch stimType
         fprintf(2, 'Center surround not yet implemented.\n');
     otherwise
         
-        if ~summaryFig && isempty(gcp('nocreate')) && isempty(getCurrentTask())
+        if ~p.Results.summaryFig && isempty(gcp('nocreate')) && isempty(getCurrentTask())
             parpool; % start the parallel pool
         end
         
@@ -63,12 +75,12 @@ switch stimType
         if verbose
             disp('analyzing...');
         end
-        Results = analyze(dataset, whichElectrodes, verbose);
+        Results = analyze(dataset, p.Results.whichElectrodes, verbose);
 
         % Save results
         if ~Results.status
             warning('%s - %s', fileName, Results.error);
-            fileDuration = toc;
+            result.fileDuration = toc;
             return;
         else
             Results.sourceFormat = dataset.sourceformat;
@@ -76,6 +88,9 @@ switch stimType
             saveResults(Results);
         end
         
+        unit = Results.Params.unit;
+        animalID = Results.Params.animalID;
+        fileName = createFileName(animalID, fileNo, stimType);
         figuresPath = fullfile(figuresDir,animalID,unit,filesep);
         
         % Check the stim times
@@ -88,7 +103,7 @@ switch stimType
         end
         
         % Plotting tuning curves and maps
-        if plotFigures
+        if p.Results.plotFigures
             if verbose
                 disp('plotting...');
             end
@@ -96,10 +111,17 @@ switch stimType
             % Append source format to figures directory
             figuresPath = fullfile(figuresPath, Results.sourceFormat, filesep);
             
+            % Delete any old figures
+            unitNo = sscanf(unit, 'Unit%d');
+            deleteFitFiles(figuresDir, animalID, unitNo, fileNo, ...
+                Results.sourceFormat);
+            
+            % Plot tuning curves, rasters, and maps
             showFigures = 0;
             plotAllResults(figuresPath, fileName, Results, ...
-                whichElectrodes, plotTCs, plotBars, plotRasters, ...
-                plotMaps, summaryFig, plotLFP, showFigures);
+                p.Results.whichElectrodes, plotTCs, plotBars, plotRasters, ...
+                plotMaps, p.Results.summaryFig, p.Results.plotLFP, ...
+                showFigures);
             
             
             % Plot waveforms?
@@ -120,6 +142,7 @@ switch stimType
         end
 end
 
-fileDuration = toc;
+result.fileDuration = toc;
+result.status = 1;
 end
 

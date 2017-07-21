@@ -15,13 +15,13 @@ if nargin < 6
     whichElectrodes = [];
 end
 if nargin < 7 || isempty(plotFigures)
-    plotFigures = 1;
+    plotFigures = true;
 end
 if nargin < 8 || isempty(plotLFP)
-    plotLFP = 0;
+    plotLFP = false;
 end
 if nargin < 9 || isempty(summaryFig)
-    summaryFig = 0;
+    summaryFig = false;
 end
 if nargin < 10 || isempty(sourceFormat)
     sourceFormat = [];
@@ -63,9 +63,10 @@ elseif nFiles > 1
     
     tic;
     parfor f = 1:size(Files,1)
-        fileDuration(f) = recalculateSingle(dataDir, figuresDir, animalID, ...
-            Files.unit{f}, Files.fileName{f}, sourceFormat, whichElectrodes, ...
+        dataset = loadExperiment(dataDir, animalID, Files.fileNo(f), sourceFormat);
+        result = recalculateSingle(dataset, figuresDir, whichElectrodes, ...
             summaryFig, plotLFP, plotFigures, false);
+        fileDuration(f) = result.fileDuration;
     end
     elapsedTime = toc;
     avgDur = smoothing * mean(fileDuration) + (1 - smoothing) * avgDur;
@@ -77,9 +78,10 @@ else
     fprintf('Time remaining: %d minutes and %d seconds\n\n', ...
         floor(timeRemaining/60), floor(rem(timeRemaining,60)));
     
-    fileDuration = recalculateSingle(dataDir, figuresDir, animalID, ...
-        Files.unit{1}, Files.fileName{1}, sourceFormat, whichElectrodes, ...
+    dataset = loadExperiment(dataDir, animalID, Files.fileNo(1), sourceFormat);
+    result = recalculateSingle(dataset, figuresDir, whichElectrodes, ...
         summaryFig, plotLFP, plotFigures, true);
+    fileDuration = result.fileDuration;
     
     elapsedTime = fileDuration;
     avgDur = smoothing * fileDuration + (1 - smoothing) * avgDur;

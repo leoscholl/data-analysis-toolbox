@@ -159,13 +159,12 @@ parfor i = 1:length(whichElectrodes)
     SpikeData = table([],[],[],cell(0),cell(0),cell(0),[]);
     SpikeData.Properties.VariableNames = ...
         {'conditionNo','trial','cell','raster','hist','isi', 'stimTime'};
-    Statistics = nan(length(conditionNo)*length(cells),11);
-    Statistics = array2table(Statistics);
+    Statistics = table([],[],[],[],[],[],[],[],[],[],[],cell(0),cell(0));
     Statistics.Properties.VariableNames = ...
         {'conditionNo','cell',...
         'tCurve','tCurveSEM','blank','blankSEM',...
         'tCurveCorr','tCurveCorrSEM','f1Rep','f1RepSD', ...
-        'latency'};
+        'latency', 'meanTrials', 'blankTrials', };
     
     %% Analysis
     for j = 1:length(conditionNo)
@@ -174,6 +173,7 @@ parfor i = 1:length(whichElectrodes)
         Stimuli = Params.Data(Params.Data.conditionNo == c,:);
         Condition = Params.Conditions(Params.Conditions.conditionNo == c,:);
         binSize = Condition.binSize;
+        nTrials = size(Stimuli,1);
         
         % Pick out the pre-stimulus and peri-stimulus times
         centers = cell2mat(Condition.centers);
@@ -184,7 +184,7 @@ parfor i = 1:length(whichElectrodes)
             u = cells(k);
             
             % Make Rasters and Histograms
-            for t = 1:size(Stimuli,1) % how many trials for this condition
+            for t = 1:nTrials % how many trials for this condition
                 
                 % Raster plots, histograms and ISIs
                 stimTime = Stimuli.stimTime(t);
@@ -229,7 +229,7 @@ parfor i = 1:length(whichElectrodes)
             binCounts = histFilt(centers >= 0);
             latencyBin = find(binCounts > CI(2),1);
             latency = latencyBin * binSize;
-            if isempty(latency); latency = NaN; end;
+            if isempty(latency); latency = NaN; end
             
             % Calculate mean firing
             meanTrials = numCounts./(binSize*size(psth,1)); % average over time
@@ -271,7 +271,7 @@ parfor i = 1:length(whichElectrodes)
                 blank,blankSEM, ...
                 tCurveCorr,tCurveCorrSEM, ...
                 f1Rep,f1RepSD, ...
-                latency};
+                latency, {meanTrials}, {blankTrials}};
         end
     end
         

@@ -83,7 +83,7 @@ parfor i = 1:length(whichElectrodes)
             
             % Set the x-scale
             if ~isempty(strfind(Params.stimType,'Looming')) || ...
-                    ~isempty(strfind(Params.stimType,'velocity'))
+                    contains(lower(Params.stimType),'velocity')
                 set(gca,'xscale','log');
             end
             

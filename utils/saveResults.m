@@ -9,7 +9,8 @@ end
 resultsFile = fullfile(dataPath,[fileName,'.mat']);
 r = matfile(resultsFile, 'Writable', true);
 varNames = who(r);
-if ismember('analysis', varNames)
+if ismember('analysis', varNames) && ...
+        isempty(setdiff(fieldnames(r.analysis), fieldnames(Results)))
     analysis = r.analysis;
     ind = find(strcmp({analysis.sourceFormat}, Results.sourceFormat));
     if isempty(ind) || ind == 0
