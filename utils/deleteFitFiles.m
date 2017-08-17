@@ -34,11 +34,10 @@ for u = 1:length(units)
         for f = 1:size(Files,1)
             fileName = Files.fileName{f};
             unit = Files.unit{f};
-            figuresPath = fullfile(baseDir, animalID, unit, channelName);
+            figuresPath = fullfile(baseDir, animalID, unit, ...
+                sourceFormat, channelName);
             delete(fullfile(figuresPath, [fileName, '*.png']), ...
                 fullfile(figuresPath, [fileName, '*.fig']));
         end
     end
 end
-
-disp(['...done deleting for ', animalID]);

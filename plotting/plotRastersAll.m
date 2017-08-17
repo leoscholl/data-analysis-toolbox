@@ -8,7 +8,7 @@ function [hRaster, hPSTH] = plotRastersAll( SpikeData,...
 unpadded = SpikeData.hist;
 lengths = cellfun('length',unpadded);
 minSize = min(lengths);
-Condition = Params.Conditions(find(cellfun('length',Params.Conditions.centers) == minSize, 1),:);
+Condition = Params.ConditionTable(find(cellfun('length',Params.ConditionTable.centers) == minSize, 1),:);
 hists = [];
 for k = 1:size(unpadded,1)
     hists{k,1} = unpadded{k}(1:minSize);
@@ -27,8 +27,8 @@ SpikeData = SpikeData(ix,:);
 
 % Make a title
 titleStr = makeTitle(Params, elecNo, cell);
-conditions = Params.Conditions.condition;
-conditionNo = Params.Conditions.conditionNo;
+conditions = Params.ConditionTable.condition;
+conditionNo = Params.ConditionTable.conditionNo;
 
 % Plot raster
 hRaster = figure('Visible',showFigure);

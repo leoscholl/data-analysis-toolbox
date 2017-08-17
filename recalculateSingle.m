@@ -17,12 +17,18 @@ tic;
 result.status = 0;
 result.fileDuration = 0;
 
-if isempty(dataset) || ~isfield(dataset, 'ex') || isempty(dataset.ex)
+if ~isfield(dataset, 'ex') || isempty(dataset.ex)
     return;
 end
 
 fileNo = dataset.ex.expNo;
 stimType = dataset.ex.stimType;
+
+if verbose
+    animalID = dataset.ex.animalID;
+    fileName = createFileName(animalID, fileNo, stimType);
+    disp(fileName);
+end
 
 % Number of bins or size of bins?
 switch stimType
@@ -36,7 +42,7 @@ end
 % What to plot?
 switch stimType
     case {'LatencyTest', 'LaserON', 'LaserGratings', ...
-            'NaturalImages', 'NaturalVideos'}
+            'NaturalImages', 'NaturalVideos', 'spontanous'}
         plotMaps = 0;
         plotTCs = 0;
         plotBars = 1;
@@ -67,24 +73,30 @@ switch stimType
         fprintf(2, 'Center surround not yet implemented.\n');
     otherwise
         
-        if ~p.Results.summaryFig && isempty(gcp('nocreate')) && isempty(getCurrentTask())
-            parpool; % start the parallel pool
-        end
-        
         % Binning and making rastergrams
         if verbose
             disp('analyzing...');
         end
-        Results = analyze(dataset, p.Results.whichElectrodes, verbose);
-
+        isparallel = ~p.Results.summaryFig;
+        try
+            Results = analyze(dataset, p.Results.whichElectrodes, verbose, isparallel);
+        catch e
+            fprintf(2, 'Error doing calculations for file #%d\n', fileNo);
+            rethrow(e);
+        end
+        
+        if verbose
+            disp('saving results...');
+        end
+        
         % Save results
         if ~Results.status
-            warning('%s - %s', fileName, Results.error);
+            warning('file #%d - %s', fileNo, Results.error);
             result.fileDuration = toc;
             return;
         else
             Results.sourceFormat = dataset.sourceformat;
-            Results.source = dataset.source;
+            Results.source = dataset.filepath;
             saveResults(Results);
         end
         
@@ -93,7 +105,6 @@ switch stimType
         fileName = createFileName(animalID, fileNo, stimType);
         figuresPath = fullfile(figuresDir,animalID,unit,filesep);
         
-        % Check the stim times
         if Results.StimTimes.hasError
             plotStimTimes(Results.StimTimes, dataset, figuresPath, fileName);
             fprintf(2, 'Error in %s: %s\n', fileName, Results.StimTimes.msg);
@@ -104,25 +115,32 @@ switch stimType
         
         % Plotting tuning curves and maps
         if p.Results.plotFigures
-            if verbose
-                disp('plotting...');
-            end
-
+            
             % Append source format to figures directory
             figuresPath = fullfile(figuresPath, Results.sourceFormat, filesep);
             
             % Delete any old figures
+            if verbose
+                disp('deleting old figures...');
+            end
             unitNo = sscanf(unit, 'Unit%d');
             deleteFitFiles(figuresDir, animalID, unitNo, fileNo, ...
                 Results.sourceFormat);
             
             % Plot tuning curves, rasters, and maps
+            if verbose
+                disp('plotting...');
+            end
             showFigures = 0;
-            plotAllResults(figuresPath, fileName, Results, ...
-                p.Results.whichElectrodes, plotTCs, plotBars, plotRasters, ...
-                plotMaps, p.Results.summaryFig, p.Results.plotLFP, ...
-                showFigures);
-            
+            try
+                plotAllResults(figuresPath, fileName, Results, ...
+                    p.Results.whichElectrodes, plotTCs, plotBars, plotRasters, ...
+                    plotMaps, p.Results.summaryFig, p.Results.plotLFP, ...
+                    showFigures);
+            catch e
+                fprintf(2, 'Error plotting file #%d\n', fileNo);
+                rethrow(e);
+            end
             
             % Plot waveforms?
             if plotWFs

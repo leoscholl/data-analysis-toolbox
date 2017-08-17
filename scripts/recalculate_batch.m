@@ -5,7 +5,6 @@ rawDataDir = 'I:\Data\';
 dataDir = 'I:\DataExport';
 sourceFormat = {'Ripple'};
 figuresDir = 'I:\Figures\unsorted';
-isParallel = 1;
 
 logFilename = 'sorting_log.txt';
 log = fopen(logFilename, 'a+t');
@@ -20,20 +19,20 @@ overwrite = 0; % for exporting data
 
 % Experiment info  
 % % animals = {'R1518', 'R1520', 'R1521',
-% animals = {'R1522', ...
-%     'R1524', 'R1525', 'R1526', 'R1527', ...
-%     'R1528', 'R1536', 'R1601', 'R1603', ...
-%     'R1604', 'R1605', 'R1629', 'R1701', ...
-%     'R1702' };
+animals = {'R1522', ...
+    'R1524', 'R1525', 'R1526', 'R1527', ...
+    'R1528', 'R1536', 'R1601', 'R1603', ...
+    'R1604', 'R1605', 'R1629', 'R1701', ...
+    'R1702' };
 % % units = {[1:5], [1:8,10:16], [1:2,4:7,10:12], 
-% units = {[1:5], ...
-%     [4:12], [2:3], [7:9, 11:20], [3], ...
-%     [3:9], [1:19], [1:7], [1:16], ...
-%     [1:13], [1:9], [1:13], [2:11], ...
-%     [1:9]};
+units = {[1:5], ...
+    [4:12], [2:3], [7:9, 11:20], [3], ...
+    [3:9], [1:19], [1:7], [1:16], ...
+    [1:13], [1:9], [1:13], [2:11], ...
+    [1:9]};
 % 
-animals = {'R1604', 'R1605', 'R1701'};
-units = {[1:13], [1:9], [2:11]};
+% animals = {'R1604', 'R1605', 'R1701'};
+% units = {[1:13], [1:9], [2:11]};
 
 fileType = 'unsorted'; % bin, osort, unsorted
 
@@ -54,7 +53,7 @@ for a = 1:length(animals)
     
     animalID = animals{a};
     whichUnits = units{a};
-    [~, ~, Files] = findFiles(dataDir, animalID, whichUnits, '*.mat');
+    [~, ~, Files] = findFiles(dataDir, animalID, whichUnits, '*[Mouse*.mat');
 
     % Make a log
     fprintf(log, '------------------\nRun #%i: %s\n------------------\n', a, animalID);
@@ -66,46 +65,8 @@ for a = 1:length(animals)
         fprintf(log, 'Running units %s...\n', mat2str(whichUnits));
     end
     
-    if isParallel
-        
-        if ~summaryFig && isempty(gcp('nocreate'))
-            parpool; % start the parallel pool
-        end
-        
-        parLog = cell(size(Files,1),1);
-        parfor f=1:size(Files,1)
-            fileNo = Files.fileNo(f);
-            try
-                whichElectrodes = [];
-                recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
-                    whichElectrodes, plotFigures, plotLFP, summaryFig)
-                parLog{f} = sprintf('%s\n', Files.fileName{f});
-            catch e
-                % Ignore errors, but print them out for debugging...
-                Report = getReport(e,'extended','hyperlinks','off');
-                warning(Report,'Error');
-                parLog{f} = sprintf('\n\nError for file %s:\n%s\n', ...
-                    Files.fileName{f}, Report);
-            end
-        end
-        cellfun(@(x)fprintf(log, '%s', x), parLog);
-    else
-        for f=1:size(Files,1)
-            fileNo = Files.fileNo(f);
-            try
-                whichElectrodes = [];
-                recalculate(dataDir, figuresDir, animalID, whichUnits, fileNo, ...
-                    whichElectrodes, plotFigures, plotLFP, summaryFig, sourceFormat)
-                fprintf(log, '%s\n', Files.fileName{f});
-            catch e
-                % Ignore errors, but print them out for debugging...
-                Report = getReport(e,'extended','hyperlinks','off');
-                fprintf(log, '\n\nError for file %s\n', Files.fileName{f});
-                warning(Report,'Error');
-                fprintf(log, '%s\n', Report);
-            end
-        end
-    end
+    recalculate(dataDir, figuresDir, animalID, whichUnits, whichFiles, ...
+        [], 1, 0, 0, {'WaveClus', 'Ripple'});
     
     fprintf(log,'End of run\n');
     

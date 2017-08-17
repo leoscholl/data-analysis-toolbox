@@ -22,7 +22,7 @@ function varargout = analysis_ui(varargin)
 
 % Edit the above text to modify the response to help analysis_ui
 
-% Last Modified by GUIDE v2.5 14-Jul-2017 13:32:56
+% Last Modified by GUIDE v2.5 11-Aug-2017 15:54:45
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -245,11 +245,13 @@ figuresDir = get(handles.FiguresDirBox, 'String');
 expTypeMenu = cellstr(get(handles.ExpTypeMenu, 'String'));
 expType = expTypeMenu{get(handles.ExpTypeMenu, 'Value')};
 
+isparallel = ~logical(get(handles.SummaryFigsCheck, 'Value'));
+
 setStatus(handles, 'plotting...');
 switch expType
     case 'Spikes'
         plotIndividual(dataDir, figuresDir, animalID, unitNo, fileNo, ...
-            whichElectrodes, figureType, sourceFormat)
+            whichElectrodes, figureType, sourceFormat, isparallel)
     case 'ECoG'
         
 end
@@ -290,6 +292,26 @@ function PlotExtras_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 plotHelper(handles, 'one raster');
 
+% --- Executes on button press in PlotTCs.
+function PlotTCs_Callback(hObject, eventdata, handles)
+% hObject    handle to PlotTCs (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+plotHelper(handles, 'tcs');
+
+% --- Executes on button press in PlotStimTimes.
+function PlotStimTimes_Callback(hObject, eventdata, handles)
+% hObject    handle to PlotStimTimes (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+plotHelper(handles, 'stimtimes');
+
+% --- Executes on button press in DoStatistics.
+function DoStatistics_Callback(hObject, eventdata, handles)
+% hObject    handle to DoStatistics (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+plotHelper(handles, 'stats');
 
 % --- Executes on button press in SummaryPrev.
 function SummaryPrev_Callback(hObject, eventdata, handles)
@@ -297,9 +319,12 @@ function SummaryPrev_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 if isfield(handles, 's') && isa(handles.s, 'summaryTable')
-    handles.s.prevUnit();
-    handles.s.showUnit();
-    set(handles.UnitNoBox, 'String', num2str(handles.s.unitNo));
+    [unitNo, Unit] = collectUnit(handles);
+    handles.s.putUnit(sprintf('Unit%d', unitNo), Unit);
+    unitNo = unitNo - 1;
+    Unit = handles.s.getUnit(sprintf('Unit%d', unitNo));
+    dispUnit(handles, unitNo, Unit);
+    set(handles.UnitNoBox, 'String', num2str(unitNo));
 end
 
 % --- Executes on button press in SummaryNext.
@@ -308,9 +333,12 @@ function SummaryNext_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 if isfield(handles, 's') && isa(handles.s, 'summaryTable')
-    handles.s.nextUnit();
-    handles.s.showUnit();
-    set(handles.UnitNoBox, 'String', num2str(handles.s.unitNo));
+    [unitNo, Unit] = collectUnit(handles);
+    handles.s.putUnit(sprintf('Unit%d', unitNo), Unit);
+    unitNo = unitNo + 1;
+    Unit = handles.s.getUnit(sprintf('Unit%d', unitNo));
+    dispUnit(handles, unitNo, Unit);
+    set(handles.UnitNoBox, 'String', num2str(unitNo));
 end
 
 % --- Executes on button press in SummaryFinish.
@@ -320,11 +348,19 @@ function SummaryFinish_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 if isfield(handles, 's') && isa(handles.s, 'summaryTable')
     setStatus(handles, 'exporting summary data...');
-    fileName = handles.s.export();
+    
+    % Store the current unit in case it wasn't already
+    [unitNo, Unit] = collectUnit(handles);
+    handles.s.putUnit(sprintf('Unit%d', unitNo), Unit);
+    
+    % Export and clear
+    notes = get(handles.CaseNotes, 'String');
+    fileName = handles.s.export(notes);
     handles.s = [];
     guidata(hObject, handles);
     set(handles.UnitNoBox, 'String', '[]');
     set(handles.ShowSummary, 'Value', 0);
+    set(handles.SummaryTable, 'Data', {});
     toggleSummaryVisibility(handles, 0);
     disp(['Exported summary data to ', fileName]);
     setStatus(handles, '');
@@ -337,7 +373,8 @@ function SummaryStart_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 dataDir = get(handles.DataDirBox, 'String');
 animalID = get(handles.AnimalIDBox, 'String');
-unitNo = eval(get(handles.UnitNoBox, 'String'));
+sourceFormatMenu = cellstr(get(handles.SourceFormatMenu, 'String'));
+sourceFormat = sourceFormatMenu{get(handles.SourceFormatMenu, 'Value')};
 
 % Set up the summary object
 if isfield(handles, 's') && isa(handles.s, 'summaryTable')
@@ -353,14 +390,67 @@ if ~state
 end
 drawnow
 setStatus(handles, 'preparing summary...');
-s = summaryTable( dataDir, animalID, unitNo, handles );
-s.showUnit();
+s = summaryTable( dataDir, animalID, sourceFormat);
+
+% Do auto selection
+s.autoSelect('MaxResponse');
+
+% Display the first unit
+unitNo = 1;
+Unit = s.getUnit(sprintf('Unit%d', unitNo));
+dispUnit(handles, unitNo, Unit);
+            
 handles.s = s;
 guidata(hObject,handles);
 setStatus(handles, '');
 
 % Update the unit number
-set(handles.UnitNoBox, 'String', num2str(handles.s.unitNo));
+set(handles.UnitNoBox, 'String', num2str(unitNo));
+
+% --- Helper function to display the summary table properly
+function dispUnit(handles, unitNo, Unit)
+if ~isempty(Unit)
+    unitCell = table2cell(Unit);
+    valid = cellfun(@isnumeric, unitCell(1,:)) | ...
+        cellfun(@islogical, unitCell(1,:)) | ...
+        cellfun(@ischar, unitCell(1,:));
+    handles.SummaryTable.Data = unitCell(:,valid);
+    handles.SummaryTable.ColumnName = Unit.Properties.VariableNames(valid);
+    handles.SummaryTable.RowName = [];
+    trackColumn = cellfun(@(x)strcmp(x, 'track'), Unit.Properties.VariableNames(valid));
+    handles.SummaryTable.ColumnEditable = ...
+        cellfun(@islogical, unitCell(1,valid)) | trackColumn;
+    handles.SummaryTable.ColumnFormat{trackColumn} = 'numeric';
+else
+    handles.SummaryTable.Data = {};
+end
+set(handles.SummaryTable, 'UserData', unitNo);
+
+
+% --- Helper function to collect data from the summary table
+function [unitNo, Unit] = collectUnit(handles)
+unitNo = get(handles.SummaryTable, 'UserData');
+Unit = get(handles.SummaryTable, 'Data');
+columnNames = get(handles.SummaryTable, 'ColumnName');
+
+if isempty(Unit)
+    Unit = table;
+    return;
+end
+
+% Set track
+track = unique(cell2mat(Unit(:,strcmp(columnNames, 'track'))));
+if ~isempty(track)
+    Unit(:,strcmp(columnNames, 'track')) = {{track}};
+end
+
+% Convert to table
+Unit = cell2table(Unit);
+if ~isempty(Unit)
+    Unit.Properties.VariableNames = columnNames;
+end
+
+
 
 % --- Executes on button press in ShowSummary.
 function ShowSummary_Callback(hObject, eventdata, handles)

@@ -1,12 +1,12 @@
-function [ hRaster, hPSTH ] = plotRastergrams( SpikeData,...
+function [ hRaster, hPSTH ] = plotRastergrams( SpikeData, Statistics,...
     Params, color, showFigure, elecNo, cell )
 %PlotRasters opens and draws raster plot and PSTH figures
 %   hRaster - handle for rater plot
 %   hPSTH - handle for PSTH
 
 titleStr = makeTitle(Params, elecNo, cell);
-conditions = Params.Conditions.condition;
-conditionNo = Params.Conditions.conditionNo;
+conditions = Params.ConditionTable.condition;
+conditionNo = Params.ConditionTable.conditionNo;
 
 % Plot raster
 hRaster = figure('Visible',showFigure);
@@ -17,7 +17,7 @@ for i = 1:length(conditionNo)
     
     c = conditionNo(i);
     Stimuli = Params.Data(Params.Data.conditionNo == c,:);
-    Condition = Params.Conditions(Params.Conditions.conditionNo == c,:);
+    Condition = Params.ConditionTable(Params.ConditionTable.conditionNo == c,:);
     
     stimDuration = Condition.stimDuration;
     stimDiffTime = Condition.stimDiffTime;
@@ -58,6 +58,20 @@ for i = 1:length(conditionNo)
         xx(2:3:3*nSpikes)=allSpikes;
         plot(ax, xx, yy, 'Color', color)
     end;
+    
+    % Plot poisson bursts
+    hold on;
+    bursts = Statistics.bursts{Statistics.conditionNo == c};
+    if ~isempty(bursts)
+        nTrials = size(bursts,1);
+        xx=ones(3*nTrials,1)*nan;
+        yy=ones(3*nTrials,1)*nan;
+        xx(1:3:3*nTrials)=bursts(:,1);
+        xx(2:3:3*nTrials)=bursts(:,2);
+        yy(1:3:3*nTrials)=1:nTrials;
+        yy(2:3:3*nTrials)=1:nTrials;
+        plot(ax, xx, yy, 'k--');
+    end
 
     % Font size, XTick, and title
     box(ax,'off');
@@ -76,7 +90,7 @@ for i = 1:length(conditionNo)
         'FaceAlpha',0.1,'EdgeColor','none');
 
     % For subplots, only label the bottommost axes
-    showXTick = length(unique(Params.Conditions.stimDuration)) > 1;
+    showXTick = length(unique(Params.ConditionTable.stimDuration)) > 1;
     if i == length(conditionNo) || i == length(conditionNo) - 1 || showXTick
         if i == length(conditionNo) || mod(length(conditionNo),2) == 0
             xlabel(ax, 'Time [s]');
@@ -85,9 +99,12 @@ for i = 1:length(conditionNo)
         set(ax, 'XTickLabel', []);
 %         set(ax2, 'XTickLabel', []);
     end
-    if length(conditionNo) > 1
+    if length(conditionNo) > 1 && isnumeric(conditions)
         title(ax, sprintf('%s = %.3f', Params.stimType, conditions(c)), ...
-            'FontSize',fontSize,'FontWeight','Normal');
+            'FontSize',fontSize,'FontWeight','Normal', 'Interpreter', 'none');
+    elseif length(conditionNo) > 1 && iscellstr(conditions)
+        title(ax, sprintf('%s', conditions{c}), ...
+            'FontSize',fontSize,'FontWeight','Normal', 'Interpreter', 'none');
     end
     ylabel(ax, 'Trial');
     
@@ -109,7 +126,7 @@ for i = 1:length(conditionNo)
     
     % Figure out the binsize
     c = conditionNo(i);
-    Condition = Params.Conditions(Params.Conditions.conditionNo == c,:);
+    Condition = Params.ConditionTable(Params.ConditionTable.conditionNo == c,:);
     
     stimDuration = Condition.stimDuration;
     stimDiffTime = Condition.stimDiffTime;
@@ -141,6 +158,18 @@ for i = 1:length(conditionNo)
     maxY = max([1; histogram]);
     axis(ax,[-timeFrom stimDiffTime-timeFrom 0 maxY]);
     
+    % Plot filtered hist
+    hold on;
+    plot(ax, centers, Statistics.histFilt{Statistics.conditionNo == c}./binSize, ...
+        'Color', 'r');
+    
+    % Plot latency
+    plot(ax, Statistics.latency(Statistics.conditionNo == c), maxY, 'r*');
+
+    % Plot poisson bursts
+    bursts = Statistics.bursts{Statistics.conditionNo == c};
+    plot(ax, nanmean(bursts,1), repmat(maxY, 1, 2), 'r', 'LineWidth', 1);
+    
     % Font size, XTick, and title
     box(ax,'off');
     set(ax,'FontSize',fontSize);
@@ -156,7 +185,7 @@ for i = 1:length(conditionNo)
         'FaceAlpha',0.1,'EdgeColor','none');
 
     % For subplots, only label the bottommost axes
-    showXTick = length(unique(Params.Conditions.stimDuration)) > 1;
+    showXTick = length(unique(Params.ConditionTable.stimDuration)) > 1;
     if i == length(conditionNo) || i == length(conditionNo) - 1 || showXTick
         if i == length(conditionNo) || mod(length(conditionNo),2) == 0
             xlabel(ax, 'Time [s]');
@@ -165,8 +194,13 @@ for i = 1:length(conditionNo)
         set(ax, 'XTickLabel', []);
 %         set(ax2, 'XTickLabel', []);
     end
-    title(ax, sprintf('%s = %.3f', Params.stimType, conditions(c)), ...
-        'FontSize',fontSize,'FontWeight','Normal');
+    if length(conditionNo) > 1 && isnumeric(conditions)
+        title(ax, sprintf('%s = %.3f', Params.stimType, conditions(c)), ...
+            'FontSize',fontSize,'FontWeight','Normal', 'Interpreter', 'none');
+    elseif length(conditionNo) > 1 && iscellstr(conditions)
+        title(ax, sprintf('%s', conditions{c}), ...
+            'FontSize',fontSize,'FontWeight','Normal', 'Interpreter', 'none');
+    end
     ylabel(ax, 'spikes/s');
     
 end

@@ -1,12 +1,16 @@
 function titleStr = makeTitle(Params, elecNo, unit, OSI, DI)
 
-if nargin < 10
+if nargin < 4
     OSI = [];
     DI = [];
 end
 
-line1 = sprintf('%d [%s] Cell %d   Elec %d', Params.expNo, Params.stimType, ...
-    unit, elecNo);
+if nargin < 3 || isempty(unit)
+    line1 = sprintf('%d [%s] Elec %d', Params.expNo, Params.stimType, elecNo);
+else
+    line1 = sprintf('%d [%s] Cell %d   Elec %d', Params.expNo, Params.stimType, ...
+        unit, elecNo);
+end
 line2 = '';
 
 if isfield(Params,'sf') && ~contains(Params.stimType, 'Spatial')

@@ -67,26 +67,24 @@ end
 hasError = 0;
 
 % Adjust old param stim times
-stimTimesLegacy = [];
-stimOffTimesLegacy = [];
 if strcmp(animalID(1),'R')
     if strcmp(animalID,'R1513') && unitNo <= 3
-        stimTimesLegacy = stimTimesPTB+0.024;
-    elseif strcmp(animalID,'R1508') || strcmp(animalID,'R1510') ...
+        legacyLatency = 0.024;
+    elseif strcmp(animalID, 'R1504') || strcmp(animalID,'R1506') || ...
+            strcmp(animalID,'R1508') || strcmp(animalID,'R1510') ...
             || strcmp(animalID,'R1511') || strcmp(animalID,'R1512')
-        stimTimesLegacy = stimTimesPTB+0.024;
+        legacyLatency = 0.024;
     else
-        stimTimesLegacy = stimTimesPTB+0.141;
-        stimOffTimesLegacy = stimOffTimesPTB+0.141;
+        legacyLatency = 0.141;
     end
-    legacyLatency = 0.141;
 else
     % For old cat experiments, assume the CRT was fast enough that the
     % recorded stim times are accurate
-    stimTimesLegacy = stimTimesPTB;
-    stimOffTimesLegacy = stimOffTimesPTB;
     legacyLatency = 0;
 end
+stimTimesLegacy = stimTimesPTB+legacyLatency;
+stimOffTimesLegacy = stimOffTimesPTB+legacyLatency;
+
 
 % Make sure Parallel Stim times are ok
 stimTimesParallelCorrected = [];
@@ -252,8 +250,8 @@ if isempty(stimTimesCorrected) && ~isempty(stimTimesLegacy)
 end
 
 % Some last-minute sanity checks for whichever times we picked
-nOverlappingPairs = sum([diff(stimTimesCorrected); NaN] + 0.1 < ...
-        Params.Data.stimDuration + Params.Data.stimInterval);
+nOverlappingPairs = sum(diff(stimTimesCorrected) + 0.1 < ...
+        diff(Params.Data.stimTime));
 outsideRange = stimTimesCorrected(1) < startTimeRipple || ...
         stimTimesCorrected(end) > endTimeRipple || ...
         min(stimTimesCorrected) > 1000;

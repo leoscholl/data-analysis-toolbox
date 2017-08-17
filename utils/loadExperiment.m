@@ -23,8 +23,13 @@ if ~exist(filePath, 'file')
     warning('No data for file %d', fileNo);
     return;
 end
-file = load(filePath, 'dataset');
-
+try
+    file = load(filePath, 'dataset');
+catch e
+    warning('Possibly corrupt dataset (file #%d)', fileNo);
+    return;
+end
+    
 % Pick which data to load
 whichData = [];
 i = 1;
@@ -38,7 +43,9 @@ while isempty(whichData)
     i = i + 1;
 end
 dataset = file.dataset(:,whichData);
-dataset.source = filePath;
+if ~isfield(dataset, 'filepath') || isempty(dataset.filepath)
+    dataset.filepath = filePath;
+end
 
 % Check data
 if ~isfield(dataset,'spike')
@@ -49,17 +56,17 @@ if ~isfield(dataset,'ex') || ~isfield(dataset.ex, 'Data') ...
         || isempty(dataset.ex.Data)
     warning('Missing Params for file %d', fileNo);
 end
-% Check LFP
-if ~isfield(dataset,'lfp')
-    warning('No LFP for file %d', fileNo);
-end
-% Check Analog
-if ~isfield(dataset,'analog1k')
-    warning('No analog data for file %d', fileNo);
-end
-% Check Events
-if ~isfield(dataset,'digital')
-    warning('No digital events for file %d', fileNo);
-end
+% % Check LFP
+% if ~isfield(dataset,'lfp')
+%     warning('No LFP for file %d', fileNo);
+% end
+% % Check Analog
+% if ~isfield(dataset,'analog1k')
+%     warning('No analog data for file %d', fileNo);
+% end
+% % Check Events
+% if ~isfield(dataset,'digital')
+%     warning('No digital events for file %d', fileNo);
+% end
 
 end

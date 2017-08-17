@@ -52,13 +52,24 @@ for i = 1:length(whichUnits)
     % Remove any files that aren't correctly formatted
     [newFileAnimals, newFileNos, newStimTypes] = ...
         cellfun(@parseFileName, newFiles, 'UniformOutput', false);
+    
+    % Screen for files that have intact file names
     valid = cellfun(@(x, y)~isnan(x) && ~isempty(y), newFileNos, newStimTypes);
-    newFileAnimals = newFileAnimals(valid);
-    newFileNos = newFileNos(valid);
-    newStimTypes = newStimTypes(valid);
+    
+    % Only take the first unique file no
+    [~, uniqueFiles] = unique([newFileNos{:}]); 
+    isUnique = ismember(1:length(newFileNos), uniqueFiles');
+    
+    % Remove files that aren't in whichFiles
+    isWanted = repmat(isempty(whichFiles), 1, length(newFileNos)) | ...
+        ismember([newFileNos{:}], whichFiles);
+
+    newFileAnimals = newFileAnimals(valid & isUnique & isWanted);
+    newFileNos = newFileNos(valid & isUnique & isWanted);
+    newStimTypes = newStimTypes(valid & isUnique & isWanted);
+    rawFileNames = rawFileNames(valid & isUnique & isWanted);
     newFiles = cellfun(@createFileName, newFileAnimals, ...
         newFileNos, newStimTypes, 'UniformOutput', false);
-    rawFileNames = rawFileNames(valid);
     if isempty(newFiles)
         continue;
     end
@@ -69,11 +80,7 @@ for i = 1:length(whichUnits)
         repmat({str2num(whichUnits{i}(5:end))},length(newFiles),1)];
 end
 
-if ~isempty(fileNames) && ~isempty(whichFiles)
-    
-    % Remove files that aren't in whichFiles
-    fileNames = fileNames(ismember(vertcat(fileNames{:,3}), whichFiles),:);
-end
+
 
 % Sort files
 if ~isempty(fileNames)

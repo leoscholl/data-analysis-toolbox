@@ -7,20 +7,25 @@ if ~exist(dataPath,'dir')
     mkdir(dataPath);
 end
 resultsFile = fullfile(dataPath,[fileName,'.mat']);
-r = matfile(resultsFile, 'Writable', true);
-varNames = who(r);
-if ismember('analysis', varNames) && ...
-        isempty(setdiff(fieldnames(r.analysis), fieldnames(Results)))
-    analysis = r.analysis;
-    ind = find(strcmp({analysis.sourceFormat}, Results.sourceFormat));
-    if isempty(ind) || ind == 0
-        analysis(end+1) = Results;
-    else
-        analysis(ind) = Results;
+% r = matfile(resultsFile, 'Writable', true);
+r = load(resultsFile);
+if isfield(r, 'analysis') 
+    if ~isempty(setdiff(fieldnames(Results),fieldnames(r.analysis)))
+        analysis = Results;
+        save(resultsFile, 'analysis', '-append');
+        return;
     end
-    r.analysis = analysis;
+    ind = find(strcmp({r.analysis.sourceFormat}, Results.sourceFormat));
+    if isempty(ind) || ind == 0
+        r.analysis(end+1) = Results;
+    else
+        r.analysis(ind) = Results;
+    end
+    analysis = r.analysis;
+    save(resultsFile, 'analysis', '-append');
 else
-    r.analysis = Results;
+    analysis = Results;
+    save(resultsFile, 'analysis', '-append');
 end
 
 end

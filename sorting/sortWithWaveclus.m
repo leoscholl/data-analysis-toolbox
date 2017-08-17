@@ -15,6 +15,7 @@ for unitNo = whichUnits
 
     parallel = true;
 
+    cd(sortingPath)
     Get_spikes(files, 'parallel', parallel);
     par = struct;
     par.min_clus = 100;

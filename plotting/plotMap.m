@@ -2,8 +2,8 @@ function [ handle ] = plotMap(Statistics, Params, showFigure, elecNo, cell)
 %PlotMaps Function plotting RF maps
 
 % Get conditions from parameters
-conditions = Params.Conditions.condition;
-conditionNo = Params.Conditions.conditionNo;
+conditions = Params.ConditionTable.condition;
+conditionNo = Params.ConditionTable.conditionNo;
 X = unique(conditions(:,1));
 Y = unique(conditions(:,2));
 
@@ -42,7 +42,7 @@ hold on;
 
 % Plot data depending on matlab version
 if verLessThan('matlab', '8.3') % < 2014
-    contourf(X,Y,corr,20);
+    contourf(X,Y,corrmap,20);
     shading(gca,'flat');
 else % >= 2014
     surf(X,Y,corrmap,'FaceColor','interp');

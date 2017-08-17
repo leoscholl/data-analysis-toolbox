@@ -1,121 +1,46 @@
 classdef summaryTable < handle
+% summaryTable generates a summary for each unit in a given dataset
     
     properties
         dataDir % where to locate results files
         animalID
-        unitNo
-        Units % Storage of all the information about each unit
-        Electrodes % how many electrodes and what are their names
-        handles % handles for gui
-        columns = {'file', 'stimulus', 'electrode', 'cell', ...
-            'pref', 'f1pref', 'corrpref', 'lat', ...
-            'ori', 'sf', 'tf', 'apt', 'velocity', 'latency', 'other', 'notes'};
+        Cells % Storage of all the information about each cell
+        columns = {'file', 'stimulus', 'electrode', 'cell', 'notes'};
     end
     
     methods
         
         % --- Constructor
-        function obj = summaryTable( dataDir, animalID, unitNo, handles )
+        function obj = summaryTable( dataDir, animalID, sourceFormat )
             
-            obj.handles = handles;
             obj.animalID = animalID;
             obj.dataDir = dataDir;
-            [~, obj.Units] = findUnits(dataDir, animalID);
-            
-            if size(obj.Units,1) < 1
-                error(['No units found for ', animalID]);
-            end
-            
-             % Set the first unit number
-            if ~isempty(unitNo) && ismember(unitNo, obj.Units.number)
-                obj.unitNo = unitNo;
-            else
-                obj.unitNo = obj.Units.number(1);
-            end
-            
-            % Generate tables for all units
-            obj.Units.data = repmat({{}}, size(obj.Units,1), 1);
-            for i = 1:size(obj.Units,1)
-                unitNo = obj.Units.number(i);
-                [summary, Electrodes] = obj.generateUnit(dataDir, animalID, unitNo);
-                obj.Electrodes = Electrodes;
-                obj.Units.data{i} = summary;
-            end 
-        end
-        
-        
-        % --- Move to the next unit
-        function nextUnit(obj)
-            if ~isempty(obj.unitNo)
-                obj.collectUnit(); % save the current unit summary
-            end
-            i = find(obj.Units.number == obj.unitNo);
-            if size(obj.Units,1) >= i + 1
-                obj.unitNo = obj.Units.number(i+1);
-            else
-                fprintf(2, 'No more units\n');
-            end
-        end
-        
-        
-        % --- Move to the previous unit
-        function prevUnit(obj)
-            if ~isempty(obj.unitNo)
-                obj.collectUnit(); % save the current unit summary
-            end
-            i = find(obj.Units.number == obj.unitNo);
-            if i > 1
-                obj.unitNo = obj.Units.number(i-1);
-            else
-                fprintf(2, 'No previous units\n');
-            end
-        end
-        
-        
-        % --- Display the summary for a unit on the table
-        function showUnit(obj)
-            
-            % Get the summary data
-            Sum = obj.Units.data{obj.Units.number == obj.unitNo};
-            
-            % display the summary for this unit, allow choice of files for each
-            % stimulus
-            set(obj.handles.SummaryTable, 'Data', Sum);
-            obj.handles.SummaryTable.ColumnName = obj.columns;
-            obj.handles.SummaryTable.ColumnWidth = {30, 70, 30, 30, ...
-                30, 30, 30, 40, ...
-                30, 30, 30, 30, 30, 30, 30, 97};
-            obj.handles.SummaryTable.RowName = [];
-            obj.handles.SummaryTable.ColumnEditable = [false false false false ...
-                true true true false ...
-                true true true true true true true true];
-            obj.handles.SummaryTable.ColumnFormat = {'numeric', 'char', 'numeric', 'numeric', ...
-                'numeric', 'numeric', 'numeric', 'numeric', ...
-                'logical', 'logical', 'logical', 'logical', 'logical', 'logical', ...
-                'logical', 'char'};
-            
-        end
 
-        
-        % --- Store the data for the current unit
-        function collectUnit(obj)
-            
-            data = get(obj.handles.SummaryTable, 'Data');
-            if isempty(data)
-                return;
-            end
-            obj.Units.data{obj.Units.number == obj.unitNo} = data;
-            
+            % Gather data
+            obj.Cells = obj.gatherData(dataDir, animalID, sourceFormat);
         end
         
+        % --- Fetch a unit summary table
+        function Unit = getUnit(obj, session)
+            Unit = obj.Cells(strcmp(obj.Cells.session, session),:);
+        end
+        
+        % --- Store a Unit table
+        function putUnit(obj, session, Unit)
+            if ~isempty(Unit)
+                obj.Cells(strcmp(obj.Cells.session, session), ...
+                    Unit.Properties.VariableNames) = Unit;
+            end
+        end
         
         % --- Save all data to file in a single table
-        function csvFile = export(obj)
-            
-            obj.collectUnit(); % just in case
-            
-            Summary = obj.summarize();
-            notes = get(obj.handles.CaseNotes, 'String');
+        function [csvFile, Summary] = export(obj, notes, columnNames)
+
+            if nargin < 3 || isempty(columnNames)
+                Summary = obj.Cells(obj.Cells.selected, :);
+            else
+                Summary = obj.Cells(obj.Cells.selected, columnNames);
+            end
             
             if isempty(Summary)
                 csvFile = 'empty summary table';
@@ -127,108 +52,67 @@ classdef summaryTable < handle
             save(exportFile, 'Summary', 'notes');
             
             % Also export a csvFile for excel
+            firstRow = table2cell(Summary(1,:));
+            valid = cellfun(@isnumeric, firstRow(1,:)) | ...
+                cellfun(@islogical, firstRow(1,:)) | ...
+                cellfun(@ischar, firstRow(1,:));
+
             csvFile = fullfile(obj.dataDir, obj.animalID, 'summary.csv');
             csvFile = obj.incrementFileName(csvFile);
-            writetable(Summary,csvFile,'WriteRowNames',true,'QuoteStrings',true);
+            writetable(Summary(:,valid),csvFile,'WriteRowNames',true,'QuoteStrings',true);
             
         end
         
-        
-        % --- collect all the summary data into a single table
-        function Summary = summarize(obj)
+        % --- Automatically select certain files using specified function
+        function autoSelect(obj, selectionMethod)
             
-            Summary = {};
-            
-            for i = 1:size(obj.Units,1)
-                
-                unitNo = obj.Units.number(i);
-                data = obj.Units.data{i};
-                
-                if isempty(data)
-                    continue;
-                end
-                
-                Sum = cell2table(data);
-                Sum.Properties.VariableNames = obj.columns;
-                set(obj.handles.SummaryTable, 'Data', []);
-                
-                nElectrodes = size(obj.Electrodes, 1);
-                
-                for e = 1:nElectrodes
-                    electrode = obj.Electrodes.number(e);
-                    cells = unique(Sum.cell(Sum.electrode == electrode));
-                    for c = 1:length(cells)
-                        track = [];
-                        cell = cells(c);
-                        CellSum = Sum(Sum.cell == cell & Sum.electrode == electrode,:);
-                        ori = obj.pref(CellSum(CellSum.ori,{'pref', 'f1pref','corrpref'}));
-                        sf = obj.pref(CellSum(CellSum.sf,{'pref', 'f1pref','corrpref'}));
-                        tf = obj.pref(CellSum(CellSum.tf,{'pref', 'f1pref','corrpref'}));
-                        apt = obj.pref(CellSum(CellSum.apt,{'pref', 'f1pref','corrpref'}));
-                        velocity = obj.pref(CellSum(CellSum.velocity,{'pref', 'f1pref','corrpref'}));
-                        latency = obj.pref(CellSum(CellSum.latency, {'pref', 'lat'}));
-                        other = obj.pref(CellSum(CellSum.other,{'pref', 'f1pref','corrpref'}));
-                        notes = table2cell(CellSum(~cellfun(@isempty,CellSum.notes),{'stimulus','file','notes'}));
-                        
-                        % Add osi for the file that ori is selected
-                        if sum(CellSum.ori) == 1
-                            oriFileNo = CellSum.file(CellSum.ori);
-                            oriCell = CellSum.cell(CellSum.ori);
-                            oriElec = CellSum.electrode(CellSum.ori);
-                            [Results] = loadResults(obj.dataDir, ...
-                                obj.animalID, unitNo, oriFileNo, {});
-                            Statistics = Results.StatisticsAll{oriElec};
-                            Statistics = Statistics(Statistics.cell == oriCell,:);
-                            [ osi, di ] = calculateOsi(Statistics, Results.Params);
-                        else
-                            osi = [];
-                            di = [];
-                        end
-                        
-                        Summary = [Summary; {track, unitNo, ...
-                            electrode, cell, ...
-                            ori, osi, di, sf, tf, apt, velocity, ...
-                            latency, other, char(notes)}];
-                    end % cells loop
-                end % Electrodes loop
-            end % Units loop
-            
-            if isempty(Summary)
-                Summary = table;
-                return;
+            % Chooses the last (most recent) test for each stimulus type
+            function best = lastStim(stimuli)
+                best = max(stimuli.fileNo);
             end
             
-            Summary = cell2table(Summary);
-            Summary.Properties.VariableNames = {'track', 'unit', 'electrode', 'cell', ...
-                'ori', 'osi', 'di', 'sf', 'tf', 'apt', 'velocity', 'latency', ...
-                'other', 'notes'};
+            % Chooses the test with the greatest maximum corrected response
+            function best = maxResponse(Stimuli)
+                [~, ind] = max(cellfun(@(x)max([x.tCurveCorr]), Stimuli.Statistics));
+                best = Stimuli.fileNo(ind);
+            end
             
+            switch selectionMethod
+                case 'LastStim'
+                    selectionFun = @lastStim;
+                case 'MaxResponse'
+                    selectionFun = @maxResponse;
+                otherwise
+                    selectionFun = @lastStim;
+            end
+            
+            % Go through the table and select the "best" of each stim type
+            sessions = unique(obj.Cells.session);
+            for s = 1:length(sessions)
+                electrodes = unique(obj.Cells.electrodeid(strcmp(obj.Cells.session, sessions{s})));
+                for e = 1:length(electrodes)
+                    cells = unique(obj.Cells.cell(strcmp(obj.Cells.session, sessions{s}) & ...
+                        obj.Cells.electrodeid == electrodes(e)));
+                    for c = 1:length(cells)
+                        Stimuli = obj.Cells(strcmp(obj.Cells.session, sessions{s}) & ...
+                            obj.Cells.electrodeid == electrodes(e) & ...
+                            obj.Cells.cell == cells(c), :);
+                        stimTypes = unique(Stimuli.stimType);
+                        for stim = 1:length(stimTypes)
+                            best = selectionFun(Stimuli(strcmp(stimTypes{stim}, Stimuli.stimType),:));
+                            obj.Cells.selected(strcmp(obj.Cells.session, sessions{s}) & ...
+                                obj.Cells.electrodeid == electrodes(e) & ...
+                                obj.Cells.cell == cells(c) & ...
+                                obj.Cells.fileNo == best) = true;
+                        end
+                    end
+                end
+            end
         end
-        
+
     end
     
     methods (Static)
-        
-        % --- Choose the preferred condition based on priorities
-        function r = pref(T)
-            r = [];
-            if isempty(T) || size(T,1) > 1
-                return;
-            end
-            if ~isempty(T.pref{1})
-                r = T.pref;
-            elseif ismember('f1pref',T.Properties.VariableNames) && ...
-                    ~isempty(T.f1pref) && ~isnan(T.f1pref)
-                r = T.f1pref;
-            elseif ismember('corrpref',T.Properties.VariableNames) && ...
-                    ~isempty(T.corrpref) && ~isnan(T.corrpref)
-                r = T.corrpref;
-            elseif ismember('lat',T.Properties.VariableNames) && ...
-                    ~isempty(T.lat) && ~isnan(T.lat)
-                r = T.lat;
-            end
-        end
-        
         
         % --- Helper for saving files to keep incrementing the name
         function fileName = incrementFileName(fileName)
@@ -256,105 +140,72 @@ classdef summaryTable < handle
         end
 
         
-        % --- Generate a summary table for a given unit
-        function [summary, Electrodes] = generateUnit(dataDir, animalID, unitNo)
-            summary = {};
-            Electrodes = table;
+        function Cells = gatherData(dataDir, animalID, sourceFormat)
             
-            % Generate from files if it doesn't already exist
-            [~, ~, Files] = findFiles(dataDir, animalID, ...
-                unitNo, '*.mat');
+            [~, ~, Files] = findFiles(dataDir, animalID, [], '*.mat');
+            nFiles = size(Files,1);
             
-            for f=1:size(Files,1)
+            % Collect all cells into a summary array of structures
+            summary = [];
+            for f = 1:nFiles
                 
-                results = loadResults(dataDir, animalID, Files.unitNo(f), ...
-                    Files.fileNo(f));
-                if isempty(results)
+                analysis = loadResults(dataDir, animalID, ...
+                    Files.fileNo(f), sourceFormat);
+                
+                if isempty(analysis)
                     continue;
                 end
-                Electrodes = results.Electrodes(:,{'name', 'number'});
-                Params = results.Params;
-
-                cells = {};
                 
-                for i=1:length(results.StatisticsAll)
-                    Stats = results.StatisticsAll{i};
+                analysis.spike;
+                analysis.lfp;
+                analysis.Params.unit;
+                
+                for i=1:length(analysis.spike) % for each electrode
+                    
+                    electrodeid = analysis.spike(i).electrodeid;
+                    
+                    Stats = analysis.spike(i).Statistics;
+                    SpikeData = analysis.spike(i).Data;
+                    Conditions = analysis.Params.Conditions;
+                    
                     if isempty(Stats)
                         continue;
                     end
-                    cells{i} = unique(Stats.cell);
+                    cells = unique(Stats.cell);
                     
-                    for j = 1:length(cells{i})
-                        StatsCell = Stats(Stats.cell == cells{i}(j),:);
-                        [maxCorr, maxCorrInd] = max(StatsCell.tCurveCorr);
-                        [maxF1, maxF1Ind] = max(StatsCell.f1Rep);
-                        if ~isnan(maxCorr)
-                            maxCorrCN = StatsCell.conditionNo(maxCorrInd);
-                            maxCorrCond = Params.Conditions.condition(...
-                                Params.Conditions.conditionNo == maxCorrCN);
-                        else
-                            maxCorrCond = NaN;
-                        end
-                        if ~isnan(maxF1)
-                            maxF1CN = StatsCell.conditionNo(maxF1Ind);
-                            maxF1Cond = Params.Conditions.condition(...
-                                Params.Conditions.conditionNo == maxF1CN);
-                        else
-                            maxF1Cond = NaN;
-                        end
-                        latencies = StatsCell.latency(~isnan(StatsCell.latency));
-                        latency = mean(latencies);
+                    for j = 1:length(cells)
                         
-                        
-                        summary = [summary; {Files.fileNo(f), Files.stimType{f}, ...
-                            i, cells{i}(j), ...
-                            [], maxF1Cond, maxCorrCond, latency}];
-                    end
-                end
-            end
+                        cell = struct;
+                        cell.cell = cells(j);
+                        cell.electrodeid = electrodeid;
+                        cell.track = [];
+                        cell.session = analysis.Params.unit;
+                        cell.Statistics = table2struct(Stats(Stats.cell == cells(j),:));
+                        cell.SpikeData = table2struct(SpikeData(SpikeData.cell == cells(j),:));
+                        cell.Conditions = Conditions;
+                        cell.fileNo = Files.fileNo(f);
+                        cell.stimType = Files.stimType{f};
+                        cell.notes = {};
+                        cell.selected = false;
+                        cell.sessionid = sum(double(cell.session).* ...
+                            (10.^(0:length(cell.session)-1)));
+                        cell.animalid = sum(double(animalID).* ...
+                            (10.^(0:length(animalID)-1)));
+                        cell.id = str2double(sprintf('%d%d%d', ...
+                            cell.electrodeid + 1, cell.cell + 1, ...
+                            cell.sessionid + cell.animalid * 100));
 
-            if isempty(summary)
-                fprintf(2, ['No data for unit ', num2str(unitNo)]);
-                return;
-            end
-            
-            summary = sortrows(summary, [3, 1]); % organize by electrode
-            
-            % Go through and select the latest of each stim type
-            stimTypes = {'Ori', 'Spatial', 'Temporal', 'Aperture', ...
-                    'Velocity', 'LatencyTest'};
-            summary(:,9:15) = {false};
-            
-            columns = {'file', 'stimulus', 'electrode', 'cell', ...
-            'pref', 'f1pref', 'corrpref', 'lat', ...
-            'ori', 'sf', 'tf', 'apt', 'velocity', 'latency', 'other', 'notes'};
-            
-            electrodes = unique([summary{:,3}]);
-            for e = 1:length(electrodes)
-                cells = unique([summary{[summary{:,3}] == electrodes(e), 4}]);
-                for c = 1:length(cells)
-                    stimuli = summary([summary{:,3}] == electrodes(e) & ...
-                        [summary{:,4}] == cells(c), 1:2);
-                    for i = 1:length(stimTypes)
-                        lastStim = find(cellfun(@(x)contains(x, stimTypes{i}), stimuli(:,2)),...
-                            1,'last');
-                        if lastStim
-                            stimNo = stimuli{lastStim,1};
-                            idx = [summary{:,1}] == stimNo & ...
-                                [summary{:,4}] == cells(c) & ...
-                                [summary{:,3}] == electrodes(e);
-                            summary(idx,i+8) = {true};
-                        end
+                        summary = [summary; cell];
                     end
                 end
             end
-            
-            
-            % Add notes
-            summary(:,16) = {''};
-            
-            
-                
+       
+            % Convert to a single table
+            if isempty(summary)
+                Cells = table;
+            else
+                Cells = struct2table(summary);
+            end
         end
         
     end

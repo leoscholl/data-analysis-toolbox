@@ -2,7 +2,7 @@ function [ Events ] = loadDigitalEvents( dataset )
 %loadDigitalEvents Loads digital TTL events from SMA 3, 4, and parallel in
 %   Detailed explanation goes here
 
-Events = struct;
+Events = [];
 if isfield(dataset, 'digital')
     startTime = dataset.digital(cellfun(@(x)strcmp(x, 'SMA 3'),{dataset.digital.channel}'));
     if ~isempty(startTime)

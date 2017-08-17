@@ -4,33 +4,22 @@ function [ handle, OSI, DI ] = plotTCurve(Statistics, Params, ShowFigure, ...
 % returns the handle to the tuning curve figure
 
 OSI = []; DI = [];
-conditions = Params.Conditions.condition;
-conditionNo = Params.Conditions.conditionNo;
 
 fontSize = 5;
 
 % Sort conditions properly
-tCurve = Statistics.tCurve(Statistics.conditionNo);
-tCurveSEM = Statistics.tCurveSEM(Statistics.conditionNo);
-blank = Statistics.blank(Statistics.conditionNo);
-blankSEM = Statistics.blankSEM(Statistics.conditionNo);
-tCurveCorr = Statistics.tCurveCorr(Statistics.conditionNo);
-tCurveCorrSEM = Statistics.tCurveCorrSEM(Statistics.conditionNo);
-if ~isempty(Statistics.f1Rep) && ~isempty(Statistics.f1RepSD)
-    f1Rep = Statistics.f1Rep(Statistics.conditionNo);
-    f1RepSD = Statistics.f1RepSD(Statistics.conditionNo);
-end
+conditions = Params.ConditionTable.condition;
+[conditions, conditionNo] = sort(conditions);
 
-% Adding 360 deg to Ori tunning
-if strcmp(Params.stimType,'Ori')
-    f1Rep(end+1) = f1Rep(1); f1RepSD(end+1) = f1RepSD(1);
-    blank(end+1) = blank(1); blankSEM(end+1) = blankSEM(1);
-    tCurveCorr(end+1) = tCurveCorr(1);
-    tCurveCorrSEM(end+1) = tCurveCorrSEM(1);
-    tCurve(end+1) = tCurve(1);
-    tCurveSEM(end+1) = tCurveSEM(1);
-    conditions(end+1) = 360;
-    conditionNo(end+1) = conditionNo(1);
+tCurve = Statistics.tCurve(conditionNo);
+tCurveSEM = Statistics.tCurveSEM(conditionNo);
+blank = Statistics.blank(conditionNo);
+blankSEM = Statistics.blankSEM(conditionNo);
+tCurveCorr = Statistics.tCurveCorr(conditionNo);
+tCurveCorrSEM = Statistics.tCurveCorrSEM(conditionNo);
+if ~isempty(Statistics.f1Rep) && ~isempty(Statistics.f1RepSD)
+    f1Rep = Statistics.f1Rep(conditionNo);
+    f1RepSD = Statistics.f1RepSD(conditionNo);
 end
 
 handle = figure;
@@ -39,7 +28,23 @@ set(handle,'Color','White')
 hold on;
 
 % Plot baseline
-baseline = mean(blank);
+if any(conditions == -1)
+    baseline = tCurve(conditions == -1); % remove -1 as blank
+    conditions = conditions(conditions ~= -1);
+    conditionNo = conditionNo(conditions ~= -1);
+    tCurve = tCurve(conditions ~= -1);
+    tCurveSEM = tCurveSEM(conditions ~= -1);
+    blank = blank(conditions ~= -1);
+    blankSEM = blankSEM(conditions ~= -1);
+    tCurveCorr = tCurveCorr(conditions ~= -1);
+    tCurveCorrSEM = tCurveCorrSEM(conditions ~= -1);
+    if ~isempty(Statistics.f1Rep) && ~isempty(Statistics.f1RepSD)
+        f1Rep = f1Rep(conditions ~= -1);
+        f1RepSD = f1RepSD(conditions ~= -1);
+    end
+else
+    baseline = mean(blank);
+end
 line([conditions(1) conditions(end)],[baseline baseline],'Color','blue');
 
 % Plot data with SEMs
@@ -63,14 +68,18 @@ end
 legend('boxoff');
 titleStr = makeTitle(Params, elecNo, cell);
     
-xlabel(Params.stimType);
+xlabel(fieldnames(Params.Conditions), 'Interpreter', 'none');
 ylabel('Rate [spikes/s]');
 set(gca,'FontSize',fontSize);
-set(gca,'XTick',conditions);
+if issorted(conditions)
+    set(gca,'XTick',conditions);
+else
+    set(gca,'XTickLabel',num2str(conditions));
+end
 box off;
 
 % Change the title
-title(titleStr, 'FontSize', 16, 'FontWeight', 'normal');
+title(titleStr, 'FontSize', 16, 'FontWeight', 'normal', 'Interpreter', 'none');
 hold off;
 end
 

@@ -27,16 +27,10 @@ if nargin < 10 || isempty(sourceFormat)
     sourceFormat = [];
 end
 
-% Duration log file
-durationLogFile = 'duration_log.mat';
+% Duration preference
 avgDur = 30; % assume 30 seconds per file
-try
-    if exist(durationLogFile,'file')
-        load(durationLogFile);
-    else
-        save(durationLogFile, 'avgDur');
-    end
-catch
+if ispref('data_analysis_toolbox','avgRecalculateDuration')
+    avgDur = getpref('data_analysis_toolbox','avgRecalculateDuration');
 end
 
 smoothing = 0.2;
@@ -51,8 +45,8 @@ if nFiles < 1
     return;
 elseif nFiles > 1
     pool = gcp('nocreate');
-    if ~summaryFig && isempty(pool) && isempty(getCurrentTask())
-        parpool; % start the parallel pool
+    if isempty(pool) && isempty(getCurrentTask())
+        pool = parpool; % start the parallel pool
     end
     
     % Display some info about duration
@@ -60,16 +54,22 @@ elseif nFiles > 1
     fprintf('There are %d files to be recalculated.\n', nFiles);
     fprintf('Time remaining: %d minutes and %d seconds\n\n', ...
         floor(timeRemaining/60), floor(rem(timeRemaining,60)));
-    
+
     tic;
     parfor f = 1:size(Files,1)
         dataset = loadExperiment(dataDir, animalID, Files.fileNo(f), sourceFormat);
+        if isempty(dataset)
+            continue; % doesn't exist
+        end
         result = recalculateSingle(dataset, figuresDir, whichElectrodes, ...
             summaryFig, plotLFP, plotFigures, false);
         fileDuration(f) = result.fileDuration;
     end
     elapsedTime = toc;
-    avgDur = smoothing * mean(fileDuration) + (1 - smoothing) * avgDur;
+    avgDur = sum(fileDuration .* smoothing .* ...
+        ((1 - smoothing).^((1:length(fileDuration)) - 1))) + ...
+        avgDur .* (1 - smoothing) .^ length(fileDuration);
+    
 else
     
     % Display some info about duration
@@ -79,6 +79,9 @@ else
         floor(timeRemaining/60), floor(rem(timeRemaining,60)));
     
     dataset = loadExperiment(dataDir, animalID, Files.fileNo(1), sourceFormat);
+    if isempty(dataset)
+        return; % doesn't exist
+    end
     result = recalculateSingle(dataset, figuresDir, whichElectrodes, ...
         summaryFig, plotLFP, plotFigures, true);
     fileDuration = result.fileDuration;
@@ -86,7 +89,7 @@ else
     elapsedTime = fileDuration;
     avgDur = smoothing * fileDuration + (1 - smoothing) * avgDur;
 end
-save(durationLogFile, 'avgDur');
-fprintf('Total elapsed time: %d minutes and %d seconds\n', ...
+setpref('data_analysis_toolbox', 'avgRecalculateDuration', avgDur);
+fprintf('Total elapsed time: %d minutes and %d seconds\n\n', ...
     floor(elapsedTime/60), floor(rem(elapsedTime,60)));
 

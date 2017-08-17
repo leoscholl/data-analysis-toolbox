@@ -20,13 +20,16 @@ if length(units) > 1 && isempty(gcp('nocreate'))
     parpool; % open a new parallel pool
 end
 
-parfor un = 1:length(units)
+for un = 1:length(units)
     
     unit = units{un};
     unitNo = sscanf(unit, 'Unit%d');
     dataPath = fullfile(dataDir,animalID,unit,filesep);
     destPath = fullfile(destDir,animalID,filesep);
     disp(dataPath);
+    
+    electrodeid = [];
+    Files = [];
     
    
     % Check for existing files

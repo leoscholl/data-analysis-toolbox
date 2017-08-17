@@ -3,8 +3,8 @@ function [ handle ] = plotBarGraph(Statistics, ...
 %PlotTCurve opens and draws a tuning curve figure
 % returns the handle to the tuning curve figure
 
-conditions = Params.Conditions.condition;
-conditionNo = Params.Conditions.conditionNo;
+conditions = Params.ConditionTable.condition;
+conditionNo = Params.ConditionTable.conditionNo;
 
 % Sort conditions properly
 tCurve = Statistics.tCurve(Statistics.conditionNo);
@@ -20,11 +20,11 @@ hold on;
 
 % Configure data for grouped bar graph
 data = [tCurve blank];
-if length(conditions) > 1
-    conditions_ = repmat(conditions, 1, 2);
+if length(conditionNo) > 1
+    conditionNo_ = repmat(conditionNo, 1, 2);
     data_ = [tCurve blank];
 else
-    conditions_ = [1.5 3.5];
+    conditionNo_ = [1.5 3.5];
     data_ = [tCurve blank; 0 0];
 end
 errorNeg = [tCurveSEM blankSEM];
@@ -34,17 +34,17 @@ errorPos(data < 0) = NaN;
 colors = [color' [0.5 0.5 0.5]' [0.25 0.25 0.25]'];
 
 % Plot baseline
-if length(conditions) > 1
+if length(conditionNo) > 1
     baseline = mean(blank);
-    line([conditions(1)-1 conditions(end)+1],[baseline baseline],'Color','blue');
+    line([conditionNo(1)-1 conditionNo(end)+1],[baseline baseline],'Color','blue');
 end
 
 % Plot data as bars
-h = bar(conditions_, data_);
+h = bar(conditionNo, data_);
 set(h,'BarWidth',1);
 
 % Remove dummy data
-if length(conditions) == 1
+if length(conditionNo) == 1
     ax = axis;
     ax(2) = 2.5;
     axis(ax);
@@ -61,7 +61,7 @@ for i = 1:numBars
     h(i).EdgeColor = colors(:,i);
     
     % Based on barweb.m by Bolu Ajiboye from MATLAB File Exchange
-    if length(conditions) > 1
+    if length(conditionNo) > 1
         x = (1:numGroups) - groupWidth/2 + (2*i-1) * groupWidth / (2*numBars);
     else
         groupWidth_ = 0.65 + groupWidth;
@@ -75,11 +75,15 @@ end
 ylim auto;
 
 % Set the title, legends, etc.
-xlabel(Params.stimType);
+xlabel(fieldnames(Params.Conditions), 'Interpreter', 'none');
 ylabel('Rate [spikes/s]');
 set(gca,'FontSize',6);
-if length(conditions) > 1
+if length(conditionNo) > 1 && issorted(conditions) && isnumeric(conditions)
     set(gca,'XTick',conditions);
+    legend('avg bg','Mean FR','bg','Location','NorthEast');
+elseif length(conditionNo) > 1 && iscellstr(conditions)
+    set(gca, 'XTick',conditionNo);
+    set(gca, 'XTickLabel',conditions);
     legend('avg bg','Mean FR','bg','Location','NorthEast');
 else
     set(gca,'XTick',[]);

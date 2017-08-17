@@ -60,7 +60,7 @@ for ch = 1:length(dataset.spike)
     ylabel('Voltage (uV)')
     set(gca, 'FontSize', 6);
     title([fileName,' El', num2str(elecNo)],'FontSize',16, ...
-        'FontWeight', 'normal');
+        'FontWeight', 'normal', 'Interpreter', 'none');
     
     figureName = fullfile(figuresPath,elecDir, ...
         [fileName, '_','El', num2str(elecNo),'-waveforms']);
