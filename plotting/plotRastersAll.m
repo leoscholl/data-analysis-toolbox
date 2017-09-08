@@ -1,5 +1,5 @@
-function [hRaster, hPSTH] = plotRastersAll( SpikeData,...
-    Params, color, showFigure, elecNo, cell )
+function [ handle, suffix ] = plotRastersAll(Statistics, SpikeData, ...
+    Params, color, showFigure, elecNo, cell)
 %PlotRasters opens and draws raster plot and PSTH figures
 %   hRaster - handle for rater plot
 %   hPSTH - handle for PSTH
@@ -119,3 +119,6 @@ v = [0 0; stimDuration 0; ...
 f = [1 2 3 4];
 patch('Faces',f,'Vertices',v,'FaceColor',[0.5 0.5 0.5],...
     'FaceAlpha',0.1,'EdgeColor','none');
+
+handle = {hRaster, hPSTH};
+suffix = {'raster_all', 'psth_all'};

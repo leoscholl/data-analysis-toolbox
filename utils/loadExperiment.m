@@ -8,7 +8,7 @@ end
 
 dataset = [];
 
-[~, ~, Files] = findFiles(dataDir, animalID, [], '*.mat', fileNo);
+[~, ~, Files] = findFiles(dataDir, animalID, [], '*].mat', fileNo);
 if size(Files, 1) > 1
     warning('Too many files with the same file number (#%d)', fileNo);
     return;
@@ -24,9 +24,14 @@ if ~exist(filePath, 'file')
     return;
 end
 try
-    file = load(filePath, 'dataset');
+    file = load(filePath);
 catch e
     warning('Possibly corrupt dataset (file #%d)', fileNo);
+    return;
+end
+
+if ~isfield(file, 'dataset')
+    warning('No dataset for file %d', fileNo);
     return;
 end
     

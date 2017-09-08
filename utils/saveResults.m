@@ -6,13 +6,18 @@ function saveResults( Results )
 if ~exist(dataPath,'dir')
     mkdir(dataPath);
 end
-resultsFile = fullfile(dataPath,[fileName,'.mat']);
-% r = matfile(resultsFile, 'Writable', true);
-r = load(resultsFile);
+oldResultsFile = fullfile(dataPath,[fileName,'.mat']);
+resultsFile = fullfile(dataPath,[fileName,'-analysis.mat']);
+
+if exist(resultsFile, 'file')
+    r = load(resultsFile);
+else 
+    r = [];
+end
 if isfield(r, 'analysis') 
     if ~isempty(setdiff(fieldnames(Results),fieldnames(r.analysis)))
-        analysis = Results;
-        save(resultsFile, 'analysis', '-append');
+        r.analysis = Results;
+        save(resultsFile, '-struct', 'r', '-v7.3');
         return;
     end
     ind = find(strcmp({r.analysis.sourceFormat}, Results.sourceFormat));
@@ -21,11 +26,10 @@ if isfield(r, 'analysis')
     else
         r.analysis(ind) = Results;
     end
-    analysis = r.analysis;
-    save(resultsFile, 'analysis', '-append');
+    save(resultsFile, '-struct', 'r', '-v7.3');
 else
-    analysis = Results;
-    save(resultsFile, 'analysis', '-append');
+    r.analysis = Results;
+    save(resultsFile, '-struct', 'r', '-v7.3');
 end
 
 end

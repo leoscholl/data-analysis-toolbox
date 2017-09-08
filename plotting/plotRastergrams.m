@@ -1,5 +1,5 @@
-function [ hRaster, hPSTH ] = plotRastergrams( SpikeData, Statistics,...
-    Params, color, showFigure, elecNo, cell )
+function [ handle, suffix ] = plotRastergrams(Statistics, SpikeData, ...
+    Params, color, showFigure, elecNo, cell)
 %PlotRasters opens and draws raster plot and PSTH figures
 %   hRaster - handle for rater plot
 %   hPSTH - handle for PSTH
@@ -205,4 +205,7 @@ for i = 1:length(conditionNo)
     
 end
 hold off;
+
+handle = {hRaster, hPSTH};
+suffix = {'raster', 'psth'};
 

@@ -1,5 +1,10 @@
 function convertWavSpikes( dataDir, sortingDir, animalID, whichUnits )
 
+if nargin < 4 || isempty(whichUnits)
+    files = dir(fullfile(sortingDir,animalID,[animalID,'Unit*.mat']));
+    whichUnits = unique(cellfun(@(x)sscanf(x, [animalID,'Unit%d.mat']),{files.name}));
+end
+
 for i = 1:length(whichUnits)
     
     unitNo = whichUnits(i);
@@ -36,10 +41,14 @@ for i = 1:length(whichUnits)
 
         fileName = Files.fileName{f};
         disp(fileName);
-
-        expFile = matfile(fullfile(dataDir, Files.animalID{f}, ...
-            Files.unit{f}, fileName),'Writable', true);
-
+        
+        expFile = [];
+        try
+            expFile = load(fullfile(dataDir, Files.animalID{f}, ...
+                Files.unit{f}, fileName));
+        catch
+        end
+        
         startTime = Files.time(f,1);
         endTime = Files.time(f,2);
         spike = struct;
@@ -56,11 +65,21 @@ for i = 1:length(whichUnits)
         end
 
         % Save the new dataset
-        dataset = expFile.dataset(1,1);
-        dataset.spike = spike;
-        dataset.source = fullfile(sortingPath, fileName);
-        dataset.sourceformat = 'WaveClus';
-        expFile.dataset(1,end+1) = dataset;
-
+        if isfield(expFile, 'dataset')
+            dataset = expFile.dataset(1,1);
+            dataset.spike = spike;
+            dataset.source = fullfile(sortingPath, fileName);
+            dataset.sourceformat = 'WaveClus';
+            expFile.dataset(1,end+1) = dataset;
+        else
+            dataset = struct;
+            dataset.spike = spike;
+            dataset.source = fullfile(sortingPath, fileName);
+            dataset.sourceformat = 'WaveClus';
+            expFile.dataset = dataset;
+        end
+        
+        save(fullfile(dataDir, Files.animalID{f}, ...
+            Files.unit{f}, fileName), '-struct', 'expFile', '-v7.3');
     end
 end

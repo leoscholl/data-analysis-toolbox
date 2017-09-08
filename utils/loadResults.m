@@ -9,7 +9,7 @@ if ~iscell(sourceFormat)
 end
 
 analysis = [];
-[~, ~, Files] = findFiles(dataDir, animalID, [], '*.mat', fileNo);
+[~, ~, Files] = findFiles(dataDir, animalID, [], '*-analysis.mat', fileNo);
 if size(Files, 1) > 1
     warning('Too many files with the same file number');
     return;

@@ -2,6 +2,11 @@ function sortWithWaveclus( sortingDir, animalID, whichUnits )
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
+if nargin < 3 || isempty(whichUnits)
+    files = dir(fullfile(sortingDir,animalID,[animalID,'Unit*.mat']));
+    whichUnits = unique(cellfun(@(x)sscanf(x, [animalID,'Unit%d.mat']),{files.name}));
+end
+
 for unitNo = whichUnits
     
     sortingPath = fullfile(sortingDir, animalID); 

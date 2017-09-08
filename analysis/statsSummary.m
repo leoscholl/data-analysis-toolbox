@@ -1,35 +1,55 @@
-function [ Statistics ] = statsSummary( Cells )
+function [ Scatter, UCells ] = statsSummary( Cells )
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
 
-Statistics = struct;
+Scatter = struct;
+UCells = struct('id', [], 'electrodeid', [], 'session', [], 'sessionid', [], ...
+    'subject', [], 'subjectid', [], 'track', [], 'cell', [], 'response', [], ...
+    'location', []);
+
 cells = unique(Cells.id);
 
+Locations = struct;
+load('C:\Users\leo\Google Drive\Matlab\manual analysis\locations.mat');
+
+uniqueCells = {};
 for c = 1:length(cells)
+    uniqueCells{c} = Cells(Cells.id == cells(c),:);
+end
+Cells = [];
+
+parfor c = 1:length(cells)
     
     % Only look a trials for this cell
     cell = struct;
-    stimuli = Cells(Cells.id == cells(c),:);
+    stimuli = uniqueCells{c};
     cell.id = stimuli.id(1);
-    cell.electrodeid = stimuli.electrodeid(1);
     cell.session = stimuli.session{1};
     cell.sessionid = stimuli.sessionid(1);
+    cell.subject = stimuli.subject{1};
+    cell.subjectid = stimuli.subjectid(1);
+    cell.track = stimuli.track{1};
+    cell.electrodeid = stimuli.electrodeid(1);
+
     cell.cell = stimuli.cell(1);
+    cell.response = struct;
     
+    % Collect location information if there is any
+    map = Locations.(cell.subject).(cell.session);
+    if isKey(map, cell.electrodeid)
+        cell.location = map(cell.electrodeid);
+    else
+        cell.location = '';
+    end
+
     for s = 1:size(stimuli,1)
         
         % Calculate statistics for each stim type
         stats = stimuli.Statistics{s};
         Stats = cell;
         
-        % Average number of spikes per trial
-        numSpikes = cellfun(@length, {stimuli.SpikeData{s}.raster});
-        Stats.meanSpikes = mean(numSpikes);
-        Stats.stdSpikes = std(numSpikes);
-        Stats.maxSpikes = max(numSpikes);
-        
         % Remove cells with low firing rates
-        if Stats.meanSpikes < 1 || Stats.maxSpikes < 10
+        if stimuli.meanSpikes(s) < 1 || stimuli.maxSpikes(s) < 10
             continue;
         end
 
@@ -42,36 +62,46 @@ for c = 1:length(cells)
         % Run ANOVA
         Stats.anova = anova1([corr{:}], [groups{:}], 'off');
         
-        % Wilcoxon rank-sum for each condition
-        Stats.ranksum = cellfun(@ranksum, {stats.meanTrials}, {stats.blankTrials});
-        Stats.broadnessW = mean(Stats.ranksum < 0.01);
+        try
+            % Wilcoxon rank-sum for each condition
+            Stats.ranksum = cellfun(@ranksum, {stats.meanTrials}, {stats.blankTrials});
+            Stats.broadnessW = mean(Stats.ranksum < 0.01);
+
+            % All trials vs all blank trials
+            [~, Stats.ttest] = ttest([stats.meanTrials], [stats.blankTrials]);
+        catch e
+            % Not enough blank trials, usually
+            Stats.ttest = NaN;
+            Stats.ranksum = [];
+            Stats.broadnessW = NaN;
+        end
         
-        % All trials vs all blank trials
-        [~, Stats.ttest] = ttest([stats.meanTrials], [stats.blankTrials]);
+        % Rank surprise
+        Stats.surprise = cellfun(@mean,{stats.surpriseInd});
+        Stats.bursts = cellfun(@(x)mean(x(:,1)),{stats.nBursts});
         
         % Selectivity
-        stats = struct2table(stats);
-        nConds = length(stats.conditionNo);
-        rMax = max(stats.tCurve);
-        rMin = min(stats.tCurve);
-        baseline = mean(stats.blank);
-        Stats.dos = (nConds - sum(arrayfun(@(x)x/rMax,stats.tCurve)))/(nConds - 1);
-        rNorm = (stats.tCurve - rMin)/(rMax - rMin);
+        nConds = length([stats.conditionNo]);
+        rMax = max([stats.tCurve]);
+        rMin = min([stats.tCurve]);
+        Stats.baseline = mean([stats.blank]);
+        Stats.dos = (nConds - sum(arrayfun(@(x)x/rMax,[stats.tCurve])))/(nConds - 1);
+        rNorm = ([stats.tCurve] - rMin)/(rMax - rMin);
         Stats.breadth = 1 - median(rNorm);
         Stats.si = (rMax - rMin)/(rMax + rMin);
         
         % Preferred stimulus
         dimensions = fieldnames(stimuli.Conditions{s});
-        Stats.pref = stimuli.Conditions{s}.(dimensions{1});
+        levels = stimuli.Conditions{s}.(dimensions{1});
         [~, ind] = max(rNorm);
-        if isnumeric(Stats.pref(ind))
-            Stats.pref = Stats.pref(ind);
+        if isnumeric(levels(ind))
+            Stats.pref = levels(ind);
         else
             Stats.pref = ind;
         end
         
         % Percent of cells with firing rates >25% over baseline
-        Stats.broadnessP = mean(stats.tCurveCorr > max(stats.tCurveCorr)*.25);
+        Stats.broadnessP = mean([stats.tCurveCorr] > max([stats.tCurveCorr])*.25);
         
         % Store the statistics in this cell's structure
         if contains(stimuli.stimType{s}, 'Spat')
@@ -89,37 +119,47 @@ for c = 1:length(cells)
         elseif contains(stimuli.stimType{s}, 'Lat') || ...
                 contains(stimuli.stimType{s}, 'spon')
             stimType = 'Latency';
+        elseif contains(stimuli.stimType{s}, 'Velocity')
+            stimType = 'Velocity';
+        elseif contains(stimuli.stimType{s}, 'RF')
+            stimType = 'RFMap';
+        elseif contains(stimuli.stimType{s}, 'Annulus')
+            stimType = 'Annulus';
         else
             stimType = strrep(stimuli.stimType{s}, '-', '_');
         end
-        if ~isfield(Statistics, stimType)
-            Statistics.(stimType) = Stats;
-        else
-            Statistics.(stimType) = [Statistics.(stimType); Stats];
+          
+        % OSI
+        if strcmp(stimType, 'Orientation')
+            valid = levels >= 0;
+            theta = deg2rad(levels(valid));
+            response = [stats.tCurve]';
+            response = response(valid);
+            Stats.dsi = abs(sum(response.*exp(1i*theta))/sum(response));
+            Stats.osi = abs(sum(response.*exp(2.1i*theta))/sum(response));
         end
-    end
-    
-end
+        
+        % Latency
+        if strcmp(stimType, 'Latency')
+            Stats.latency = stats.latency;
+        end
+        
+        % Scatter plot structure
+%         if ~isfield(Scatter, stimType)
+%             Scatter.(stimType) = Stats;
+%         else
+%             Scatter.(stimType) = [Scatter.(stimType); Stats];
+%         end
+        
+        % Group responses per cell
+        cell.response.(stimType) = rmfield(Stats, {'id', ...
+            'electrodeid', 'session', 'sessionid', 'subject', 'subjectid',...
+            'track', 'cell', 'response', 'location'});
+    end % for each stimuli
 
-% Plot scatters
-stimTypes = fieldnames(Statistics);
-for i = 1:length(stimTypes)
+    UCells(c,:) = cell;
+
     
-    stim = Statistics.(stimTypes{i});
-    
-    n = size(stim,1);
-    stim = stim([stim.ttest] <  0.05);
-    
-    figure(i);
-    scatter([stim.pref], [stim.si]);
-    title(stimTypes{i}, 'Interpreter', 'none');
-    xlabel('preference');
-    ylabel('selectivity index');
-    xlim auto
-    ylim([0 1]);
-    
-    dim = [.2 .5 .3 .3];
-    str = sprintf('%d/%d cells responding (p > 0.05)', size(stim, 1), n);
-    annotation('textbox',dim,'String',str,'FitBoxToText','on');
-    
-end
+end % for each cell
+
+

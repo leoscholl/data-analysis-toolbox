@@ -1,5 +1,8 @@
-function [ handle ] = plotMap(Statistics, Params, showFigure, elecNo, cell)
+function [ handle, suffix ] = plotMap(Statistics, SpikeData, ...
+    Params, color, showFigure, elecNo, cell)
 %PlotMaps Function plotting RF maps
+
+suffix = 'map';
 
 % Get conditions from parameters
 conditions = Params.ConditionTable.condition;
@@ -13,9 +16,9 @@ blank = Statistics.blank(Statistics.conditionNo);
 blankSEM = Statistics.blankSEM(Statistics.conditionNo);
 tCurveCorr = Statistics.tCurveCorr(Statistics.conditionNo);
 tCurveCorrSEM = Statistics.tCurveCorrSEM(Statistics.conditionNo);
-if ~isempty(Statistics.f1Rep) && ~isempty(Statistics.f1RepSD)
-    f1Rep = Statistics.f1Rep(Statistics.conditionNo);
-    f1RepSD = Statistics.f1RepSD(Statistics.conditionNo);
+if ~isempty(Statistics.f1) && ~isempty(Statistics.f1SD)
+    f1 = Statistics.f1(Statistics.conditionNo);
+    f1SD = Statistics.f1SD(Statistics.conditionNo);
 end
 
 % Sort conditions properly

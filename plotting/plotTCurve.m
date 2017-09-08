@@ -1,11 +1,10 @@
-function [ handle, OSI, DI ] = plotTCurve(Statistics, Params, ShowFigure, ...
-    elecNo, cell)
+function [ handle, suffix ] = plotTCurve(Statistics, SpikeData, ...
+    Params, color, showFigure, elecNo, cell)
 %PlotTCurve opens and draws a tuning curve figure
 % returns the handle to the tuning curve figure
 
-OSI = []; DI = [];
-
 fontSize = 5;
+suffix = 'tc';
 
 % Sort conditions properly
 conditions = Params.ConditionTable.condition;
@@ -17,9 +16,9 @@ blank = Statistics.blank(conditionNo);
 blankSEM = Statistics.blankSEM(conditionNo);
 tCurveCorr = Statistics.tCurveCorr(conditionNo);
 tCurveCorrSEM = Statistics.tCurveCorrSEM(conditionNo);
-if ~isempty(Statistics.f1Rep) && ~isempty(Statistics.f1RepSD)
-    f1Rep = Statistics.f1Rep(conditionNo);
-    f1RepSD = Statistics.f1RepSD(conditionNo);
+if ~isempty(Statistics.f1) && ~isempty(Statistics.f1SD)
+    f1 = Statistics.f1(conditionNo);
+    f1SD = Statistics.f1SD(conditionNo);
 end
 
 handle = figure;
@@ -38,9 +37,9 @@ if any(conditions == -1)
     blankSEM = blankSEM(conditions ~= -1);
     tCurveCorr = tCurveCorr(conditions ~= -1);
     tCurveCorrSEM = tCurveCorrSEM(conditions ~= -1);
-    if ~isempty(Statistics.f1Rep) && ~isempty(Statistics.f1RepSD)
-        f1Rep = f1Rep(conditions ~= -1);
-        f1RepSD = f1RepSD(conditions ~= -1);
+    if ~isempty(Statistics.f1) && ~isempty(Statistics.f1SD)
+        f1 = f1(conditions ~= -1);
+        f1SD = f1SD(conditions ~= -1);
     end
 else
     baseline = mean(blank);
@@ -49,9 +48,9 @@ line([conditions(1) conditions(end)],[baseline baseline],'Color','blue');
 
 % Plot data with SEMs
 errorbar(conditions,tCurve,tCurveSEM,'k','LineWidth',1);
-if ~(isempty(f1Rep) || isempty(f1RepSD))
-    % || any(ismissing(F1Rep)) || any(ismissing(F1RepSD)))
-    errorbar(conditions,f1Rep,f1RepSD,'r');
+if ~(isempty(f1) || isempty(f1SD))
+    % || any(ismissing(f1)) || any(ismissing(f1SD)))
+    errorbar(conditions,f1,f1SD,'r');
 end
 errorbar(conditions,blank,blankSEM,'Color',[0.5 0.5 0.5]);
 errorbar(conditions,tCurveCorr, tCurveCorrSEM,'g');
@@ -59,8 +58,8 @@ errorbar(conditions,tCurveCorr, tCurveCorrSEM,'g');
 
 % Configure axes, legend, title
 axis tight;
-if isempty(f1Rep) || isempty(f1RepSD)
-%        || any(ismissing(F1Rep)) || any(ismissing(F1RepSD))
+if isempty(f1) || isempty(f1SD)
+%        || any(ismissing(f1)) || any(ismissing(f1SD))
     legend({'avg bg';'Mean FR';'bg';'FR-bg'},'Location','NorthEast');
 else
     legend({'avg bg';'Mean FR';'F1';'bg';'FR-bg'},'Location','NorthEast');
@@ -71,12 +70,18 @@ titleStr = makeTitle(Params, elecNo, cell);
 xlabel(fieldnames(Params.Conditions), 'Interpreter', 'none');
 ylabel('Rate [spikes/s]');
 set(gca,'FontSize',fontSize);
-if issorted(conditions)
+if issorted(conditions, 'strictmonotonic') 
     set(gca,'XTick',conditions);
 else
-    set(gca,'XTickLabel',num2str(conditions));
+    set(gca,'XTick',unique(conditions));
 end
 box off;
+
+% Set the x-scale
+if ~isempty(strfind(Params.stimType,'Looming')) || ...
+        contains(lower(Params.stimType),'velocity')
+    set(gca,'xscale','log');
+end
 
 % Change the title
 title(titleStr, 'FontSize', 16, 'FontWeight', 'normal', 'Interpreter', 'none');

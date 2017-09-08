@@ -22,7 +22,7 @@ function varargout = analysis_ui(varargin)
 
 % Edit the above text to modify the response to help analysis_ui
 
-% Last Modified by GUIDE v2.5 11-Aug-2017 15:54:45
+% Last Modified by GUIDE v2.5 07-Sep-2017 09:39:53
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -66,7 +66,7 @@ guidata(hObject, handles);
 % Load preferences
 global uiPrefsList
 uiPrefsList = {'PlotLFPCheck', 'PlotFiguresCheck', ...
-    'SummaryFigsCheck', 'DataDirBox', 'FiguresDirBox', ...
+    'ParallelCheck', 'DataDirBox', 'FiguresDirBox', ...
     'AnimalIDBox', 'UnitNoBox', 'FileNoBox', 'SortingDirBox', ...
     'SuffixBox', 'SourceFormatMenu', 'RawDataBox'};
 loadPrefs(handles);
@@ -135,7 +135,7 @@ expType = expTypeMenu{get(handles.ExpTypeMenu, 'Value')};
 
 plotLFP = logical(get(handles.PlotLFPCheck, 'Value'));
 plotFigures = logical(get(handles.PlotFiguresCheck, 'Value'));
-summaryFigs = logical(get(handles.SummaryFigsCheck, 'Value'));
+isParallel = logical(get(handles.ParallelCheck, 'Value'));
 dataDir = get(handles.DataDirBox, 'String');
 figuresDir = get(handles.FiguresDirBox, 'String');
 sourceFormatMenu = cellstr(get(handles.SourceFormatMenu, 'String'));
@@ -151,7 +151,7 @@ setStatus(handles, 'recalculating...');
 switch expType
     case 'Spikes'
         recalculate(dataDir, figuresDir, animalID, unitNo, fileNo, whichElectrodes, ...
-            plotFigures, plotLFP, summaryFigs, sourceFormat);
+            plotFigures, plotLFP, isParallel, sourceFormat);
     case 'ECoG'
         
 end
@@ -245,13 +245,13 @@ figuresDir = get(handles.FiguresDirBox, 'String');
 expTypeMenu = cellstr(get(handles.ExpTypeMenu, 'String'));
 expType = expTypeMenu{get(handles.ExpTypeMenu, 'Value')};
 
-isparallel = ~logical(get(handles.SummaryFigsCheck, 'Value'));
+isParallel = ~logical(get(handles.ParallelCheck, 'Value'));
 
 setStatus(handles, 'plotting...');
 switch expType
     case 'Spikes'
         plotIndividual(dataDir, figuresDir, animalID, unitNo, fileNo, ...
-            whichElectrodes, figureType, sourceFormat, isparallel)
+            whichElectrodes, figureType, sourceFormat, isParallel)
     case 'ECoG'
         
 end
@@ -313,6 +313,13 @@ function DoStatistics_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 plotHelper(handles, 'stats');
 
+% --- Executes on button press in PlotSpectrogram.
+function PlotSpectrogram_Callback(hObject, eventdata, handles)
+% hObject    handle to PlotSpectrogram (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+plotHelper(handles, 'spike spectrogram');
+
 % --- Executes on button press in SummaryPrev.
 function SummaryPrev_Callback(hObject, eventdata, handles)
 % hObject    handle to SummaryPrev (see GCBO)
@@ -354,7 +361,7 @@ if isfield(handles, 's') && isa(handles.s, 'summaryTable')
     handles.s.putUnit(sprintf('Unit%d', unitNo), Unit);
     
     % Export and clear
-    notes = get(handles.CaseNotes, 'String');
+    notes = get(handles.UnitVars, 'String');
     fileName = handles.s.export(notes);
     handles.s = [];
     guidata(hObject, handles);
@@ -375,6 +382,12 @@ dataDir = get(handles.DataDirBox, 'String');
 animalID = get(handles.AnimalIDBox, 'String');
 sourceFormatMenu = cellstr(get(handles.SourceFormatMenu, 'String'));
 sourceFormat = sourceFormatMenu{get(handles.SourceFormatMenu, 'Value')};
+
+if strcmp(sourceFormat, 'Plexon')
+    sourceFormat = {'Plexon', 'Ripple'};
+elseif strcmp(sourceFormat, 'WaveClus')
+    sourceFormat = {'WaveClus', 'Ripple'};
+end
 
 % Set up the summary object
 if isfield(handles, 's') && isa(handles.s, 'summaryTable')
@@ -770,13 +783,13 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-% --- Executes on button press in SummaryFigsCheck.
-function SummaryFigsCheck_Callback(hObject, eventdata, handles)
-% hObject    handle to SummaryFigsCheck (see GCBO)
+% --- Executes on button press in ParallelCheck.
+function ParallelCheck_Callback(hObject, eventdata, handles)
+% hObject    handle to ParallelCheck (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hint: get(hObject,'Value') returns toggle state of SummaryFigsCheck
+% Hint: get(hObject,'Value') returns toggle state of ParallelCheck
 
 
 
@@ -805,18 +818,18 @@ end
 
 
 
-function CaseNotes_Callback(hObject, eventdata, handles)
-% hObject    handle to CaseNotes (see GCBO)
+function UnitVars_Callback(hObject, eventdata, handles)
+% hObject    handle to UnitVars (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of CaseNotes as text
-%        str2double(get(hObject,'String')) returns contents of CaseNotes as a double
+% Hints: get(hObject,'String') returns contents of UnitVars as text
+%        str2double(get(hObject,'String')) returns contents of UnitVars as a double
 
 
 % --- Executes during object creation, after setting all properties.
-function CaseNotes_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to CaseNotes (see GCBO)
+function UnitVars_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to UnitVars (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 

@@ -35,21 +35,8 @@ Params.whichElectrodes = whichElectrodes;
 
 % Load all possible stim times
 Events = loadDigitalEvents(dataset);
-if ~isempty(Events)
-    StimTimes = Events.StimTimes;
-end
-StimTimes.matlab = Params.Data.stimTime;
-
-[stimOnTimes, stimOffTimes, source, latency, variation, hasError, msg] = ...
-    adjustStimTimes(Params, Events);
-
-StimTimes.on = stimOnTimes;
-StimTimes.off = stimOffTimes;
-StimTimes.latency = latency;
-StimTimes.variation = variation;
-StimTimes.source = source;
-StimTimes.hasError = hasError;
-StimTimes.msg = msg;
+Events = adjustStimTimes2(Params, Events);
+StimTimes = Events.StimTimes;
 
 % Replace the old stim times with these new ones
 nStims = size(Params.Data,1);
@@ -60,6 +47,8 @@ Params.Data.stimDiffTime = [StimTimes.on(2:nStims); NaN] - StimTimes.on(1:nStims
 % Add stimulus offsets to Data table
 nTrials = Params.nTrials;
 if nTrials < 2
+    Results.Params = Params;
+    Results.StimTimes = StimTimes;
     Results.error = 'Not enough trials\n';
     return;
 end
@@ -68,8 +57,8 @@ end
 Params.ConditionTable = conditionTable(Params);
 
 % Make a gaussian filter for later
-sigma = 2;
-sz = 5;    % length of gaussFilter vector
+sigma = 1;
+sz = 10;    % length of gaussFilter vector
 x = linspace(-sz / 2, sz / 2, sz);
 gaussFilter = exp(-x .^ 2 / (2 * sigma ^ 2));
 gaussFilter = gaussFilter / sum (gaussFilter); % normalize
@@ -108,16 +97,13 @@ if isparallel
             fprintf(2, 'No spikes for electrode %d...', elecNo);
             continue;
         end
-        [SpikeData, LFPData, Statistics] = ...
-            analyzeElectrode(Params, rawSpikes(i), gaussFilter, rawLFP(:,i), fsLFP);
+        [SpikeData, Statistics] = ...
+            analyzeElectrode(Params, rawSpikes(i), gaussFilter);
 
         % Save everything
         spike(i).Data = SpikeData;
         spike(i).Statistics = Statistics;
         spike(i).electrodeid = elecNo;
-        lfp(i).Data = LFPData;
-        lfp(i).electrodeid = elecLFP(i);
-        lfp(i).fs = fsLFP;
 
     end % Electrodes loop
 else
@@ -132,18 +118,49 @@ else
             fprintf(2, 'No spikes for electrode %d...', elecNo);
             continue;
         end
-        [SpikeData, LFPData, Statistics] = ...
-            analyzeElectrode(Params, rawSpikes(i), gaussFilter, rawLFP(:,i), fsLFP);
+        
+        [SpikeData, Statistics] = ...
+            analyzeElectrode(Params, rawSpikes(i), gaussFilter);
 
         % Save everything
         spike(i).Data = SpikeData;
         spike(i).Statistics = Statistics;
         spike(i).electrodeid = elecNo;
-        lfp(i).Data = LFPData;
-        lfp(i).electrodeid = elecLFP(i);
-        lfp(i).fs = fsLFP;
     end
 end
+
+% LFP analysis (needs to be done separately from spike)
+% for elecNo = whichElectrodes
+%         i = find([rawSpikes.electrodeid] == elecNo);
+%         if isempty(i)
+%             continue;
+%         end
+%         
+%         % Collect spike times for this electrode  
+%         if isempty(rawSpikes(i))
+%             fprintf(2, 'No spikes for electrode %d...', elecNo);
+%             continue;
+%         end
+%         if ~ismember(elecNo, elecLFP)
+%             lfpSlice = [];
+%         else
+%             lfpSlice = rawLFP(:,i);
+%         end
+%         [SpikeData, LFPData, Statistics] = ...
+%             analyzeElectrode(Params, rawSpikes(i), gaussFilter, lfpSlice, fsLFP);
+% 
+%         % Save everything
+%         if size(SpikeData,1) > 0 && size(Statistics,1) > 0
+%             spike(i).Data = SpikeData;
+%             spike(i).Statistics = Statistics;
+%             spike(i).electrodeid = elecNo;
+%         end
+%         if ismember(elecNo, elecLFP)
+%             lfp(i).Data = LFPData;
+%             lfp(i).electrodeid = elecLFP(i);
+%             lfp(i).fs = fsLFP;
+%         end
+%     end
 
 % Accumulate results
 Results.lfp = lfp;
@@ -156,24 +173,24 @@ Results.sourceFormat = dataset.sourceformat;
 
 end
 
-function [SpikeData, LFPData, Statistics] = ...
-    analyzeElectrode(Params, rawSpikes, gaussFilter, rawLFP, fsLFP)
+function [SpikeData, Statistics] = ...
+    analyzeElectrode(Params, rawSpikes, gaussFilter)
 
 % Initialize the data structures
     SpikeData = table([],[],[],cell(0),cell(0),cell(0),[]);
     SpikeData.Properties.VariableNames = ...
         {'conditionNo','trial','cell','raster','hist','isi', 'stimTime'};
-    LFPData = table([],cell(0),cell(0),cell(0),cell(0));
-    LFPData.Properties.VariableNames = ...
-        {'conditionNo', 'time', 'mean', 'std', 'trials'};
-    Statistics = table([],[],[],[],[],[],[],[],[],[],[],...
-        cell(0),cell(0),cell(0), cell(0), cell(0), cell(0));
+%     LFPData = table([],cell(0),cell(0),cell(0),cell(0));
+%     LFPData.Properties.VariableNames = ...
+%         {'conditionNo', 'time', 'mean', 'std', 'trials'};
+    Statistics = table([],[],[],[],[],[],[],[],[],[],[],[],...
+        cell(0),cell(0),cell(0), cell(0), cell(0), cell(0), cell(0));
     Statistics.Properties.VariableNames = ...
         {'conditionNo','cell',...
         'tCurve','tCurveSEM','blank','blankSEM',...
-        'tCurveCorr','tCurveCorrSEM','f1Rep','f1RepSD', ...
+        'tCurveCorr','tCurveCorrSEM','f0','f1','f1SD', ...
         'latency', 'cv', 'meanTrials', 'blankTrials', 'histFilt', ...
-        'surpriseInd', 'bursts'};
+        'surpriseInd', 'bursts', 'nBursts'};
     
     %% Analysis
     conditionNo = Params.ConditionTable.conditionNo;
@@ -192,6 +209,8 @@ function [SpikeData, LFPData, Statistics] = ...
         centers = Condition.centers;
         which = centers>=0 & centers < Condition.stimDuration+Params.responseLag;
         whichBlank = centers<0;
+        assert(any(which)); % Need at least one trial bin
+        assert(any(whichBlank)); % Need at least one blank bin
         
         for k = 1:length(cells)
             u = cells(k);
@@ -199,7 +218,10 @@ function [SpikeData, LFPData, Statistics] = ...
             % Make Rasters and Histograms
             histFilt = zeros(length(centers), nTrials);
             cv = cell(length(time)-1,1);
-
+            surpInd = zeros(nTrials, 1);
+            burst = nan(nTrials, 2);
+            nBursts = zeros(nTrials, 2); % how many bursts during and outside of stim
+            
             for t = 1:nTrials % how many trials for this condition
                 
                 % Raster plots, histograms and ISIs
@@ -234,6 +256,26 @@ function [SpikeData, LFPData, Statistics] = ...
 %                         logical([ones(length(raster)-1, 1); 0])); % don't include last spike
 %                     cv{bin} = [cv{bin}; raster(spikes+1) - raster(spikes)];
 %                 end
+
+                % Rank Surprise analysis
+                if length(raster) > 2
+                    limit = []; % default is 75th percentile of ISIs
+                    RSalpha = -log(0.05); % Significance cutoff
+                    [RS,burst_length,burst_start]=rank_surprise(raster,limit,RSalpha);
+                    stimOn = burst_start > find(raster > 0, 1) & ...
+                        burst_start + burst_length - 1 < find(raster > Condition.stimDuration, 1);
+                    stimBurst = find(stimOn);
+                    blankBurst = find(~stimOn);
+                    nBursts(t,:) = [length(stimBurst),length(blankBurst)];
+                    nStimBurst = length(stimBurst);
+                    if nStimBurst > 0
+                        surpInd(t) = RS(stimBurst(1));
+                        burst(t,:) = [burst_start(stimBurst(1)), ...
+                            burst_start(stimBurst(1)) + burst_length(stimBurst(1)) - 1];
+                        burst(t,1) = raster(burst(t,1));
+                        burst(t,2) = raster(burst(t,2));
+                    end
+                end
                 
             end
             
@@ -250,10 +292,10 @@ function [SpikeData, LFPData, Statistics] = ...
             % Latency
             histFilt = mean(histFilt,2);
             baseline = mean(histFilt(whichBlank));
-            peak = max(histFilt);
-            latencyBin = find(centers' >= 0 & ...
-                histFilt > (peak-baseline)*0.1 + baseline & ...
-                diff([histFilt; NaN]) > 0, 1);
+            histCorrected = histFilt - baseline;
+            histStd = std(histCorrected);
+            latencyBin = find(which' & ...
+                abs(histCorrected) > 2*histStd, 1);
             latency = latencyBin * binSize - Condition.timeFrom;
             if isempty(latency); latency = NaN; end
             
@@ -282,100 +324,105 @@ function [SpikeData, LFPData, Statistics] = ...
                 Y = fft(psthPad(1:N,:)./binSize,[],1);
                 psthSpectra = abs(Y(1:floor(N/2),:))/floor(N/2);
                 specFreq = 0:1/T:floor((N-1)/T/2);
-                f1 = psthSpectra(find(specFreq>=min(Stimuli.tf)-0.05,1),:);
-                if isempty(f1); f1 = NaN; end
-                f1Rep = mean(f1);
-                f1RepSD = std(f1)/sqrt(nTrials);
+                f1Trials = psthSpectra(find(specFreq>=min(Stimuli.tf)-0.05,1),:);
+                if isempty(f1Trials); f1Trials = NaN; end
+                f0 = mean(psthSpectra(1,:));
+                f1 = mean(f1Trials);
+                f1SD = std(f1Trials)/sqrt(nTrials);
             else
-                f1Rep = NaN;
-                f1RepSD = NaN;
+                f0 = NaN;
+                f1 = NaN;
+                f1SD = NaN;
             end
             
             % Coefficient of variation
 %             cv = cellfun(@(bin)std(bin)/mean(bin),cv);
 
+            
+            
+            
             % Poisson analysis
-            maxIsi = 0.1; % 100 ms gap is too much of a gap
-            surpInd = nan(nTrials, 1);
-            burst = nan(nTrials, 2);
-            for t = 1:nTrials
-                spikes = SpikeData.raster{SpikeData.conditionNo == c ...
-                & SpikeData.cell == u & SpikeData.trial == t};
-            
-                stimTime = find(spikes >= 0, 1);
-                stimOffTime = find(spikes < Condition.stimDuration + ...
-                    Params.responseLag, 1, 'last');
-                if isempty(stimOffTime)
-                    stimOffTime = length(spikes);
-                end
-            
-                if isempty(stimTime) || stimOffTime - stimTime < 2
-                    burst(t,:) = NaN;
-                    surpInd(t) = NaN;
-                    continue;
-                end
-                
-                % Mean firing rate for this trial
-                r = length(spikes) / ...
-                    (Condition.timeFrom + Condition.stimDiffTime);
-                
-                spikes = spikes(stimTime:stimOffTime);
-                T = [];
-                n = 2;
-                
-                % Find the first pair of spikes with instantaneous firing
-                % rate >= mean firing rate
-                startInd = find(spikes(1:end-1) >= 0 & ...
-                    n./diff(spikes) >= r, 1);
-                if isempty(startInd)
-                    burst(t,:) = NaN;
-                    surpInd(t) = NaN;
-                    continue;
-                end
-                ind = startInd + 1;
-                T = spikes(ind) - spikes(ind-1);
-                isi = T;
-                
-                % Find end of burst by iterating suprise index forwards
-                SI = zeros(length(spikes),2);
-                while ind <= length(spikes) && isi < maxIsi
-                    p = poisscdf(n, r*T);
-                    SI(ind,1) = -log(p);
-                    
-                    if ind ~= length(spikes)
-                        isi = spikes(ind+1) - spikes(ind);
-                        n = n + 1;
-                        T = T + isi;
-                    end
-                    ind = ind + 1;
-                end
-                [~, burst(t,2)] = max(SI(:,1));
-                
-                % Find beginning of burst by removing spikes from the
-                % beginning until SI is maximized
-                ind = startInd;
-                n = burst(t,2) - ind;
-                T = spikes(burst(t,2)) - spikes(ind);
-                while n > 1
-                    p = poisscdf(n, r*T);
-                    SI(ind,2) = -log(p);
-                    
-                    ind = ind + 1;
-                    n = n - 1;
-                    T = spikes(burst(t,2)) - spikes(ind);
-                end
-                [~, burst(t,1)] = max(SI(:,2));
-                
-                % Calculate the final surprise index
-                n = burst(t,2) - burst(t,1);
-                T = spikes(burst(t,2)) - spikes(burst(t,1));
-                p = poisscdf(n, r*T);
-                surpInd(t) = -log(p);
-                
-                % Convert burst indices into timestamps
-                burst(t,1) = spikes(burst(t,1));
-                burst(t,2) = spikes(burst(t,2));
-            end
+%             maxIsi = 0.1; % 100 ms gap is too much of a gap
+%             surpInd = nan(nTrials, 1);
+%             burst = nan(nTrials, 2);
+%             for t = 1:nTrials
+%                 spikes = SpikeData.raster{SpikeData.conditionNo == c ...
+%                 & SpikeData.cell == u & SpikeData.trial == t};
+%             
+%                 stimTime = find(spikes >= 0, 1);
+%                 stimOffTime = find(spikes < Condition.stimDuration + ...
+%                     Params.responseLag, 1, 'last');
+%                 if isempty(stimOffTime)
+%                     stimOffTime = length(spikes);
+%                 end
+%             
+%                 if isempty(stimTime) || stimOffTime - stimTime < 2
+%                     burst(t,:) = NaN;
+%                     surpInd(t) = NaN;
+%                     continue;
+%                 end
+%                 
+%                 % Mean firing rate for this trial
+%                 r = length(spikes) / ...
+%                     (Condition.timeFrom + Condition.stimDiffTime);
+%                 
+%                 spikes = spikes(stimTime:stimOffTime);
+%                 T = [];
+%                 n = 2;
+%                 
+%                 % Find the first pair of spikes with instantaneous firing
+%                 % rate >= mean firing rate
+%                 startInd = find(spikes(1:end-1) >= 0 & ...
+%                     n./diff(spikes) >= r, 1);
+%                 if isempty(startInd)
+%                     burst(t,:) = NaN;
+%                     surpInd(t) = NaN;
+%                     continue;
+%                 end
+%                 ind = startInd + 1;
+%                 T = spikes(ind) - spikes(ind-1);
+%                 isi = T;
+%                 
+%                 % Find end of burst by iterating suprise index forwards
+%                 SI = zeros(length(spikes),2);
+%                 while ind <= length(spikes) && isi < maxIsi
+%                     p = poisscdf(n, r*T);
+%                     SI(ind,1) = -log(p);
+%                     
+%                     if ind ~= length(spikes)
+%                         isi = spikes(ind+1) - spikes(ind);
+%                         n = n + 1;
+%                         T = T + isi;
+%                     end
+%                     ind = ind + 1;
+%                 end
+%                 [~, burst(t,2)] = max(SI(:,1));
+%                 
+%                 % Find beginning of burst by removing spikes from the
+%                 % beginning until SI is maximized
+%                 ind = startInd;
+%                 n = burst(t,2) - ind;
+%                 T = spikes(burst(t,2)) - spikes(ind);
+%                 while n > 1
+%                     p = poisscdf(n, r*T);
+%                     SI(ind,2) = -log(p);
+%                     
+%                     ind = ind + 1;
+%                     n = n - 1;
+%                     T = spikes(burst(t,2)) - spikes(ind);
+%                 end
+%                 [~, burst(t,1)] = max(SI(:,2));
+%                 
+%                 % Calculate the final surprise index
+%                 n = burst(t,2) - burst(t,1);
+%                 T = spikes(burst(t,2)) - spikes(burst(t,1));
+%                 p = poisscdf(n, r*T);
+%                 surpInd(t) = -log(p);
+%                 
+%                 % Convert burst indices into timestamps
+%                 burst(t,1) = spikes(burst(t,1));
+%                 burst(t,2) = spikes(burst(t,2));
+%             end
             
             
             Statistics((j-1)*length(cells)+k,:) = ...
@@ -383,25 +430,25 @@ function [SpikeData, LFPData, Statistics] = ...
                 tCurve,tCurveSEM, ...
                 blank,blankSEM, ...
                 tCurveCorr,tCurveCorrSEM, ...
-                f1Rep,f1RepSD, ...
+                f0,f1,f1SD, ...
                 latency, cv, {meanTrials}, {blankTrials}, {histFilt}, ...
-                {surpInd}, {burst}};
+                {surpInd}, {burst}, {nBursts}};
             
         end
         
         % LFP binning
-        if ~isempty(rawLFP)
-            time = -Condition.timeFrom:1/fsLFP:Condition.stimDiffTime;
-            lfpTrials = zeros(nTrials,length(time));
-            for t = 1:nTrials
-                stimTime = Stimuli.stimTime(t);
-                stimOffTime = Stimuli.stimOffTime(t);
-                ind = ceil(fsLFP*(stimTime+time));
-                ind(ind>length(rawLFP)) = length(rawLFP);
-                lfpTrials(t,:) = rawLFP(ind);
-            end
-            LFPData(j,:) = {c, {time}, {mean(lfpTrials)}, {std(lfpTrials)}, {lfpTrials}};
-        end
+%         if ~isempty(rawLFP)
+%             time = -Condition.timeFrom:1/fsLFP:Condition.stimDiffTime;
+%             lfpTrials = zeros(nTrials,length(time));
+%             for t = 1:nTrials
+%                 stimTime = Stimuli.stimTime(t);
+%                 stimOffTime = Stimuli.stimOffTime(t);
+%                 ind = ceil(fsLFP*(stimTime+time));
+%                 ind(ind>length(rawLFP)) = length(rawLFP);
+%                 lfpTrials(t,:) = rawLFP(ind);
+%             end
+%             LFPData(j,:) = {c, {time}, {mean(lfpTrials)}, {std(lfpTrials)}, {lfpTrials}};
+%         end
     end 
 end
 

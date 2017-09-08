@@ -23,7 +23,7 @@ dataPath = fullfile(dataPath, filesep);
 filePath = fullfile(dataPath, [fileName, '.mat']);
 pathParts = strsplit(dataPath, filesep);
 if ~exist(filePath, 'file')
-    warning('Cannot convert empty file (%s)', fileName);
+    warning('File does not exist (%s)', filePath);
     rmpath(seqDir);
     return;
 end
@@ -98,7 +98,8 @@ if ~isempty(Params)
                 'apterture','ori','contrast','stimDuration','trialNo','velocity',...
                 'stimInterval','stimOffTime','stimTimePTB','stimOffTimePTB','condition'};
         end
-        Params = gatherConditions(Params, Params.Data, []);
+        condName = {Params.stimType};
+        Params = gatherConditions(Params, Params.Data, [], condName);
 
         rmpath(seqDir);
         return;
@@ -391,6 +392,10 @@ switch stimType
         else
             condName = {stimType};
         end
+end
+
+if isempty(condName)
+    condName = {stimType};
 end
 
 Params = gatherConditions(Params, Data, stimSequence, condName);

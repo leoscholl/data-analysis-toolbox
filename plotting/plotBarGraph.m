@@ -1,8 +1,9 @@
-function [ handle ] = plotBarGraph(Statistics, ...
+function [ handle, suffix ] = plotBarGraph(Statistics, SpikeData, ...
     Params, color, showFigure, elecNo, cell)
 %PlotTCurve opens and draws a tuning curve figure
 % returns the handle to the tuning curve figure
 
+suffix = 'bar';
 conditions = Params.ConditionTable.condition;
 conditionNo = Params.ConditionTable.conditionNo;
 
@@ -36,11 +37,11 @@ colors = [color' [0.5 0.5 0.5]' [0.25 0.25 0.25]'];
 % Plot baseline
 if length(conditionNo) > 1
     baseline = mean(blank);
-    line([conditionNo(1)-1 conditionNo(end)+1],[baseline baseline],'Color','blue');
+    line([conditionNo_(1,1)-1 conditionNo_(end,1)+1],[baseline baseline],'Color','blue');
 end
 
 % Plot data as bars
-h = bar(conditionNo, data_);
+h = bar(conditionNo_, data_);
 set(h,'BarWidth',1);
 
 % Remove dummy data

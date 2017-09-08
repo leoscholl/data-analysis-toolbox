@@ -40,12 +40,16 @@ if isfield(StimTimes, 'matlab')
     tEnd = max(tEnd, matlab(end));
 end
 
+% Corrected
+tStart = min(tStart, StimTimes.on(1));
+tEnd = max(tEnd, StimTimes.off(end));
+
 %% Plotting
 fig = figure('Visible', 'off');
 suptitle(fileName);
 
 % Raw photodiode plot
-subplot(10,1,[1:6]);
+subplot(10,1,[1:5]);
 hold on;
 if ~isempty(rawPhotodiode)
     ptStart = max(ceil((tStart - dataset.analog1k.time(1))*fs), 0);
@@ -59,6 +63,23 @@ ylim([minSignal maxSignal]);
 ylabel('Photodiode signal (mV)');
 set(gca, 'FontSize', 6);
 box off
+
+% Corrected marks
+subplot(10,1,7);
+hold on;
+plot(StimTimes.on,...
+    ones(length(StimTimes.on),1),...
+    'm.', 'MarkerSize', 3);
+plot(StimTimes.off,...
+    zeros(length(StimTimes.off),1),...
+    'r.', 'MarkerSize', 3);
+ylim([-1 2]);
+xlim([tStart-1 tEnd]);
+box off;
+xticks([])
+yticks([]);
+ylabel('corrected')
+set(gca, 'FontSize', 6);
 
 % Photodiode marks
 subplot(10,1,8);
@@ -102,12 +123,14 @@ set(gca, 'FontSize', 6);
 subplot(10,1,10);
 hold on;
 if ~isempty(matlab)
-    plot(matlab,...
-        zeros(length(matlab),1),...
+    plot(matlab(1:2:end),...
+        ones(length(matlab(1:2:end)),1),...
         'm.', 'MarkerSize', 3);
-    legenditems = 'matlab';
+    plot(matlab(2:2:end),...
+        zeros(length(matlab(2:2:end)),1),...
+        'r.', 'MarkerSize', 3);
 end
-ylim([-1 1]);
+ylim([-1 2]);
 xlim([tStart-1 tEnd]);
 box off;
 xlabel('Time (s)');
@@ -117,7 +140,7 @@ set(gca, 'FontSize', 6);
 
 
 % Text box with error message
-dim = [0.125 0.33 0.75 0.1];
+dim = [0.125 0.43 0.75 0.1];
 annotation('textbox',dim,'String',StimTimes.msg,'FitBoxToText','off', ...
     'FontSize', 6, 'Color', 'r', 'LineStyle', 'none');
 

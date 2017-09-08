@@ -10,7 +10,10 @@ for c = 1:length(basicColors)
         [0.25 0.5 1]), 2);
 end
 
-valueSet = num2cell([colors; hsv(double(max(units)) - size(colors, 1))], 2);
+extraColors = hsv(20);
+colors = [colors; extraColors(2:end,:)];
+
+valueSet = num2cell(colors, 2);
 keySet = 0:length(colors)-1;
 
 map = containers.Map(keySet, valueSet);

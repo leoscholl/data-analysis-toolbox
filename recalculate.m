@@ -1,5 +1,5 @@
 function recalculate(dataDir, figuresDir, animalID, whichUnits, whichFiles, ...
-    whichElectrodes, plotFigures, plotLFP, summaryFig, sourceFormat)
+    whichElectrodes, plotFigures, plotLFP, isparallel, sourceFormat)
 %recalculate and replot all data
 % whichUnits is an array of unit numbers to calculate
 % whichFiles is an array of file numbers to calculate
@@ -20,8 +20,8 @@ end
 if nargin < 8 || isempty(plotLFP)
     plotLFP = false;
 end
-if nargin < 9 || isempty(summaryFig)
-    summaryFig = false;
+if nargin < 9 || isempty(isparallel)
+    isparallel = true;
 end
 if nargin < 10 || isempty(sourceFormat)
     sourceFormat = [];
@@ -56,20 +56,32 @@ elseif nFiles > 1
         floor(timeRemaining/60), floor(rem(timeRemaining,60)));
 
     tic;
-    parfor f = 1:size(Files,1)
-        dataset = loadExperiment(dataDir, animalID, Files.fileNo(f), sourceFormat);
-        if isempty(dataset)
-            continue; % doesn't exist
+    fileDuration = [];
+    if isparallel
+        parfor f = 1:size(Files,1)
+            dataset = loadExperiment(dataDir, animalID, Files.fileNo(f), sourceFormat);
+            if isempty(dataset)
+                continue; % doesn't exist
+            end
+            result = recalculateSingle(dataset, figuresDir, whichElectrodes, ...
+                plotLFP, plotFigures, false, false);
+            fileDuration(f) = result.fileDuration;
         end
-        result = recalculateSingle(dataset, figuresDir, whichElectrodes, ...
-            summaryFig, plotLFP, plotFigures, false);
-        fileDuration(f) = result.fileDuration;
+    else
+        for f = 1:size(Files,1)
+            dataset = loadExperiment(dataDir, animalID, Files.fileNo(f), sourceFormat);
+            if isempty(dataset)
+                continue; % doesn't exist
+            end
+            result = recalculateSingle(dataset, figuresDir, whichElectrodes, ...
+                plotLFP, plotFigures, false, false);
+            fileDuration(f) = result.fileDuration;
+        end
     end
     elapsedTime = toc;
     avgDur = sum(fileDuration .* smoothing .* ...
         ((1 - smoothing).^((1:length(fileDuration)) - 1))) + ...
         avgDur .* (1 - smoothing) .^ length(fileDuration);
-    
 else
     
     % Display some info about duration
@@ -83,7 +95,7 @@ else
         return; % doesn't exist
     end
     result = recalculateSingle(dataset, figuresDir, whichElectrodes, ...
-        summaryFig, plotLFP, plotFigures, true);
+        plotLFP, plotFigures, isparallel, true);
     fileDuration = result.fileDuration;
     
     elapsedTime = fileDuration;

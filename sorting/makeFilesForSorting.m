@@ -215,7 +215,12 @@ for un = 1:length(units)
                     nextEnd = nextEnd + endTime;
                     endTimes(fi,:) = [endTime(1),spikeCount,nextEnd];
                 else
-                    error([fileName, ' has not been exported yet']);
+                    spikeCount = 0;
+                    endTime = 10000; % add some artificial separation
+                    nextEnd = nextEnd + endTime;
+                    endTimes(fi,:) = [endTime(1),spikeCount,nextEnd];
+
+                    warning(['empty dataset for ' fileName]);
                 end
         end
         
