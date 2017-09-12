@@ -57,10 +57,8 @@ if ismember('stimOffTimePTB', Params.Data.Properties.VariableNames) && ...
     endTimePTB = Params.endTimePTB;
 end
 
-% Update all the stim times with the new start and end times
-stimTimesPTB = stimTimesPTB - startTimePTB;
-stimTimesParallel = stimTimesParallel - startTimeRipple;
-stimTimesPhotodiode = stimTimesPhotodiode - startTimeRipple;
+% Update PTB's times with the new start times
+stimTimesPTB = stimTimesPTB - startTimePTB + startTimeRipple;
     
 % Fix if broken
 rippleFirst = min(min(stimTimesParallel), min(stimTimesPhotodiode));
@@ -98,6 +96,7 @@ if ~isempty(stimTimesParallel)
 
         % Correct PTB stim times
         stimTimesPTB = stimTimesPTB + correction;
+        Events.StimTimes.matlab = stimTimesPTB;
 
         % Do the switching again
         [stimTimesPass1, parallelError] = ...
