@@ -334,6 +334,16 @@ switch stimType
         Data.stimInterval = data(:,5);
         Data.trialNo = data(:,6);
         condName = {'Image'};
+    case {'WholeScreenMapLP'}
+        Data.stimNo = (1:size(data,1))';
+        Data.stimTime = data(:,1);
+        Data.conditionNo = data(:,2);
+        Data.color = data(:,3);
+        Data.xPosition = data(:,4);
+        Data.yPosition = data(:,5);
+        Data.stimDuration = data(:,6);
+        Data.trialNo = data(:,7);
+        Data.condition = [Data.xPosition Data.yPosition];
     otherwise
         if isempty(stimSequence)
             warning(['Unsupported filetype. Skipping ', fileName]);

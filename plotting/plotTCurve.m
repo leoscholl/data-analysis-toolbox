@@ -22,7 +22,7 @@ if ~isempty(Statistics.f1) && ~isempty(Statistics.f1SD)
 end
 
 handle = figure;
-set(handle,'Visible',ShowFigure);
+set(handle,'Visible',showFigure);
 set(handle,'Color','White')
 hold on;
 

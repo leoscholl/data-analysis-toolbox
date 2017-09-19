@@ -16,16 +16,16 @@ end
 [~, ~, Files] = ...
     findFiles(dataDir, animalID, whichUnits, '*].n*', whichFiles);
 
-% if isempty(gcp('nocreate'))
-%     parpool;
-% end
+if isempty(gcp('nocreate'))
+    parpool;
+end
 
 parfor i=1:size(Files,1)
     fileName = Files.fileName{i};
     unit = Files.unit{i};
     dataPath = fullfile(dataDir, animalID, unit);
     dataFile = fullfile(dataPath, [fileName, '.nev']);
-    destPath = fullfile(destDir, animalID, unit);
+    destPath = fullfile(destDir, animalID);
     exportFile = fullfile(destPath, [fileName, '.mat']);
       
     disp(['exporting ', fileName]);
@@ -45,9 +45,9 @@ parfor i=1:size(Files,1)
     % Use NeuroAnalysis export
     sourceformat = 'Ripple';
     isparallel = 1;
-    doplotting = 0;
-    [ result ] = NeuroAnalysis.Base.EvalFun('NeuroAnalysis.IO.Export', ...
-        {dataFile, destPath,sourceformat,isparallel,doplotting} );
+    callback = {'recalculateSingle', {'I:\Figures'}};
+    [ result ] = NeuroAnalysis.IO.Export(dataFile, destPath, sourceformat, ...
+        isparallel, callback);
     if ~result.status
         warning(result.source);
     end

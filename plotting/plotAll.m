@@ -29,7 +29,7 @@ switch stimType
     case {'RFmap', 'CatRFdetailed', 'CatRFfast', 'CatRFfast10x10'}
         plotFun = @plotMap;
     otherwise
-        plotFun = {@plotRasters, @plotTCurve};
+        plotFun = {@plotRastergrams, @plotTCurve};
 
         if contains(fileName,'R') && (contains(stimType,'Temporal') || ...
             contains(stimType,'Spatial'))
