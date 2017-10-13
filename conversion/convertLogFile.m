@@ -31,19 +31,10 @@ end
 % What to load?
 fileVars = who('-file', filePath);
 vars = {'data','GridSize',...
-    'MonitorDistance','MonRes','MonSize','RFposition'};
-if ismember('PPD',fileVars)
-    vars{end+1} = 'PPD';
-end
-if ismember('StimInterval',fileVars)
-    vars{end+1} = 'StimInterval';
-end
-if ismember('StimDuration',fileVars)
-    vars{end+1} = 'StimDuration';
-end
-if ismember('Params',fileVars)
-    vars{end+1} = 'Params';
-end
+    'MonitorDistance','MonRes','MonSize','RFposition',...
+    'PPD', 'StimInterval', 'StimDuration', 'Params'};
+vars = intersect(vars, fileVars);
+
 Params = [];
 load(filePath, vars{:});
 
@@ -63,7 +54,7 @@ if ~isempty(Params)
         {'StimColorString', 'stimColorString'}, {'Aperture', 'aperture'},... 
         {'DrawMask', 'drawMask'}, {'SquareGratings', 'squareGratings'}, ...
         {'ScreenNumber', 'screenNumber'}, {'ScreenRect', 'screenRect'},...
-        {'MonitorSize', 'monitorSize'}, {'GridSize', 'gridSize'}, ...
+        {'MonitorSize', 'monitorDiagonal'}, {'GridSize', 'gridSize'}, ...
         {'MonitorDistance', 'monitorDistance'}, ...
         {'MonitorResolution', 'monitorResolution'}, ...
         {'StimInterval', 'stimInterval'}, ...
@@ -72,8 +63,9 @@ if ~isempty(Params)
         {'StartTimePTB', 'startTimePTB'}, {'EndTimePTB', 'endTimePTB'},...
         {'StartTimeRipple', 'startTimeRipple'},...
         {'EndTimeRipple', 'endTimeRipple'}, ...
+        {'monitorSize', 'monitorDiagnoal'}, ...
         'nTrials', 'expNo', 'animalID', 'stimType', 'unit', ...
-        'ppd', 'monitorSize', 'gridSize', 'monitorDistance', ...
+        'ppd', 'gridSize', 'monitorDistance', ...
         'monitorResolution', 'rfPosition', 'stimDuration', ...
         'stimInterval', 'stimInvervalMax', 'nConds', 'nTrials'};
     
@@ -117,24 +109,37 @@ Params.unitNo = sscanf(Params.unit, 'Unit%d');
 
 % Monitor resolution, size, PPD, etc.
 if exist('MonRes','var')
-    monRes = cellfun(@str2num,regexp(MonRes,'\d+','match'));
+    Params.monitorResolution = sscanf(MonRes,'%f x %f');
 else
-    monRes = [1920 1080];
+    Params.monitorResolution = [NaN NaN];
+end
+if exist('MonitorDistance', 'var')
+    Params.monitorDistance = MonitorDistance;
+else
+    Params.monitorDistance = NaN;
+end
+if exist('MonSize', 'var') && ischar(MonSize)
+    Params.monitorDegrees = sscanf(MonSize,'%f x %f');
+    ppd = mean(Params.monitorResolution ./ Params.monitorDegrees);
+    ppi = ppd/(2*Params.monitorDistance*tand(0.5))*2.54; % convert to inches
+    Params.monitorDiagonal = round(sqrt((Params.monitorResolution(1)^2+Params.monitorResolution(2)^2))/ppi);
+elseif exist('MonSize', 'var')
+    Params.monitorDiagonal = MonSize;
+else
+    Params.monitorDiagonal = NaN;
 end
 if exist('PPD', 'var')
     Params.ppd = PPD;
-    Params.monitorSize = NaN;
-elseif ischar(MonSize)
-    Params.monitorSize = MonSize; % needs fixing
 else
-    Params.monitorSize = MonSize;
-    Resolution.width = monRes(2);
-    Resolution.height = monRes(1);
-    Params.ppd = monitorPPD(Resolution, MonSize, MonitorDistance);
+    Resolution.width = Params.monitorResolution(2);
+    Resolution.height = Params.monitorResolution(1);
+    Params.ppd = monitorPPD(Resolution, Params.monitorDiagonal, Params.monitorDistance);
 end
-Params.gridSize = GridSize;
-Params.monitorDistance = MonitorDistance;
-Params.monitorResolution = monRes;
+if exist('GridSize', 'var')
+    Params.gridSize = GridSize;
+else
+    Params.gridSize = NaN;
+end
 
 % RF position
 if exist('RFposition','var')
@@ -350,11 +355,11 @@ switch stimType
             rmpath(seqDir);
             return;
         end
-        Params.nConds = length(unique(stimSequence(:,1)));
-        Params.nTrials = ceil(size(data,1)/Params.nConds);
-        conditionNo = reshape(stimSequence(1:Params.nConds,1,1:Params.nTrials),...
-            Params.nConds*Params.nTrials,1);
-        Data.conditionNo = conditionNo(1:size(data,1));
+%         Params.nConds = length(unique(stimSequence(:,1)));
+%         Params.nTrials = ceil(size(data,1)/Params.nConds);
+%         conditionNo = reshape(stimSequence(1:Params.nConds,1,1:Params.nTrials),...
+%             Params.nConds*Params.nTrials,1);
+%         Data.conditionNo = conditionNo(1:size(data,1));
         
         % condition, stimTime, sf, tf, apt, ori, c, dur
         if size(data,2) >= 8

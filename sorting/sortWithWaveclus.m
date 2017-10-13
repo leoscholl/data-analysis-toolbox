@@ -10,6 +10,9 @@ end
 for unitNo = whichUnits
     
     sortingPath = fullfile(sortingDir, animalID); 
+    if ~exist(sortingPath, 'dir')
+        mkdir(sortingPath);
+    end
     fileName = [animalID, 'Unit', num2str(unitNo)];
 
 

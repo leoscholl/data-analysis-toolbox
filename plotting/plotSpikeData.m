@@ -105,7 +105,9 @@ for j = 1:length(cells)
     
     for h = 1:length(handles)
         saveas(handles{h},fullfile(figuresPath,elecDir,[figBaseName,'_',suffix{h},'.png']));
+        close(handles{h});
     end
+    
     
 end
 end

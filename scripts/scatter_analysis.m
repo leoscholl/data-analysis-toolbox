@@ -11,19 +11,15 @@ plotLFP = false;
 summaryFig = false; % faster without summary figs (can't do parallel pool)
 
 % Experiment info  
-animals = {'R1504', 'R1506', 'R1508', ... % R1511
-    'R1518', 'R1520', 'R1521', 'R1522', ...
-    'R1524', 'R1525', 'R1526', 'R1527', ...
-    'R1528', 'R1536', 'R1601', 'R1603', ...
-    'R1604', 'R1605', 'R1629', 'R1701', ...
-    'R1702' };
+load('locations.mat');
+animals = fieldnames(Locations);
 
 %% Sorting
-for a = 4:length(animals)
+for a = 22:length(animals)
     
     animalID = animals{a};
     
-%     makeFilesForSorting(dataDir, sortingDir, animalID, [], 'spikes');
+    makeFilesForSorting(dataDir, sortingDir, animalID, []);
     sortWithWaveclus(sortingDir, animalID, []);
     convertWavSpikes(dataDir, sortingDir, animalID, []);
 end
@@ -40,14 +36,12 @@ for a = 1:length(animals)
 end
 
 %% Plot?
-if 1
-    for a = 6:length(animals)
-        animalID = animals{a};
-
-        % Plot figures
-        plotIndividual(dataDir, figuresDir, animalID, [], [], [], ...
-            'tcs', sourceFormat, true)
-    end
+for a = 8:length(animals)
+    animalID = animals{a};
+    
+    % Plot figures
+    plotIndividual(dataDir, figuresDir, animalID, [], [], [], ...
+        'tcs', sourceFormat, true)
 end
 
 %% Summarize
@@ -68,7 +62,9 @@ parfor a = 1:length(animals)
 end
 Cells = [];
 for a = 1:length(animals)
-    Cells = [Cells; cells{a}];
+    if ~isempty(fieldnames(cells{a}))
+        Cells = [Cells; cells{a}];
+    end
 end
 
 save('C:\Users\leo\Google Drive\Matlab\manual analysis\Cells.mat', 'Cells');
@@ -156,221 +152,130 @@ Summary = sortrows(Summary,{'AnimalID', 'Unit', 'Elec', 'Cell'});
 csvFile = 'C:\Users\leo\Google Drive\Matlab\manual analysis\Cells.csv';
 writetable(Summary,csvFile,'WriteRowNames',true,'QuoteStrings',true);
 
+%% Import csv file 
+csvFile = 'C:\Users\leo\Google Drive\Matlab\manual analysis\Cells.csv';
+Summary = readtable(csvFile);
+
+%% Inspect responsive cells
+if ~ismember('Checked', Summary.Properties.VariableNames)
+    Summary.Checked = repmat(0, size(Summary,1), 1);
+end
+for c = 1:size(Summary,1)
+    
+    % Change the decimal places for some thigns
+    Summary.OSI(c) = round(Summary.OSI(c), 3);
+    Summary.DSI(c) = round(Summary.DSI(c), 3);
+    Summary.Apt(c) = round(Summary.Apt(c), 0);
+    Summary.BG(c) = round(Summary.BG(c), 1);
+    Summary.Peak(c) = round(Summary.Peak(c), 1);
+    
+    cell = table2struct(Summary(c,:));
+    
+    if cell.Checked || isempty(cell.Location) || ~cell.Response
+        continue;
+    end
+    
+    % Try to find the figures for this cell (waveclus)
+    cellDir = fullfile(figuresDir,cell.AnimalID,['Unit',num2str(cell.Unit)],'WaveClus',...
+        ['Ch',sprintf('%02d',cell.Elec)]);
+    figs = dir(fullfile(cellDir,['*_',num2str(cell.Cell),'El',num2str(cell.Elec),'_tc.png']));
+    
+    if isempty(figs) % Try expo
+        cellDir = fullfile(figuresDir,cell.AnimalID,['Unit',num2str(cell.Unit)],'Expo',...
+            ['Ch',sprintf('%02d',cell.Elec)]);
+        figs = dir(fullfile(cellDir,['*_',num2str(cell.Cell),'El',num2str(cell.Elec),'_tc.png']));
+    end
+    
+    if isempty(figs) % Try ripple
+        cellDir = fullfile(figuresDir,cell.AnimalID,['Unit',num2str(cell.Unit)],'Ripple',...
+            ['Ch',sprintf('%02d',cell.Elec)]);
+        figs = dir(fullfile(cellDir,['*_',num2str(cell.Cell),'El',num2str(cell.Elec),'_tc.png']));
+    end
+    
+    
+    for i=1:size(figs,1)
+        I = imread(fullfile(figs(i).folder,figs(i).name));
+        figure;
+        imshow(I)
+    end
+    toShow = table2struct(Summary(c,{'AnimalID','Unit','Elec','Cell','SF','TF','Apt','Con','Latency','Peak'}));
+    text = evalc('disp(toShow)');
+    
+    tilefigs;
+    
+    options = struct;
+    options.Default = 'No';
+    options.Interpreter = 'tex';
+    choice = questdlg(text,'Response?', 'Yes', 'No', 'Cancel',options);
+    switch choice
+        case 'Yes'
+            Summary.Response(c) = 1;
+        case 'No'
+            Summary.Response(c) = 0;
+            Summary.Tuning(c) = 0;
+        otherwise
+            close all;
+            break;
+    end
+    
+    Summary.Checked(c) = 1;
+    close all;
+end
+
+Summary = Summary(:,~ismember(Summary.Properties.VariableNames,'Checked'));
+csvFile = 'C:\Users\leo\Google Drive\Matlab\manual analysis\Cells.csv';
+writetable(Summary,csvFile,'WriteRowNames',true,'QuoteStrings',true);
+
+
+%% Export each subdivision to a new file
+locations = unique(Summary.Location);
+for i=1:length(locations)
+    csvFile = fullfile('C:\Users\leo\Google Drive\Matlab\manual analysis', ...
+        sprintf('Cells_%s.csv', locations{i}));
+    writetable(Summary(cellfun(@(x)strcmp(x,locations{i}),Summary.Location),:),...
+        csvFile, 'QuoteStrings', true);
+end
+
+% Export good cells
+csvFile = fullfile('C:\Users\leo\Google Drive\Matlab\manual analysis', ...
+    sprintf('Cells_%s.csv', 'Responding'));
+writetable(Summary(logical(Summary.Response),:),...
+    csvFile, 'QuoteStrings', true);
+
 %% Plot scatters for each stim type
-% stimTypes = fieldnames(Statistics);
-% for i = 1:length(stimTypes)
+close all;
+Responding = Summary(logical(Summary.Response),:);
+[locs,locNames] = grp2idx(categorical(Responding.Location));
+stimTypes = {'SF','TF','OSI','DSI','Apt','Con','Latency'};
+for i = 1:length(stimTypes)
+    
+    stim = Responding.(stimTypes{i});
+    stim = stim + 2*(rand(size(stim))-0.5)*0.05;
+    
+    n = size(stim,1);
+    
+%     A=[locs, stim];
+%     [Auniq,~,IC] = unique(A,'rows');
+%     cnt = accumarray(IC,1);
 %     
-%     stim = Statistics.(stimTypes{i});
-%     
-%     n = size(stim,1);
-%     stim = stim([stim.ttest] <  0.05);
-%     
-%     figure(i);
-%     scatter([stim.pref], [stim.si]);
-%     title(stimTypes{i}, 'Interpreter', 'none');
-%     xlabel('preference');
-%     ylabel('selectivity index');
-%     xlim auto
-%     ylim([0 1]);
-%     
+    figure(i);
+    scatter(locs, stim, 'kx'); %Auniq(:,1),Auniq(:,2), [], cnt);
+    title(stimTypes{i}, 'Interpreter', 'none');
+%     colorbar;
+%     colormap(jet)
+    xlabel('Location');
+    ylabel('Preference');
+    xlim([0 length(locNames)+1])
+    xticks(1:length(locNames));
+    xticklabels(locNames);
+    ylim auto;
+    
+    
+    
 %     dim = [.2 .5 .3 .3];
 %     str = sprintf('%d/%d cells responding (p < 0.05)', size(stim, 1), n);
 %     annotation('textbox',dim,'String',str,'FitBoxToText','on');
-%     
-% end
-
-%% Plot scatters for TF vs OSI
-close all;
-
-pResponse = 0.005;
-
-% Separate responding cells
-Complete = Cells(arrayfun(@(x)isfield(x.response,'Orientation') && ...
-    isfield(x.response,'Temporal'), Cells),:);
-nComplete = size(Complete, 1);
-nCompleteLP = sum(arrayfun(@(x)contains(x.location, 'LP') || ...
-    strcmp(x.location, 'Border'), Complete));
-
-Responding = Complete(arrayfun(@(x)x.response.Orientation.ttest < pResponse && ...
-    x.response.Temporal.ttest < pResponse, Complete),:);
-nResponding = size(Responding, 1);
-
-% Plot Ori vs TF response
-V1 = arrayfun(@(x)strcmp(x.location, 'V1'), Responding);
-LPMR = arrayfun(@(x)strcmp(x.location, 'LPMR'), Responding);
-LPLR = arrayfun(@(x)strcmp(x.location, 'LPLR'), Responding);
-Border = arrayfun(@(x)strcmp(x.location, 'Border'), Responding);
-LP = LPMR | LPLR | Border;
-LGN = arrayfun(@(x)strcmp(x.location, 'LGN'), Responding);
-
-% Separate by location
-locationNames = {'V1', 'LP', 'LGN', 'Unknown', 'LPLR', 'LPMR', 'Border'};
-locations = {V1, LP, LGN, ~LP & ~LGN & ~V1, LPLR, LPMR, Border};
-tf = struct;
-osi = struct;
-for i = 1:length(locations)
-    tf.(locationNames{i}) = arrayfun(@(x)x.response.Temporal.pref, Responding(locations{i}));
-    osi.(locationNames{i}) = arrayfun(@(x)x.response.Orientation.osi, Responding(locations{i}));
+    
 end
+tilefigs;
 
-% Scatter plots
-figure(1);
-hold on
-scatter(tf.V1, osi.V1);
-scatter(tf.LP, osi.LP);
-scatter(tf.LGN, osi.LGN);
-scatter(tf.Unknown, osi.Unknown);
-
-title('OSI vs TF');
-xlabel('TF preference');
-ylabel('OSI');
-axis tight
-legend({'V1', 'LP', 'LGN', 'Unknown'});
-
-dim = [.2 .5 .3 .3];
-str = sprintf('%d/%d cells responding (p < %g)', nResponding, nComplete, pResponse);
-annotation('textbox',dim,'String',str,'FitBoxToText','on');
-hold off;
-
-figure(2);
-hold on
-scatter(tf.LPLR, osi.LPLR);
-scatter(tf.LPMR, osi.LPMR);
-scatter(tf.Border, osi.Border);
-
-title('OSI vs TF');
-xlabel('TF selectivity');
-ylabel('OSI');
-axis tight
-legend({'LPLR', 'LPMR', 'Border'});
-
-dim = [.2 .5 .3 .3];
-str = sprintf('%d/%d cells responding (p < %g)', size(Responding(LP), 1), nCompleteLP, pResponse);
-annotation('textbox',dim,'String',str,'FitBoxToText','on');
-hold off;
-
-
-% Bar plots
-figure(3)
-tf_ = rmfield(tf, {'LPMR', 'LPLR', 'Border'});
-osi_ = rmfield(osi, {'LPMR', 'LPLR', 'Border'});
-bar([1 1 1 1; 2 2 2 2], [structfun(@mean, tf_)'; structfun(@mean, osi_)']);
-xticklabels({'TF selectivity', 'OSI'});
-legend(fieldnames(tf_), 'Location', 'BestOutside');
-hold off
-
-figure(4)
-tf_ = rmfield(tf, {'LP', 'V1', 'LGN', 'Unknown'});
-osi_ = rmfield(osi, {'LP', 'V1', 'LGN', 'Unknown'});
-
-bar([1 1 1; 2 2 2], [structfun(@mean, tf_)'; structfun(@mean, osi_)']);
-xticklabels({'TF selectivity', 'OSI'});
-legend(fieldnames(tf_), 'Location', 'BestOutside');
-hold off
-
-% ANOVA for TF
-tf_ = rmfield(tf, {'LPMR', 'LPLR', 'Border'});
-osi_ = rmfield(osi, {'LPMR', 'LPLR', 'Border'});
-locs = fieldnames(tf_);
-
-flat = [];
-for i = 1:length(locs)
-    flat = [flat; [tf_.(locs{i}) repmat(i, length(tf_.(locs{i})), 1)]];
-end
-anova1(flat(:,1), flat(:,2));
-
-tf_ = rmfield(tf, {'LP', 'V1', 'LGN', 'Unknown'});
-osi_ = rmfield(osi, {'LP', 'V1', 'LGN', 'Unknown'});
-locs = fieldnames(tf_);
-
-flat = [];
-for i = 1:length(locs)
-    flat = [flat; [tf_.(locs{i}) repmat(i, length(tf_.(locs{i})), 1)]];
-end
-anova1(flat(:,1), flat(:,2));
-
-%% Plot Latency
-close all;
-
-pResponse = 0.01;
-
-% Separate responding cells
-Complete = Cells(arrayfun(@(x)isfield(x.response,'Latency'), Cells),:);
-nComplete = size(Complete, 1);
-
-Responding = Complete(arrayfun(@(x)any(structfun(...
-    @(y)y.ttest < pResponse, x.response)), Complete),:);
-nResponding = size(Responding, 1);
-
-% Collect each ROI
-V1 = arrayfun(@(x)strcmp(x.location, 'V1'), Responding);
-LPMR = arrayfun(@(x)strcmp(x.location, 'LPMR'), Responding);
-LPLR = arrayfun(@(x)strcmp(x.location, 'LPLR'), Responding);
-Border = arrayfun(@(x)strcmp(x.location, 'Border'), Responding);
-LP = LPMR | LPLR | Border;
-LGN = arrayfun(@(x)strcmp(x.location, 'LGN'), Responding);
-
-% Separate by location
-locationNames = {'V1', 'LP', 'LGN', 'Unknown', 'LPLR', 'LPMR', 'Border'};
-locations = {V1, LP, LGN, ~LP & ~LGN & ~V1, LPLR, LPMR, Border};
-latency = struct;
-for i = 1:length(locations)
-    latency.(locationNames{i}) = arrayfun(@(x)x.response.Latency.latency, Responding(locations{i}));
-end
-
-% Bar plots
-figure(3)
-latency_ = rmfield(latency, {'LPMR', 'LPLR', 'Border'});
-
-bar(structfun(@nanmean, latency_));
-xticklabels(fieldnames(latency_));
-hold off
-
-figure(4)
-latency_ = rmfield(latency, {'LP', 'V1', 'LGN', 'Unknown'});
-bar(structfun(@nanmean, latency_));
-xticklabels(fieldnames(latency_));
-hold off
-
-
-% ANOVA
-latency_ = rmfield(latency, {'LPMR', 'LPLR', 'Border'});
-locs = fieldnames(latency_);
-
-flat = [];
-for i = 1:length(locs)
-    flat = [flat; [latency_.(locs{i}) repmat(i, length(latency_.(locs{i})), 1)]];
-end
-anova1(flat(:,1), flat(:,2));
-
-latency_ = rmfield(latency, {'LP', 'V1', 'LGN', 'Unknown'});
-locs = fieldnames(latency_);
-
-flat = [];
-for i = 1:length(locs)
-    flat = [flat; [latency_.(locs{i}) repmat(i, length(latency_.(locs{i})), 1)]];
-end
-anova1(flat(:,1), flat(:,2));
-
-% PCA
-% nCells = size(UCells, 1);
-% CompleteCells = UCells(arrayfun(@(x)length(fieldnames(x.response)) == ...
-%     length(desiredStims),UCells));
-% data = nan(length(CompleteCells), length(desiredStims)*6);
-% for c = 1:length(CompleteCells)
-%     for s = 1:length(desiredStims)
-%         stim = desiredStims{s};
-%         names = fieldnames(CompleteCells(c).response.(stim));
-%         for i = 1:length(names)
-%             data(c,(s-1)*6 + i) = CompleteCells(c).response.(stim).(names{i});
-%         end
-%     end
-% end
-% 
-% [coeff,score,latent,tsquared,explained,mu] = pca(data);
-% plot3(score(:,1), score(:,2), score(:,3),'+');
-% xlabel('PCA 1');
-% ylabel('PCA 2');
-% zlabel('PCA 3');
-% 
-% 

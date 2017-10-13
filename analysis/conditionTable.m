@@ -40,15 +40,15 @@ for c = 1:length(conditions)
             numBins = 100;
             binSize = stimDiffTime/numBins;
         case 'size'
-            stimDiffTime = min(Stimuli.stimDiffTime); % This condition
-%             stimDiffTime = min(Params.Data.stimDiffTime); % All stimuli
+            stimDiffTime = nanmedian(Stimuli.stimDiffTime); % This condition
+%             stimDiffTime = nanmedian(Params.Data.stimDiffTime); % All stimuli
             binSize = 0.01;
             numBins = floor(stimDiffTime/binSize);
     end
     
     % Pick out the peri-stimulus times and bin centers
-    stimDuration = min(Stimuli.stimOffTime - Stimuli.stimTime);
-    stimInterval = min(Stimuli.stimDiffTime - ...
+    stimDuration = median(Stimuli.stimOffTime - Stimuli.stimTime);
+    stimInterval = nanmedian(Stimuli.stimDiffTime - ...
         (Stimuli.stimOffTime - Stimuli.stimTime));
     timeFrom = min(stimInterval/2, Params.blankPeriod);
     time = -timeFrom:binSize:stimDiffTime-timeFrom;

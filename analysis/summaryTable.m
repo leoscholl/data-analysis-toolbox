@@ -128,6 +128,10 @@ classdef summaryTable < handle
         % --- Automatically select certain files using specified function
         function autoSelect(obj, selectionMethod)
             
+            if isempty(obj.Cells)
+                return;
+            end
+            
             % Chooses the last (most recent) test for each stimulus type
             function best = lastStim(stimuli)
                 best = max(stimuli.fileNo);
@@ -185,7 +189,10 @@ classdef summaryTable < handle
         % --- Summarize cells by uniqueness and perform basic statistics
         function Summary = uniqueCells(obj, columnNames)
             
-            if nargin < 2 || isempty(columnNames)
+            if isempty(obj.Cells)
+                Summary = struct;
+                return;
+            elseif nargin < 2 || isempty(columnNames)
                 AllCells = obj.Cells(obj.Cells.selected, :);
             else
                 AllCells = obj.Cells(obj.Cells.selected, columnNames);
@@ -286,7 +293,7 @@ classdef summaryTable < handle
                     % Preferred stimulus
                     dimensions = fieldnames(Stimuli.Conditions{s});
                     levels = Stimuli.Conditions{s}.(dimensions{1});
-                    [~, ind] = max(rNorm);
+                    [~, ind] = max([stats.tCurveCorr]);
                     if isnumeric(levels(ind))
                         Stats.pref = levels(ind);
                     else

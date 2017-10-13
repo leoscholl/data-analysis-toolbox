@@ -245,7 +245,7 @@ figuresDir = get(handles.FiguresDirBox, 'String');
 expTypeMenu = cellstr(get(handles.ExpTypeMenu, 'String'));
 expType = expTypeMenu{get(handles.ExpTypeMenu, 'Value')};
 
-isParallel = ~logical(get(handles.ParallelCheck, 'Value'));
+isParallel = logical(get(handles.ParallelCheck, 'Value'));
 
 setStatus(handles, 'plotting...');
 switch expType

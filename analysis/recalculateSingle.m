@@ -21,12 +21,12 @@ if ~isfield(dataset, 'ex') || isempty(dataset.ex)
     return;
 end
 
+animalID = dataset.ex.animalID;
 fileNo = dataset.ex.expNo;
 stimType = dataset.ex.stimType;
+fileName = createFileName(animalID, fileNo, stimType);
 
 if verbose
-    animalID = dataset.ex.animalID;
-    fileName = createFileName(animalID, fileNo, stimType);
     disp(fileName);
 end
 
@@ -40,7 +40,7 @@ end
 
 % Do the analysis / plotting
 switch stimType
-    case {'OriLowHighTwoApertures', 'CenterNearSurround'}
+    case {'OriLowHighTwoApertures', 'CenterNearSurround', 'WholeScreenMapLP'}
         fprintf(2, 'Center surround not yet implemented.\n');
     otherwise
         
@@ -52,7 +52,7 @@ switch stimType
         try
             Results = analyze(dataset, p.Results.whichElectrodes, verbose, isparallel);
         catch e
-            fprintf(2, 'Error doing calculations for file #%d\n', fileNo);
+            fprintf(2, 'Error doing calculations for file %s\n', fileName);
             rethrow(e);
         end
         
@@ -62,7 +62,7 @@ switch stimType
         
         % Save results
         if ~Results.status
-            warning('file #%d - %s', fileNo, Results.error);
+            warning('file %s - %s', fileName, Results.error);
             return;
         else
             Results.sourceFormat = dataset.sourceformat;
@@ -71,8 +71,6 @@ switch stimType
         end
         
         unit = Results.Params.unit;
-        animalID = Results.Params.animalID;
-        fileName = createFileName(animalID, fileNo, stimType);
         figuresPath = fullfile(figuresDir,animalID,unit,filesep);
         
         if Results.StimTimes.hasError
@@ -106,7 +104,7 @@ switch stimType
                 plotAll(figuresPath, fileName, Results, ...
                     p.Results.whichElectrodes, showFigures, isparallel);
             catch e
-                fprintf(2, 'Error plotting file #%d\n', fileNo);
+                fprintf(2, 'Error plotting file %s\n', fileName);
                 rethrow(e);
             end
             

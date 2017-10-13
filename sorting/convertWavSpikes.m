@@ -44,8 +44,7 @@ for i = 1:length(whichUnits)
         
         expFile = [];
         try
-            expFile = load(fullfile(dataDir, Files.animalID{f}, ...
-                Files.unit{f}, fileName));
+            expFile = load(fullfile(dataDir, Files.animalID{f}, fileName));
         catch
         end
         
@@ -79,7 +78,7 @@ for i = 1:length(whichUnits)
             expFile.dataset = dataset;
         end
         
-        save(fullfile(dataDir, Files.animalID{f}, ...
-            Files.unit{f}, fileName), '-struct', 'expFile', '-v7.3');
+        save(fullfile(dataDir, Files.animalID{f}, fileName), ...
+            '-struct', 'expFile', '-v7.3');
     end
 end

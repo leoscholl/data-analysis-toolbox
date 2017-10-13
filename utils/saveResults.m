@@ -10,7 +10,12 @@ oldResultsFile = fullfile(dataPath,[fileName,'.mat']);
 resultsFile = fullfile(dataPath,[fileName,'-analysis.mat']);
 
 if exist(resultsFile, 'file')
-    r = load(resultsFile);
+    try
+        r = load(resultsFile);
+    catch e
+        warning(getReport(e));
+        r = [];
+    end
 else 
     r = [];
 end
