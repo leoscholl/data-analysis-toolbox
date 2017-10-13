@@ -106,7 +106,7 @@ function figure1_CloseRequestFcn(hObject, eventdata, handles)
 % Make sure any summary data is exported
 if isfield(handles, 's') && isa(handles.s, 'summaryTable')
     fprintf('Exporting summary...');
-    fileName = handles.s.export();
+%     fileName = handles.s.export();
     fprintf(' done.\n');
 end
 
