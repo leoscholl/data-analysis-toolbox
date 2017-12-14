@@ -65,8 +65,7 @@ else
     legend({'avg bg';'Mean FR';'F1';'bg';'FR-bg'},'Location','NorthEast');
 end
 legend('boxoff');
-titleStr = makeTitle(Params, elecNo, cell);
-    
+
 xlabel(fieldnames(Params.Conditions), 'Interpreter', 'none');
 ylabel('Rate [spikes/s]');
 set(gca,'FontSize',fontSize);
@@ -83,7 +82,32 @@ if ~isempty(strfind(Params.stimType,'Looming')) || ...
     set(gca,'xscale','log');
 end
 
+% Add annotation for parameters
+OSI = [];
+DSI = [];
+if contains(Params.stimType, 'Ori')
+    valid = conditions >= 0;
+    theta = deg2rad(conditions(valid));
+    response = tCurve(valid) - baseline;
+    response(response < 0) = 0;
+    
+    [~, prefInd] = max(response);
+    prefTheta = theta(prefInd);
+    theta_ = mod(theta - prefTheta + pi/2, 2*pi);
+    left = 0 <= theta_ &...
+        theta_ < pi;
+    
+    OSI = abs(sum(response(left).*exp(2.1i*theta(left)))/sum(response(left)));
+
+    DSI = abs(sum(response.*exp(1i*theta))/sum(response));
+end
+annoStr = makeParamBox(Params, OSI, DSI);
+dim = [0.15 0.15 0.3 0.2];
+annotation('textbox',dim,'String',annoStr,'FitBoxToText','on', ...
+    'Interpreter', 'none', 'FontName', 'FixedWidth', 'FontSize', 5);
+
 % Change the title
+titleStr = makeTitle(Params, elecNo, cell);
 title(titleStr, 'FontSize', 16, 'FontWeight', 'normal', 'Interpreter', 'none');
 hold off;
 end

@@ -10,7 +10,7 @@ parfor unitNo = whichUnits
     
     unit = ['Unit', deblank(num2str(unitNo))];
     plexonPath = fullfile(plexonDir, animalID, filesep);
-    dataPath = fullfile(dataDir, animalID, unit, filesep);
+    dataPath = fullfile(dataDir, animalID, filesep);
     
     logFile = [plexonPath,animalID,unit,'.mat'];
     spikesFile = [plexonPath,animalID,unit,suffix,'.mat'];
@@ -64,8 +64,11 @@ parfor unitNo = whichUnits
             fileName = Files.fileName{f};
             disp(fileName);
             
-            expFile = matfile(fullfile(dataPath, fileName),'Writable', true);
-
+            expFile = [];
+            try
+                expFile = load(fullfile(dataPath, fileName));
+            catch
+            end
             startTime = Files.time(f,1);
             endTime = Files.time(f,2);
             spike = struct;
@@ -96,11 +99,21 @@ parfor unitNo = whichUnits
             end
                        
             % Save the new dataset
-            dataset = expFile.dataset(1,1);
-            dataset.spike = spike;
-            dataset.source = fullfile(dataPath, fileName);
-            dataset.sourceformat = 'Plexon';
-            expFile.dataset(1,end+1) = dataset;
+            if isfield(expFile, 'dataset')
+                dataset = expFile.dataset(1,1);
+                dataset.spike = spike;
+                dataset.source = fullfile(dataPath, fileName);
+                dataset.sourceformat = 'Plexon';
+                expFile.dataset(1,end+1) = dataset;
+            else
+                dataset = struct;
+                dataset.spike = spike;
+                dataset.source = fullfile(dataPath, fileName);
+                dataset.sourceformat = 'Plexon';
+                expFile.dataset = dataset;
+            end
+
+            parsave(fullfile(dataPath, fileName), expFile);
             
         end
         disp('Done');
@@ -108,4 +121,9 @@ parfor unitNo = whichUnits
         warning(['No such file ', spikesFile]);
         continue;
     end
+end
+end
+
+function parsave(fileName, expFile)
+    save(fileName, '-struct', 'expFile', '-v7.3');
 end

@@ -1,5 +1,5 @@
 function recalculate(dataDir, figuresDir, animalID, whichUnits, whichFiles, ...
-    whichElectrodes, plotFigures, plotLFP, isparallel, sourceFormat)
+    searchString, plotFigures, plotLFP, isparallel, sourceFormat)
 %recalculate and replot all data
 % whichUnits is an array of unit numbers to calculate
 % whichFiles is an array of file numbers to calculate
@@ -12,7 +12,7 @@ if nargin < 5
     whichFiles = [];
 end
 if nargin < 6
-    whichElectrodes = [];
+    searchString = '*';
 end
 if nargin < 7 || isempty(plotFigures)
     plotFigures = true;
@@ -37,7 +37,7 @@ smoothing = 0.2;
 
 % Figure out which files need to be recalculated
 [~, ~, Files] = ...
-    findFiles(dataDir, animalID, whichUnits, '*', whichFiles);
+    findFiles(dataDir, animalID, whichUnits, searchString, whichFiles);
 nFiles = size(Files,1);
 
 % Recalculate all files
@@ -63,7 +63,7 @@ elseif nFiles > 1
             if isempty(dataset)
                 continue; % doesn't exist
             end
-            result = recalculateSingle(dataset, figuresDir, whichElectrodes, ...
+            result = recalculateSingle(dataset, figuresDir, [], ...
                 plotLFP, plotFigures, false, false);
             fileDuration(f) = result.fileDuration;
         end
@@ -73,7 +73,7 @@ elseif nFiles > 1
             if isempty(dataset)
                 continue; % doesn't exist
             end
-            result = recalculateSingle(dataset, figuresDir, whichElectrodes, ...
+            result = recalculateSingle(dataset, figuresDir, [], ...
                 plotLFP, plotFigures, false, false);
             fileDuration(f) = result.fileDuration;
         end
@@ -94,7 +94,7 @@ else
     if isempty(dataset)
         return; % doesn't exist
     end
-    result = recalculateSingle(dataset, figuresDir, whichElectrodes, ...
+    result = recalculateSingle(dataset, figuresDir, searchString, ...
         plotLFP, plotFigures, isparallel, true);
     fileDuration = result.fileDuration;
     

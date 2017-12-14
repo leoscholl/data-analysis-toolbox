@@ -22,7 +22,7 @@ function varargout = analysis_ui(varargin)
 
 % Edit the above text to modify the response to help analysis_ui
 
-% Last Modified by GUIDE v2.5 07-Sep-2017 09:39:53
+% Last Modified by GUIDE v2.5 03-Nov-2017 12:18:34
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -129,7 +129,7 @@ function Recalculate_Callback(hObject, eventdata, handles)
 animalID = get(handles.AnimalIDBox, 'String');
 unitNo = eval(get(handles.UnitNoBox, 'String'));
 fileNo = eval(get(handles.FileNoBox, 'String'));
-whichElectrodes = eval(get(handles.ElectrodeNoBox, 'String'));
+searchString = get(handles.SearchStringBox, 'String');
 expTypeMenu = cellstr(get(handles.ExpTypeMenu, 'String'));
 expType = expTypeMenu{get(handles.ExpTypeMenu, 'Value')};
 
@@ -150,7 +150,7 @@ end
 setStatus(handles, 'recalculating...');
 switch expType
     case 'Spikes'
-        recalculate(dataDir, figuresDir, animalID, unitNo, fileNo, whichElectrodes, ...
+        recalculate(dataDir, figuresDir, animalID, unitNo, fileNo, searchString, ...
             plotFigures, plotLFP, isParallel, sourceFormat);
     case 'ECoG'
         
@@ -171,7 +171,7 @@ switch sourceFormat
     case 'Plexon'
         dataDir = get(handles.RawDataBox, 'String');
         setStatus(handles, 'generating files...');
-        makeFilesForSorting(dataDir, sortingDir, animalID, unitNo, 'bin');
+        makeFilesForSortingOld(dataDir, sortingDir, animalID, unitNo, 'bin');
         setStatus(handles, '');
     otherwise
         setStatus(handles, ['no sorting method for ', sourceFormat]);
@@ -202,7 +202,7 @@ function AutomaticSorting_Callback(hObject, eventdata, handles)
 animalID = get(handles.AnimalIDBox, 'String');
 unitNo = eval(get(handles.UnitNoBox, 'String'));
 fileNo = eval(get(handles.FileNoBox, 'String'));
-whichElectrodes = eval(get(handles.ElectrodeNoBox, 'String')); % TODO
+searchString = get(handles.SearchStringBox, 'String'); % TODO
 
 dataDir = get(handles.DataDirBox, 'String');
 sortingDir = get(handles.SortingDirBox, 'String');
@@ -236,7 +236,7 @@ function plotHelper(handles, figureType)
 animalID = get(handles.AnimalIDBox, 'String');
 unitNo = eval(get(handles.UnitNoBox, 'String'));
 fileNo = eval(get(handles.FileNoBox, 'String'));
-whichElectrodes = eval(get(handles.ElectrodeNoBox, 'String'));
+searchString = get(handles.SearchStringBox, 'String');
 dataDir = get(handles.DataDirBox, 'String');
 sourceFormatMenu = cellstr(get(handles.SourceFormatMenu, 'String'));
 sourceFormat = sourceFormatMenu{get(handles.SourceFormatMenu, 'Value')};
@@ -251,7 +251,7 @@ setStatus(handles, 'plotting...');
 switch expType
     case 'Spikes'
         plotIndividual(dataDir, figuresDir, animalID, unitNo, fileNo, ...
-            whichElectrodes, figureType, sourceFormat, isParallel)
+            searchString, figureType, sourceFormat, isParallel)
     case 'ECoG'
         
 end
@@ -793,20 +793,20 @@ function ParallelCheck_Callback(hObject, eventdata, handles)
 
 
 
-function ElectrodeNoBox_Callback(hObject, eventdata, handles)
-% hObject    handle to ElectrodeNoBox (see GCBO)
+function SearchStringBox_Callback(hObject, eventdata, handles)
+% hObject    handle to SearchStringBox (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of ElectrodeNoBox as text
-%        str2double(get(hObject,'String')) returns contents of ElectrodeNoBox as a double
+% Hints: get(hObject,'String') returns contents of SearchStringBox as text
+%        str2double(get(hObject,'String')) returns contents of SearchStringBox as a double
 if isempty(get(hObject, 'String'))
-    set(hObject, 'String', '[]');
+    set(hObject, 'String', '*');
 end
 
 % --- Executes during object creation, after setting all properties.
-function ElectrodeNoBox_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to ElectrodeNoBox (see GCBO)
+function SearchStringBox_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to SearchStringBox (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 

@@ -209,9 +209,6 @@ classdef summaryTable < handle
                 uniqueCells{c} = AllCells(AllCells.id == cellIds(c),:);
             end
 
-            if isempty(gcp('nocreate')) && isempty(getCurrentTask())
-                parpool;
-            end
             for c = 1:length(cellIds)
 
                 % Only look a trials for this cell
@@ -293,13 +290,37 @@ classdef summaryTable < handle
                     % Preferred stimulus
                     dimensions = fieldnames(Stimuli.Conditions{s});
                     levels = Stimuli.Conditions{s}.(dimensions{1});
-                    [~, ind] = max([stats.tCurveCorr]);
-                    if isnumeric(levels(ind))
-                        Stats.pref = levels(ind);
+                    [prefMax, prefInd] = max([stats.tCurveCorr]);
+                    if isnumeric(levels(prefInd))
+                        Stats.pref = levels(prefInd);
                     else
-                        Stats.pref = ind;
+                        Stats.pref = prefInd;
                     end
-
+                    if contains(Stimuli.stimType{s}, 'Aper')
+                        % For aperture, subtract the size for which there
+                        % is zero (insignificant) increase in firing rate
+                        % from the size at which the firing rate no longer
+                        % increases significantly
+                        tCurveCorrSEM = [stats.tCurveCorrSEM];
+                        tCurveCorr = [stats.tCurveCorr];
+                        prefSEM = tCurveCorrSEM(prefInd);
+                        prefIndOld = prefInd;
+                        prefInd = find(tCurveCorr + prefMax*0.1 > prefMax, 1);
+                        zeroInd = find(Stats.ranksum(1:prefInd) > 0.05, 1, 'last');
+                        if ~isempty(prefInd) && ~isempty(zeroInd) && zeroInd > 2
+                            Stats.pref = levels(prefInd) - levels(zeroInd-1);
+                        elseif ~isempty(prefInd)
+                            Stats.pref = levels(prefInd);
+                        else
+                            prefInd = prefIndOld;
+                        end
+                    end
+                    if ~isempty(Stats.ranksum)
+                        Stats.prefP = Stats.ranksum(prefInd);
+                    else
+                        Stats.prefP = NaN;
+                    end
+                    
                     % Percent of cells with firing rates >25% over baseline
                     Stats.broadnessP = mean([stats.tCurveCorr] > max([stats.tCurveCorr])*.25);
 
@@ -335,14 +356,30 @@ classdef summaryTable < handle
                         theta = deg2rad(levels(valid));
                         response = [stats.tCurve]';
                         response = response(valid);
+                        response(response < 0) = 0;
+                        
+                        [~, prefInd] = max(response);
+                        prefTheta = theta(prefInd);
+                        theta_ = mod(theta - prefTheta + pi/2, 2*pi);
+                        left = 0 <= theta_ &...
+                            theta_ < pi;
+                        right = ~left;
+                        
+                        osiLeft = abs(sum(response(left).*exp(2.1i*theta(left)))/sum(response(left)));
+                        osiRight = abs(sum(response(right).*exp(2.1i*theta(right)))/sum(response(right)));
+                        Stats.osi = osiLeft;
+                        Stats.osi2 = osiRight; % less response
+                        Stats.osiAll = abs(sum(response.*exp(2.1i*theta))/sum(response));
                         Stats.dsi = abs(sum(response.*exp(1i*theta))/sum(response));
-                        Stats.osi = abs(sum(response.*exp(2.1i*theta))/sum(response));
                     end
 
                     % Latency
                     if strcmp(stimType, 'Latency')
                         Stats.latency = stats.latency;
                     end
+                    
+                    % Save the file number
+                    Stats.fileNo = Stimuli.fileNo(s);
 
                     % Group responses per cell
                     thisCell.response.(stimType) = Stats;
@@ -436,6 +473,8 @@ classdef summaryTable < handle
                         cell.track = [];
                         cell.session = analysis.Params.unit;
                         cell.subject = analysis.Params.animalID;
+                        cell.fileNo = analysis.Params.expNo;
+                        cell.stimType = analysis.Params.stimType;
                         
                         % Collect location information if there is any
                         cell.location = '';
@@ -445,7 +484,7 @@ classdef summaryTable < handle
                                 cell.location = map(cell.electrodeid);
                             end
                         end
-                            
+
 
                         % Statistics
                         cell.Statistics = table2struct(Stats(Stats.cell == cells(j),:));
@@ -458,8 +497,6 @@ classdef summaryTable < handle
                         cell.numSpikes = sum(numSpikes);
                         
                         cell.Conditions = Conditions;
-                        cell.fileNo = Files.fileNo(f);
-                        cell.stimType = Files.stimType{f};
                         cell.notes = {};
                         cell.selected = false;
                         cell.sessionid = sum(double(cell.session).* ...

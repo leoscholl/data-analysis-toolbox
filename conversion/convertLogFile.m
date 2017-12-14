@@ -29,7 +29,8 @@ if ~exist(filePath, 'file')
 end
 
 % What to load?
-fileVars = who('-file', filePath);
+all = load(filePath, '-regexp', '^(?!handles)^(?!hObject)\w');
+fileVars = fieldnames(all);
 vars = {'data','GridSize',...
     'MonitorDistance','MonRes','MonSize','RFposition',...
     'PPD', 'StimInterval', 'StimDuration', 'Params'};
@@ -213,6 +214,7 @@ end
 
 % Fill out Data table
 Data = table;
+condName = {};
 switch stimType
     case {'velocity', 'VelocityConstantCycles', ...
             'VelocityConstantCyclesBar'}
@@ -349,6 +351,7 @@ switch stimType
         Data.stimDuration = data(:,6);
         Data.trialNo = data(:,7);
         Data.condition = [Data.xPosition Data.yPosition];
+        condName = {'xPosition','yPosition'};
     otherwise
         if isempty(stimSequence)
             warning(['Unsupported filetype. Skipping ', fileName]);

@@ -1,3 +1,331 @@
+%% Import csv file and cells table
+%csvFile = 'C:\Users\leo\Google Drive\Matlab\manual analysis\Cells.csv';
+% csvFile = 'C:\Users\leo\Google Drive\LP Results\Rat summary for LP.xlsm';
+csvFile = 'C:\Users\leo\Google Drive\Matlab\manual analysis\individual\Rat summary for LP - 10-26-17 - LPMR.csv';
+Summary = readtable(csvFile);
+% Summary.Checked = repmat(0, size(Summary,1), 1);
+
+load('C:\Users\leo\Google Drive\Matlab\manual analysis\RippleCells.mat');
+Cells = struct2table(Cells);
+Cells.subject = categorical(Cells.subject);
+Cells.session = categorical(Cells.session);
+
+%% Adjust OSI and DSI for all cells
+for c = 1:size(Summary,1)
+    csvCell = table2struct(Summary(c,:));
+    
+    if isempty(csvCell.AnimalID)
+        continue;
+    end
+    
+    ind = find(Cells.subject == csvCell.AnimalID & ...
+        Cells.session == sprintf('Unit%d',csvCell.Unit) & ...
+        Cells.electrodeid == csvCell.Elec & ...
+        Cells.cell == csvCell.Cell);
+    
+    if isempty(ind)
+        warning('Cell not found -- %s unit %d elec %d cell %d', ...
+            csvCell.AnimalID, csvCell.Unit, csvCell.Elec, csvCell.Cell);
+        continue;
+    end
+    
+    goodCell = table2struct(Cells(ind,:));
+
+    % Add Latency if none
+    if isfield(goodCell.response, 'Latency') && ...
+            (goodCell.response.Latency.peak > 10 || ...
+            goodCell.response.Latency.ttest < 0.01)
+        Summary.Latency(c) = round(goodCell.response.Latency.latency,2);
+    end
+    
+    % Background calculation
+    tests = fieldnames(goodCell.response);
+    for s = 1:length(tests)
+        background(s) = goodCell.response.(tests{s}).baseline;
+        peak(s) = goodCell.response.(tests{s}).peak;
+        nSpikes(s) = goodCell.response.(tests{s}).numSpikes;
+        
+    end
+    background = mean(background);
+    peak = max(peak);
+    nSpikes = sum(nSpikes);
+    
+
+        Summary.BG(c) = round(background,1);
+        Summary.Peak(c) = round(peak,1);
+        Summary.NumSpikes(c) = nSpikes;
+
+    
+    % Location if none
+    if isempty(Summary.Location(c))
+        Summary.Location(c) = goodCell.location;
+    end
+    
+    
+end
+
+%%
+writetable(Summary, csvFile, 'QuoteStrings', true);
+
+
+
+
+
+
+%% Import csv file and cells table
+%csvFile = 'C:\Users\leo\Google Drive\Matlab\manual analysis\Cells.csv';
+% csvFile = 'C:\Users\leo\Google Drive\LP Results\Rat summary for LP.xlsm';
+csvGood = 'C:\Users\leo\Google Drive\Matlab\manual analysis\individual\NEW Rat summary for LP - 11-08-17 - V1.csv';
+Good = readtable(csvGood);
+Good.AnimalID = categorical(Good.AnimalID);
+
+csvRipple = 'C:\Users\leo\Google Drive\Matlab\manual analysis\RippleSummary.csv';
+Ripple = readtable(csvRipple);
+Ripple.AnimalID = categorical(Ripple.AnimalID);
+
+csvSorted = 'C:\Users\leo\Google Drive\Matlab\manual analysis\Summary.csv';
+Sorted = readtable(csvSorted);
+Sorted.AnimalID = categorical(Sorted.AnimalID);
+
+%% Figure out non-responsive cells based on responsive cells
+for c = 1:size(Good,1)
+    goodCell = table2struct(Good(c,:));
+    
+    if ismissing(goodCell.AnimalID)
+        continue;
+    end
+    
+    
+    
+    if goodCell.sorted
+        
+        ind = Sorted.AnimalID == goodCell.AnimalID & ...
+            Sorted.Unit == goodCell.Unit & ...
+            Sorted.Elec == goodCell.Elec & ...
+            Sorted.Cell == goodCell.Cell;
+        
+        Sorted = Sorted(~ind,:);
+        
+    else
+        
+        ind = Ripple.AnimalID == goodCell.AnimalID & ...
+            Ripple.Unit == goodCell.Unit & ...
+            Ripple.Elec == goodCell.Elec & ...
+            Ripple.Cell == goodCell.Cell;
+        
+        Ripple = Ripple(~ind,:);
+        
+    end
+    
+end
+
+
+%% Import csv file and cells table
+%csvFile = 'C:\Users\leo\Google Drive\Matlab\manual analysis\Cells.csv';
+% csvFile = 'C:\Users\leo\Google Drive\LP Results\Rat summary for LP.xlsm';
+csvGood = 'C:\Users\leo\Google Drive\Matlab\manual analysis\individual\NEW Rat summary for LP - 11-08-17 - LPLR.csv';
+Good = readtable(csvGood);
+Good.Checked = zeros(size(Good,1), 1);
+
+%% Inspect tuning
+test = 'Latency';
+for c = 1:size(Good,1)
+    goodCell = table2struct(Good(c,:));
+    goodCell.AnimalID = strrep(goodCell.AnimalID, '''', '');
+    
+    if goodCell.Checked || any(ismissing(goodCell.AnimalID))
+        continue;
+    end
+    
+    if  ismissing(goodCell.FlashResponse) || ~goodCell.FlashResponse || ...
+        ~ismissing(goodCell.Latency)
+        continue;
+    end
+    
+    if ~ismissing(goodCell.sorted) && goodCell.sorted
+            
+        cellDir = fullfile(figuresDir,goodCell.AnimalID,['Unit',num2str(goodCell.Unit)],'WaveClus',...
+            ['Ch',sprintf('%02d',goodCell.Elec)]);
+        figs = dir(fullfile(cellDir,['*[',test,'*]_',num2str(goodCell.Cell),'El',num2str(goodCell.Elec),'*.png']));
+    
+    else
+        % Try expo
+        cellDir = fullfile(figuresDir,goodCell.AnimalID,['Unit',num2str(goodCell.Unit)],'Expo',...
+            ['Ch',sprintf('%02d',goodCell.Elec)]);
+        figs = dir(fullfile(cellDir,['*[',test,'*]_',num2str(goodCell.Cell),'El',num2str(goodCell.Elec),'*.png']));
+
+    
+        if isempty(figs) % Try ripple
+            cellDir = fullfile(figuresDir,goodCell.AnimalID,['Unit',num2str(goodCell.Unit)],'Ripple',...
+                ['Ch',sprintf('%02d',goodCell.Elec)]);
+            figs = dir(fullfile(cellDir,['*[',test,'*]_',num2str(goodCell.Cell),'El',num2str(goodCell.Elec),'*.png']));
+        end
+    end
+    
+    for i=1:size(figs,1)
+        I = imread(fullfile(figs(i).folder,figs(i).name));
+        figure;
+        imshow(I)
+    end
+    
+    tilefigs;
+    
+    text = sprintf('%s Unit %d Elec %d Cell %d', goodCell.AnimalID, goodCell.Unit, ...
+        goodCell.Elec, goodCell.Cell);
+    
+    choice = questdlg(text, 'Continue?', 'Yes', 'Cancel', 'Yes');
+    switch choice
+        case 'Yes'
+            Good.Checked(c) = 1;
+            close all;
+        otherwise
+            close all;
+            break;
+    end
+    
+    
+end
+
+%% re-Plot all data and import R1511
+sourceFormat = {'WaveClus'};
+for a = 5:length(animals)
+    animalID = animals{a};
+    
+    % Plot figures
+    plotIndividual(dataDir, figuresDir, animalID, [], [], [], ...
+        'tcs', sourceFormat, true)
+end
+sourceFormat = {'Ripple', 'Expo'};
+for a = 1:length(animals)
+    animalID = animals{a};
+    
+    % Plot figures
+    plotIndividual(dataDir, figuresDir, animalID, [], [], [], ...
+        'tcs', sourceFormat, true)
+end
+
+export_batch;
+
+%% Inspect responsive cells
+for c = 1:size(Summary,1)
+    
+    goodCell = table2struct(Summary(c,:));
+    
+    if goodCell.Checked || isempty(goodCell.Location) || ~goodCell.Response
+        continue;
+    end
+    
+    % Try to find the latency figures for this cell (waveclus)
+    cellDir = fullfile(figuresDir,goodCell.AnimalID,['Unit',num2str(goodCell.Unit)],'WaveClus',...
+        ['Ch',sprintf('%02d',goodCell.Elec)]);
+    figs = dir(fullfile(cellDir,['*[LatencyTest]_',num2str(goodCell.Cell),'El',num2str(goodCell.Elec),'*_psth.png']));
+    
+    if isempty(figs) % Try expo
+        cellDir = fullfile(figuresDir,goodCell.AnimalID,['Unit',num2str(goodCell.Unit)],'Expo',...
+            ['Ch',sprintf('%02d',goodCell.Elec)]);
+        figs = dir(fullfile(cellDir,['*_',num2str(goodCell.Cell),'El',num2str(goodCell.Elec),'_tc.png']));
+    end
+    
+    if isempty(figs) % Try ripple
+        cellDir = fullfile(figuresDir,goodCell.AnimalID,['Unit',num2str(goodCell.Unit)],'Ripple',...
+            ['Ch',sprintf('%02d',goodCell.Elec)]);
+        figs = dir(fullfile(cellDir,['*_',num2str(goodCell.Cell),'El',num2str(goodCell.Elec),'_tc.png']));
+    end
+    
+    
+    for i=1:size(figs,1)
+        I = imread(fullfile(figs(i).folder,figs(i).name));
+        figure;
+        imshow(I)
+    end
+    toShow = table2struct(Summary(c,{'AnimalID','Unit','Elec','Cell','SF','TF','Apt','Con','Latency','Peak'}));
+    text = evalc('disp(toShow)');
+    
+    tilefigs;
+    
+    options = struct;
+    options.Default = 'No';
+    options.Interpreter = 'tex';
+    choice = questdlg(text,'Response?', 'Yes', 'No', 'Cancel',options);
+    switch choice
+        case 'Yes'
+            Summary.Response(c) = 1;
+        case 'No'
+            Summary.Response(c) = 0;
+            Summary.Tuning(c) = 0;
+        otherwise
+            close all;
+            break;
+    end
+    
+    Summary.Checked(c) = 1;
+    close all;
+end
+
+%% Reset checked
+Summary.Checked = repmat(0, size(Summary,1), 1);
+
+%% Inspect tuned cells
+for c = 1:size(Summary,1)
+
+    goodCell = table2struct(Summary(c,:));
+    
+    if goodCell.Checked || isempty(goodCell.Location) || ~goodCell.Tuning
+        continue;
+    end
+    
+    % Try to find the tuning curve figures for this cell (waveclus)
+    cellDir = fullfile(figuresDir,goodCell.AnimalID,['Unit',num2str(goodCell.Unit)],'WaveClus',...
+        ['Ch',sprintf('%02d',goodCell.Elec)]);
+    figs = dir(fullfile(cellDir,['*_',num2str(goodCell.Cell),'El',num2str(goodCell.Elec),'*_tc.png']));
+    
+    if isempty(figs) % Try expo
+        cellDir = fullfile(figuresDir,goodCell.AnimalID,['Unit',num2str(goodCell.Unit)],'Expo',...
+            ['Ch',sprintf('%02d',goodCell.Elec)]);
+        figs = dir(fullfile(cellDir,['*_',num2str(goodCell.Cell),'El',num2str(goodCell.Elec),'_tc.png']));
+    end
+    
+    if isempty(figs) % Try ripple
+        cellDir = fullfile(figuresDir,goodCell.AnimalID,['Unit',num2str(goodCell.Unit)],'Ripple',...
+            ['Ch',sprintf('%02d',goodCell.Elec)]);
+        figs = dir(fullfile(cellDir,['*_',num2str(goodCell.Cell),'El',num2str(goodCell.Elec),'_tc.png']));
+    end
+    
+    
+    for i=1:size(figs,1)
+        I = imread(fullfile(figs(i).folder,figs(i).name));
+        figure;
+        imshow(I)
+    end
+    toShow = table2struct(Summary(c,{'AnimalID','Unit','Elec','Cell','SF','TF','Apt','Con','Latency','Peak'}));
+    text = evalc('disp(toShow)');
+    
+    tilefigs;
+    
+    options = struct;
+    options.Default = 'No';
+    options.Interpreter = 'tex';
+    choice = questdlg(text,'Tuning?', 'Yes', 'No', 'Cancel',options);
+    switch choice
+        case 'Yes'
+            Summary.Tuning(c) = 1;
+        case 'No'
+            Summary.Tuning(c) = 0;
+        otherwise
+            close all;
+            break;
+    end
+    
+    Summary.Checked(c) = 1;
+    close all;
+end
+
+
+%% Save new summary
+Summary = Summary(:,~ismember(Summary.Properties.VariableNames,'Checked'));
+
+
+
 %% Plot scatters for TF vs OSI
 close all;
 

@@ -1,10 +1,12 @@
 function plotIndividual(dataDir, figuresDir, animalID, whichUnits, whichFiles, ...
-    whichElectrodes, figureType, sourceFormats, isparallel)
+    searchString, figureType, sourceFormats, isparallel)
 %plotIndividual plot and individual figure for one file
+
+whichElectrodes = []; % TODO
 
 % Figure out which files need to be recalculated
 [~, ~, Files] = ...
-    findFiles(dataDir, animalID, whichUnits, '*.mat', whichFiles);
+    findFiles(dataDir, animalID, whichUnits, [searchString, '.mat'], whichFiles);
 
 % Display some info about duration
 nFiles = size(Files,1);
@@ -28,11 +30,6 @@ for f = 1:size(Files,1)
     sourceFormat = analysis.sourceFormat;
     figuresPath = fullfile(figuresDir, animalID, unit, ...
         sourceFormat, filesep);
-
-    % Start the parallel pool if one isn't already opened
-    if isparallel && isempty(gcp('nocreate'))
-        parpool; % start the parallel pool
-    end
     
     switch figureType
         case 'waveforms'

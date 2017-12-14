@@ -1,20 +1,19 @@
 %% Parameters
 
 % Maintenance variables
-rawDataDir = 'J:\Data';
+rawDataDir = '\\STUDENTLYONLAB\f\Data_2015-2017';
 dataDir = 'I:\DataExport';
 
 diaryFilename = 'batch_output.txt';
 diary(diaryFilename);
 
-% Plotting parameters
-plotFigures = 0;
-plotLFP = 0;
 overwrite = 1; % for exporting data
 
 % % Experiment info
-load('locations.mat');
-animals = fieldnames(Locations);
+% load('locations.mat');
+% animals = fieldnames(Locations);
+animals = {'R1511'};   
+whichUnits = [11:13];
 
 fileType = 'unsorted'; % bin, osort, unsorted
 
@@ -22,7 +21,7 @@ fileType = 'unsorted'; % bin, osort, unsorted
 for i = 1:length(animals)
     
     animalID = animals{i};
-    whichUnits = [];
+    
     whichFiles = [];
     
     fprintf(1, '\n\n----------------- %s -------------------\n', animalID);
@@ -43,6 +42,5 @@ for i = 1:length(animals)
     
 end
 
-fprintf(log, 'End of all runs\n\n');
-fclose(log);
+fprintf(1, 'End of all runs\n\n');
 diary off

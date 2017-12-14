@@ -1,7 +1,7 @@
 disp('copying files...')
 
-dataDir = 'I:\Figures\';
-destDir = 'I:\Figures\';
+dataDir = 'I:\Sorting\';
+destDir = 'J:\Leo\Sorting\';
 
 animalIDs = findAnimals(dataDir);
 % animalID = '';
@@ -9,26 +9,26 @@ whichUnits = [];
 
 for a = 1:length(animalIDs)
     animalID = animalIDs{a};
-    units = findUnits(dataDir, animalID, whichUnits);
-    
-    for i=1:length(units)
-        unit = units{i};
-    
+%     units = findUnits(dataDir, animalID, whichUnits);
+%     
+%     for i=1:length(units)
+%         unit = units{i};
+%     
     %% Delete direcories
-    %     dataPath = fullfile(dataDir, animalID, unit);
-    %     destPath = fullfile(destDir, animalID, unit, 'StimTimes');
+        dataPath = fullfile(dataDir, animalID);
+        destPath = fullfile(destDir, animalID);
     %     if exist(destPath, 'dir')
     %         rmdir(destPath, 's');
     %         disp(destPath);
     %     end
     
     %% Copy Files
-    %     if ~exist(DestPath,'dir')
-    %         mkdir(DestPath);
-    %     end
+        if ~exist(destPath,'dir')
+            mkdir(destPath);
+        end
     
-    %% copy .ns5, .nev, and .mat files
-    % CopyFiles('*].ns5', DataPath, DestPath);
+    % copy .ns5, .nev, and .mat files
+    copyFiles('*.png', dataPath, destPath);
     % CopyFiles('*].nev', DataPath, DestPath);
     % CopyFiles('*].mat', DataPath, DestPath);
     % CopyFiles('*-params.mat', DataPath, DestPath);
@@ -64,13 +64,13 @@ for a = 1:length(animalIDs)
     %     delete(fullfile(dataPath,'*]-lfp.mat'));
     
     %% Move folders
-        channels = dir(fullfile(dataDir, animalID, unit, 'Ch*'));
-        channels = {channels([channels.isdir]).name};
-        for ch = 1:length(channels)
-            movefile(fullfile(dataDir, animalID, unit, channels{ch}), ...
-                fullfile(dataDir, animalID, unit, 'Ripple', channels{ch}));
-        end
-    end
+%         channels = dir(fullfile(dataDir, animalID, unit, 'Ch*'));
+%         channels = {channels([channels.isdir]).name};
+%         for ch = 1:length(channels)
+%             movefile(fullfile(dataDir, animalID, unit, channels{ch}), ...
+%                 fullfile(dataDir, animalID, unit, 'Ripple', channels{ch}));
+%         end
+%     end
 end
 
 disp('...done');

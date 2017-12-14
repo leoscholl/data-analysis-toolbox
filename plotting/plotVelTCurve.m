@@ -12,8 +12,8 @@ for k = 1:length(velConditionNo)
         unique(Params.Data.conditionNo(Params.Data.velocity == ...
         velConditions(k))); % should only be one!
 end
-velParams.Conditions.condition = velConditions;
-velParams.Conditions.conditionNo = velConditionNo;
+velParams.ConditionTable.condition = velConditions(velConditionNo);
+velParams.Conditions.Velocity = velConditions(velConditionNo);
 velStatistics = Statistics;
 velStatistics.conditionNo = velConditionNo;
 

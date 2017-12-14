@@ -26,6 +26,12 @@ spike = Results.spike;
 
 % Go through each electrode
 if isparallel
+    
+    % Start the parallel pool if one isn't already opened
+    if length(whichElectrodes) > 1 && isempty(gcp('nocreate'))
+        parpool; % start the parallel pool
+    end
+    
     parfor i = 1:length(whichElectrodes)
         elecNo = spike(i).electrodeid;
         if ~ismember(elecNo, whichElectrodes)
