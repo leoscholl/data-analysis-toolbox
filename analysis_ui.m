@@ -22,7 +22,7 @@ function varargout = analysis_ui(varargin)
 
 % Edit the above text to modify the response to help analysis_ui
 
-% Last Modified by GUIDE v2.5 03-Nov-2017 12:18:34
+% Last Modified by GUIDE v2.5 21-Feb-2018 16:51:26
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -57,33 +57,32 @@ function analysis_ui_OpeningFcn(hObject, eventdata, handles, varargin)
 % Choose default command line output for analysis_ui
 handles.output = hObject;
 
-% Update handles structure
-guidata(hObject, handles);
-
 % UIWAIT makes analysis_ui wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
 
 % Load preferences
 global uiPrefsList
-uiPrefsList = {'PlotLFPCheck', 'PlotFiguresCheck', ...
-    'ParallelCheck', 'DataDirBox', 'FiguresDirBox', ...
-    'AnimalIDBox', 'UnitNoBox', 'FileNoBox', 'SortingDirBox', ...
-    'SuffixBox', 'SourceFormatMenu', 'RawDataBox'};
+uiPrefsList = {'ParallelCheck', 'DataDirBox', 'FiguresDirBox', ...
+    'SortingDirBox', 'SuffixBox', 'SourceFormatMenu', 'RawDataBox'};
 loadPrefs(handles);
 
 % Set the title
 set(hObject, 'Name', 'analysis UI')
 
-% Remove the summary panel
-state = get(handles.ShowSummary, 'Value');
-set(handles.SummaryTable, 'Data', []);
-if state
-    toggleSummaryVisibility(handles, 0);
-    set(handles.ShowSummary, 'Value', 0);
-end
-
 % Hide the sorting buttons
 SourceFormatMenu_Callback(hObject, eventdata, handles)
+
+% Populate file table
+metafile = fullfile(get(handles.DataDirBox, 'String'),'metadata.mat');
+mt = NeuroAnalysis.IO.MetaTable(metafile);
+handles.mt = mt;
+if ~isempty(mt.Tests)
+    set(handles.FileList, 'String', {mt.Tests.filename} );
+    set(handles.FileList, 'UserData', mt.Tests );
+end
+
+% Update handles structure
+guidata(hObject, handles);
 
 
 % --- Outputs from this function are returned to the command line.
@@ -120,42 +119,68 @@ fprintf(' done.\n');
 delete(hObject);
 
 
-% --- Executes on button press in Recalculate.
-function Recalculate_Callback(hObject, eventdata, handles)
-% hObject    handle to Recalculate (see GCBO)
+function SearchStringBox_Callback(hObject, eventdata, handles)
+% hObject    handle to SearchStringBox (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-animalID = get(handles.AnimalIDBox, 'String');
-unitNo = eval(get(handles.UnitNoBox, 'String'));
-fileNo = eval(get(handles.FileNoBox, 'String'));
-searchString = get(handles.SearchStringBox, 'String');
-expTypeMenu = cellstr(get(handles.ExpTypeMenu, 'String'));
-expType = expTypeMenu{get(handles.ExpTypeMenu, 'Value')};
-
-plotLFP = logical(get(handles.PlotLFPCheck, 'Value'));
-plotFigures = logical(get(handles.PlotFiguresCheck, 'Value'));
-isParallel = logical(get(handles.ParallelCheck, 'Value'));
-dataDir = get(handles.DataDirBox, 'String');
-figuresDir = get(handles.FiguresDirBox, 'String');
-sourceFormatMenu = cellstr(get(handles.SourceFormatMenu, 'String'));
-sourceFormat = sourceFormatMenu{get(handles.SourceFormatMenu, 'Value')};
-
-if strcmp(sourceFormat, 'Plexon')
-    sourceFormat = {'Plexon', 'Ripple'};
-elseif strcmp(sourceFormat, 'WaveClus')
-    sourceFormat = {'WaveClus', 'Ripple'};
+% Hints: get(hObject,'String') returns contents of SearchStringBox as text
+%        str2double(get(hObject,'String')) returns contents of SearchStringBox as a double
+strs = regexp(get(hObject, 'String'),'\s?,\s?', 'split');
+mt = handles.mt;
+set(handles.FileList, 'Value', []);
+if mod(length(strs),2) == 0
+    query = mt.query(strs{:});
+    set(handles.FileList, 'String', {query.Tests.filename} );
+    set(handles.FileList, 'UserData', query.Tests);
+elseif length(strs) == 1
+    files = {mt.Tests.filename};
+    match = cellfun(@(x)contains(x,strs{1},'IgnoreCase',true),files);
+    set(handles.FileList, 'String', files(match));
+    set(handles.FileList, 'UserData', mt.Tests.(match));
+else
+    set(handles.FileList, 'String', {mt.Tests.filename});
+    set(handles.FileList, 'UserData', mt.Tests);
 end
 
-setStatus(handles, 'recalculating...');
-switch expType
-    case 'Spikes'
-        recalculate(dataDir, figuresDir, animalID, unitNo, fileNo, searchString, ...
-            plotFigures, plotLFP, isParallel, sourceFormat);
-    case 'ECoG'
-        
+
+% --- Executes on button press in SelectNone.
+function SelectNone_Callback(hObject, eventdata, handles)
+% hObject    handle to SelectNone (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+set(handles.FileList, 'Value', []);
+
+
+% --- Executes on button press in SelectAll.
+function SelectAll_Callback(hObject, eventdata, handles)
+% hObject    handle to SelectAll (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+files = get(handles.FileList, 'String');
+set(handles.FileList, 'Value', 1:length(files));
+
+
+% --- Executes on button press in RefreshButton.
+function RefreshButton_Callback(hObject, eventdata, handles)
+% hObject    handle to RefreshButton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+metafile = fullfile(get(handles.DataDirBox, 'String'),'metadata.mat');
+mt = NeuroAnalysis.IO.MetaTable(metafile);
+handles.mt = mt;
+if ~isempty(mt.Tests)
+    set(handles.FileList, 'String', {mt.Tests.filename} );
+    set(handles.FileList, 'UserData', mt.Tests );
+else
+    set(handles.FileList, 'String', {} );
+    set(handles.FileList, 'UserData', [] );
 end
-setStatus(handles, '');
+    
+set(handles.FileList, 'Value', []);
+
+% Update handles structure
+guidata(hObject, handles);
 
 % --- Executes on button press in MakeSortFile.
 function MakeSortFile_Callback(hObject, eventdata, handles)
@@ -230,31 +255,46 @@ switch sourceFormat
         return;
 end
 
-% --- Helper function for plotting buttons
-function plotHelper(handles, figureType)
 
-animalID = get(handles.AnimalIDBox, 'String');
-unitNo = eval(get(handles.UnitNoBox, 'String'));
-fileNo = eval(get(handles.FileNoBox, 'String'));
-searchString = get(handles.SearchStringBox, 'String');
-dataDir = get(handles.DataDirBox, 'String');
+% --- Executes on button press in LoadDatasets.
+function LoadDatasets_Callback(hObject, eventdata, handles)
+% hObject    handle to LoadDatasets (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+tests = get(handles.FileList, 'UserData');
+selected = get(handles.FileList, 'Value');
+tests = tests(selected);
+files = arrayfun(@(x)x.files{1}, tests, 'UniformOutput', 0);
+
 sourceFormatMenu = cellstr(get(handles.SourceFormatMenu, 'String'));
 sourceFormat = sourceFormatMenu{get(handles.SourceFormatMenu, 'Value')};
-figuresDir = get(handles.FiguresDirBox, 'String');
 
-expTypeMenu = cellstr(get(handles.ExpTypeMenu, 'String'));
-expType = expTypeMenu{get(handles.ExpTypeMenu, 'Value')};
+for f = 1:length(files)
+    dataset = loadDataset(files{f}, sourceFormat);
+    % Move the datasets to the matlab workspace
+    [~, filename, ~] = fileparts(files{f});
+    name = genvarname(sprintf('dataset_%s', filename));
+    assignin('base',name,dataset);
+end
 
+
+
+
+% --- Helper function for plotting buttons
+function plotHelper(handles, plotFun)
+
+tests = get(handles.FileList, 'UserData');
+selected = get(handles.FileList, 'Value');
+tests = tests(selected);
+files = arrayfun(@(x)x.files{1}, tests, 'UniformOutput', 0);
+
+figuresPath = get(handles.FiguresDirBox, 'String');
+sourceFormatMenu = cellstr(get(handles.SourceFormatMenu, 'String'));
+sourceFormat = sourceFormatMenu{get(handles.SourceFormatMenu, 'Value')};
 isParallel = logical(get(handles.ParallelCheck, 'Value'));
 
 setStatus(handles, 'plotting...');
-switch expType
-    case 'Spikes'
-        plotIndividual(dataDir, figuresDir, animalID, unitNo, fileNo, ...
-            searchString, figureType, sourceFormat, isParallel)
-    case 'ECoG'
-        
-end
+dispatch(files,figuresPath,isParallel,sourceFormat,plotFun);
 setStatus(handles, '');
 
 % --- Executes on button press in PlotWaveforms.
@@ -262,246 +302,63 @@ function PlotWaveforms_Callback(hObject, eventdata, handles)
 % hObject    handle to PlotWaveforms (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-plotHelper(handles, 'waveforms');
+plotHelper(handles, {@plotWaveforms});
 
 % --- Executes on button press in PlotISIs.
 function PlotISIs_Callback(hObject, eventdata, handles)
 % hObject    handle to PlotISIs (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-plotHelper(handles, 'isi');
+plotHelper(handles, {@plotIsi});
 
 % --- Executes on button press in PlotRasters.
 function PlotRasters_Callback(hObject, eventdata, handles)
 % hObject    handle to PlotRasters (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-plotHelper(handles, 'rasters');
+plotHelper(handles, {@plotRastergram, @plotPsth});
 
 % --- Executes on button press in PlotLFP.
 function PlotLFP_Callback(hObject, eventdata, handles)
 % hObject    handle to PlotLFP (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-plotHelper(handles, 'lfp');
+plotHelper(handles, {@plotLfp});
 
 % --- Executes on button press in PlotExtras.
 function PlotExtras_Callback(hObject, eventdata, handles)
 % hObject    handle to PlotExtras (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-plotHelper(handles, 'one raster');
+plotHelper(handles, {});
 
 % --- Executes on button press in PlotTCs.
 function PlotTCs_Callback(hObject, eventdata, handles)
 % hObject    handle to PlotTCs (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-plotHelper(handles, 'tcs');
+plotHelper(handles, {});
 
 % --- Executes on button press in PlotStimTimes.
 function PlotStimTimes_Callback(hObject, eventdata, handles)
 % hObject    handle to PlotStimTimes (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-plotHelper(handles, 'stimtimes');
+plotHelper(handles, {});
 
 % --- Executes on button press in DoStatistics.
 function DoStatistics_Callback(hObject, eventdata, handles)
 % hObject    handle to DoStatistics (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-plotHelper(handles, 'stats');
+plotHelper(handles, {});
 
 % --- Executes on button press in PlotSpectrogram.
 function PlotSpectrogram_Callback(hObject, eventdata, handles)
 % hObject    handle to PlotSpectrogram (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-plotHelper(handles, 'spike spectrogram');
-
-% --- Executes on button press in SummaryPrev.
-function SummaryPrev_Callback(hObject, eventdata, handles)
-% hObject    handle to SummaryPrev (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-if isfield(handles, 's') && isa(handles.s, 'summaryTable')
-    [unitNo, Unit] = collectUnit(handles);
-    handles.s.putUnit(sprintf('Unit%d', unitNo), Unit);
-    unitNo = unitNo - 1;
-    Unit = handles.s.getUnit(sprintf('Unit%d', unitNo));
-    dispUnit(handles, unitNo, Unit);
-    set(handles.UnitNoBox, 'String', num2str(unitNo));
-end
-
-% --- Executes on button press in SummaryNext.
-function SummaryNext_Callback(hObject, eventdata, handles)
-% hObject    handle to SummaryNext (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-if isfield(handles, 's') && isa(handles.s, 'summaryTable')
-    [unitNo, Unit] = collectUnit(handles);
-    handles.s.putUnit(sprintf('Unit%d', unitNo), Unit);
-    unitNo = unitNo + 1;
-    Unit = handles.s.getUnit(sprintf('Unit%d', unitNo));
-    dispUnit(handles, unitNo, Unit);
-    set(handles.UnitNoBox, 'String', num2str(unitNo));
-end
-
-% --- Executes on button press in SummaryFinish.
-function SummaryFinish_Callback(hObject, eventdata, handles)
-% hObject    handle to SummaryFinish (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-if isfield(handles, 's') && isa(handles.s, 'summaryTable')
-    setStatus(handles, 'exporting summary data...');
-    
-    % Store the current unit in case it wasn't already
-    [unitNo, Unit] = collectUnit(handles);
-    handles.s.putUnit(sprintf('Unit%d', unitNo), Unit);
-    
-    % Export and clear
-    notes = get(handles.UnitVars, 'String');
-    fileName = handles.s.export(notes);
-    handles.s = [];
-    guidata(hObject, handles);
-    set(handles.UnitNoBox, 'String', '[]');
-    set(handles.ShowSummary, 'Value', 0);
-    set(handles.SummaryTable, 'Data', {});
-    toggleSummaryVisibility(handles, 0);
-    disp(['Exported summary data to ', fileName]);
-    setStatus(handles, '');
-end
-
-% --- Executes on button press in SummaryStart.
-function SummaryStart_Callback(hObject, eventdata, handles)
-% hObject    handle to SummaryStart (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-dataDir = get(handles.DataDirBox, 'String');
-animalID = get(handles.AnimalIDBox, 'String');
-sourceFormatMenu = cellstr(get(handles.SourceFormatMenu, 'String'));
-sourceFormat = sourceFormatMenu{get(handles.SourceFormatMenu, 'Value')};
-
-if strcmp(sourceFormat, 'Plexon')
-    sourceFormat = {'Plexon', 'Ripple'};
-elseif strcmp(sourceFormat, 'WaveClus')
-    sourceFormat = {'WaveClus', 'Ripple'};
-end
-
-% Set up the summary object
-if isfield(handles, 's') && isa(handles.s, 'summaryTable')
-    warning('Already started');
-    return;
-end
-
-% Show the summary panel
-state = get(handles.ShowSummary, 'Value');
-if ~state
-    set(handles.ShowSummary, 'Value', 1);
-    toggleSummaryVisibility(handles, 1);
-end
-drawnow
-setStatus(handles, 'preparing summary...');
-s = summaryTable( dataDir, animalID, sourceFormat);
-
-% Do auto selection
-s.autoSelect('MaxResponse');
-
-% Display the first unit
-unitNo = 1;
-Unit = s.getUnit(sprintf('Unit%d', unitNo));
-dispUnit(handles, unitNo, Unit);
-            
-handles.s = s;
-guidata(hObject,handles);
-setStatus(handles, '');
-
-% Update the unit number
-set(handles.UnitNoBox, 'String', num2str(unitNo));
-
-% --- Helper function to display the summary table properly
-function dispUnit(handles, unitNo, Unit)
-if ~isempty(Unit)
-    unitCell = table2cell(Unit);
-    valid = cellfun(@isnumeric, unitCell(1,:)) | ...
-        cellfun(@islogical, unitCell(1,:)) | ...
-        cellfun(@ischar, unitCell(1,:));
-    handles.SummaryTable.Data = unitCell(:,valid);
-    handles.SummaryTable.ColumnName = Unit.Properties.VariableNames(valid);
-    handles.SummaryTable.RowName = [];
-    trackColumn = cellfun(@(x)strcmp(x, 'track'), Unit.Properties.VariableNames(valid));
-    handles.SummaryTable.ColumnEditable = ...
-        cellfun(@islogical, unitCell(1,valid)) | trackColumn;
-    handles.SummaryTable.ColumnFormat{trackColumn} = 'numeric';
-else
-    handles.SummaryTable.Data = {};
-end
-set(handles.SummaryTable, 'UserData', unitNo);
-
-
-% --- Helper function to collect data from the summary table
-function [unitNo, Unit] = collectUnit(handles)
-unitNo = get(handles.SummaryTable, 'UserData');
-Unit = get(handles.SummaryTable, 'Data');
-columnNames = get(handles.SummaryTable, 'ColumnName');
-
-if isempty(Unit)
-    Unit = table;
-    return;
-end
-
-% Set track
-track = unique(cell2mat(Unit(:,strcmp(columnNames, 'track'))));
-if ~isempty(track)
-    Unit(:,strcmp(columnNames, 'track')) = {{track}};
-end
-
-% Convert to table
-Unit = cell2table(Unit);
-if ~isempty(Unit)
-    Unit.Properties.VariableNames = columnNames;
-end
-
-
-
-% --- Executes on button press in ShowSummary.
-function ShowSummary_Callback(hObject, eventdata, handles)
-% hObject    handle to ShowSummary (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of ShowSummary
-state = get(hObject, 'Value');
-toggleSummaryVisibility(handles, state);
-
-
-% --- Helper to toggle visibility of summary panel
-function toggleSummaryVisibility(handles, state)
-figurePos = get(handles.figure1, 'Position');
-summaryPos = get(handles.SummaryPanel, 'Position');
-panelPos(1,:) = get(handles.SettingsPanel, 'Position');
-panelPos(2,:) = get(handles.RecalculatePanel, 'Position');
-panelPos(3,:) = get(handles.SummaryControlPanel, 'Position');
-panelPos(4,:) = get(handles.SortingPanel, 'Position');
-panelPos(5,:) = get(handles.FiguresPanel, 'Position');
-if state
-    set(handles.SummaryPanel, 'Visible', 'on');
-    figurePos(4) = figurePos(4) + summaryPos(4);
-    figurePos(2) = figurePos(2) - summaryPos(4);
-    panelPos(:,2) = panelPos(:,2) + summaryPos(4);
-else
-    set(handles.SummaryPanel, 'Visible', 'off');
-    figurePos(4) = figurePos(4) - summaryPos(4);
-    figurePos(2) = figurePos(2) + summaryPos(4);
-    panelPos(:,2) = panelPos(:,2) - summaryPos(4);
-end
-set(handles.figure1, 'Position', figurePos);
-set(handles.SettingsPanel, 'Position', panelPos(1,:));
-set(handles.RecalculatePanel, 'Position', panelPos(2,:));
-set(handles.SummaryControlPanel, 'Position', panelPos(3,:));
-set(handles.SortingPanel, 'Position', panelPos(4,:));
-set(handles.FiguresPanel, 'Position', panelPos(5,:));
+plotHelper(handles, {});
 
 
 % --- Executes on selection change in SourceFormatMenu.
@@ -642,102 +499,6 @@ function PlotFiguresCheck_Callback(hObject, eventdata, handles)
 % Hint: get(hObject,'Value') returns toggle state of PlotFiguresCheck
 
 
-% --- Executes on selection change in ExpTypeMenu.
-function ExpTypeMenu_Callback(hObject, eventdata, handles)
-% hObject    handle to ExpTypeMenu (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns ExpTypeMenu contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from ExpTypeMenu
-
-
-% --- Executes during object creation, after setting all properties.
-function ExpTypeMenu_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to ExpTypeMenu (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-
-function AnimalIDBox_Callback(hObject, eventdata, handles)
-% hObject    handle to AnimalIDBox (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of AnimalIDBox as text
-%        str2double(get(hObject,'String')) returns contents of AnimalIDBox as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function AnimalIDBox_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to AnimalIDBox (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-
-function UnitNoBox_Callback(hObject, eventdata, handles)
-% hObject    handle to UnitNoBox (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of UnitNoBox as text
-%        str2double(get(hObject,'String')) returns contents of UnitNoBox as a double
-if isempty(get(hObject, 'String'))
-    set(hObject, 'String', '[]');
-end
-
-% --- Executes during object creation, after setting all properties.
-function UnitNoBox_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to UnitNoBox (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-
-function FileNoBox_Callback(hObject, eventdata, handles)
-% hObject    handle to FileNoBox (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of FileNoBox as text
-%        str2double(get(hObject,'String')) returns contents of FileNoBox as a double
-if isempty(get(hObject, 'String'))
-    set(hObject, 'String', '[]');
-end
-
-% --- Executes during object creation, after setting all properties.
-function FileNoBox_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to FileNoBox (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
 function DataDirBox_Callback(hObject, eventdata, handles)
 % hObject    handle to DataDirBox (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -792,17 +553,6 @@ function ParallelCheck_Callback(hObject, eventdata, handles)
 % Hint: get(hObject,'Value') returns toggle state of ParallelCheck
 
 
-
-function SearchStringBox_Callback(hObject, eventdata, handles)
-% hObject    handle to SearchStringBox (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of SearchStringBox as text
-%        str2double(get(hObject,'String')) returns contents of SearchStringBox as a double
-if isempty(get(hObject, 'String'))
-    set(hObject, 'String', '*');
-end
 
 % --- Executes during object creation, after setting all properties.
 function SearchStringBox_CreateFcn(hObject, eventdata, handles)
@@ -916,6 +666,29 @@ function SourceFormatMenu_CreateFcn(hObject, eventdata, handles)
 % handles    empty - handles not created until after all CreateFcns called
 
 % Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on selection change in FileList.
+function FileList_Callback(hObject, eventdata, handles)
+% hObject    handle to FileList (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns FileList contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from FileList
+
+
+% --- Executes during object creation, after setting all properties.
+function FileList_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to FileList (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: listbox controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
