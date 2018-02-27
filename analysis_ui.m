@@ -22,7 +22,7 @@ function varargout = analysis_ui(varargin)
 
 % Edit the above text to modify the response to help analysis_ui
 
-% Last Modified by GUIDE v2.5 21-Feb-2018 16:51:26
+% Last Modified by GUIDE v2.5 27-Feb-2018 12:40:57
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -80,6 +80,9 @@ if ~isempty(mt.Tests)
     set(handles.FileList, 'String', {mt.Tests.filename} );
     set(handles.FileList, 'UserData', mt.Tests );
 end
+
+% Set up the plot function list
+handles.plots = [1];
 
 % Update handles structure
 guidata(hObject, handles);
@@ -275,14 +278,29 @@ for f = 1:length(files)
     [~, filename, ~] = fileparts(files{f});
     name = genvarname(sprintf('dataset_%s', filename));
     assignin('base',name,dataset);
+    pause(0.1);
 end
 
 
+% --- Executes on button press in AddPlotFun.
+function AddPlotFun_Callback(hObject, eventdata, handles)
+% hObject    handle to AddPlotFun (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
 
 
-% --- Helper function for plotting buttons
-function plotHelper(handles, plotFun)
+% --- Executes on button press in DelPlotFun.
+function DelPlotFun_Callback(hObject, eventdata, handles)
+% hObject    handle to DelPlotFun (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
 
+
+% --- Executes on button press in PlotFigures.
+function PlotFigures_Callback(hObject, eventdata, handles)
+% hObject    handle to PlotFigures (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
 tests = get(handles.FileList, 'UserData');
 selected = get(handles.FileList, 'Value');
 tests = tests(selected);
@@ -293,72 +311,35 @@ sourceFormatMenu = cellstr(get(handles.SourceFormatMenu, 'String'));
 sourceFormat = sourceFormatMenu{get(handles.SourceFormatMenu, 'Value')};
 isParallel = logical(get(handles.ParallelCheck, 'Value'));
 
+plotFunList = get(handles.PlotFunList, 'String');
+plotFun = plotFunList(get(handles.PlotFunList, 'Value'));
+plotFun = cellfun(@convertToPlotFun, plotFun, 'UniformOutput', false);
+plotFun = plotFun(~cellfun(@isempty, plotFun));
+
 setStatus(handles, 'plotting...');
 dispatch(files,figuresPath,isParallel,sourceFormat,plotFun);
 setStatus(handles, '');
 
-% --- Executes on button press in PlotWaveforms.
-function PlotWaveforms_Callback(hObject, eventdata, handles)
-% hObject    handle to PlotWaveforms (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-plotHelper(handles, {@plotWaveforms});
+% --- Helper for converting string to function name
+function plotFun = convertToPlotFun(string)
+% string    human readable name of the plotting fun
+switch string
+    case 'Rastergram'
+        plotFun = @plotRastergram;
+    case 'PSTH'
+        plotFun = @plotPsth;
+    case 'Tuning curve'
+        plotFun = @plotTuningCurve;
+    case 'Map'
+        plotFun = @plotMap;
+    case 'Waveforms'
+        plotFun = @plotWaveforms;
+    case 'LFP'
+        plotFun = @plotLfp;
+    otherwise
+        plotFun = {};
+end
 
-% --- Executes on button press in PlotISIs.
-function PlotISIs_Callback(hObject, eventdata, handles)
-% hObject    handle to PlotISIs (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-plotHelper(handles, {@plotIsi});
-
-% --- Executes on button press in PlotRasters.
-function PlotRasters_Callback(hObject, eventdata, handles)
-% hObject    handle to PlotRasters (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-plotHelper(handles, {@plotRastergram, @plotPsth});
-
-% --- Executes on button press in PlotLFP.
-function PlotLFP_Callback(hObject, eventdata, handles)
-% hObject    handle to PlotLFP (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-plotHelper(handles, {@plotLfp});
-
-% --- Executes on button press in PlotExtras.
-function PlotExtras_Callback(hObject, eventdata, handles)
-% hObject    handle to PlotExtras (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-plotHelper(handles, {});
-
-% --- Executes on button press in PlotTCs.
-function PlotTCs_Callback(hObject, eventdata, handles)
-% hObject    handle to PlotTCs (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-plotHelper(handles, {});
-
-% --- Executes on button press in PlotStimTimes.
-function PlotStimTimes_Callback(hObject, eventdata, handles)
-% hObject    handle to PlotStimTimes (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-plotHelper(handles, {});
-
-% --- Executes on button press in DoStatistics.
-function DoStatistics_Callback(hObject, eventdata, handles)
-% hObject    handle to DoStatistics (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-plotHelper(handles, {});
-
-% --- Executes on button press in PlotSpectrogram.
-function PlotSpectrogram_Callback(hObject, eventdata, handles)
-% hObject    handle to PlotSpectrogram (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-plotHelper(handles, {});
 
 
 % --- Executes on selection change in SourceFormatMenu.
@@ -462,43 +443,6 @@ for i = 1:length(uiPrefsList)
 end
 
 
-
-% --- Executes on button press in PlotRastersCheck.
-function PlotRastersCheck_Callback(hObject, eventdata, handles)
-% hObject    handle to PlotRastersCheck (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of PlotRastersCheck
-
-
-% --- Executes on button press in PlotLFPCheck.
-function PlotLFPCheck_Callback(hObject, eventdata, handles)
-% hObject    handle to PlotLFPCheck (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of PlotLFPCheck
-
-
-% --- Executes on button press in PlotWaveformsCheck.
-function PlotWaveformsCheck_Callback(hObject, eventdata, handles)
-% hObject    handle to PlotWaveformsCheck (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of PlotWaveformsCheck
-
-
-% --- Executes on button press in PlotFiguresCheck.
-function PlotFiguresCheck_Callback(hObject, eventdata, handles)
-% hObject    handle to PlotFiguresCheck (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of PlotFiguresCheck
-
-
 function DataDirBox_Callback(hObject, eventdata, handles)
 % hObject    handle to DataDirBox (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -519,7 +463,6 @@ function DataDirBox_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
-
 
 
 function FiguresDirBox_Callback(hObject, eventdata, handles)
@@ -553,7 +496,6 @@ function ParallelCheck_Callback(hObject, eventdata, handles)
 % Hint: get(hObject,'Value') returns toggle state of ParallelCheck
 
 
-
 % --- Executes during object creation, after setting all properties.
 function SearchStringBox_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to SearchStringBox (see GCBO)
@@ -565,30 +507,6 @@ function SearchStringBox_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
-
-
-
-function UnitVars_Callback(hObject, eventdata, handles)
-% hObject    handle to UnitVars (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of UnitVars as text
-%        str2double(get(hObject,'String')) returns contents of UnitVars as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function UnitVars_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to UnitVars (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
 
 
 function SortingDirBox_Callback(hObject, eventdata, handles)
@@ -613,7 +531,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-
 function SuffixBox_Callback(hObject, eventdata, handles)
 % hObject    handle to SuffixBox (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -634,7 +551,6 @@ function SuffixBox_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
-
 
 
 function RawDataBox_Callback(hObject, eventdata, handles)
@@ -693,3 +609,49 @@ function FileList_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+
+% --- Executes during object creation, after setting all properties.
+function PlotFunList_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to PlotFunList (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: listbox controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+function AddPlotFunBox_Callback(hObject, eventdata, handles)
+% hObject    handle to AddPlotFunBox (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of AddPlotFunBox as text
+%        str2double(get(hObject,'String')) returns contents of AddPlotFunBox as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function AddPlotFunBox_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to AddPlotFunBox (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on selection change in PlotFunList.
+function PlotFunList_Callback(hObject, eventdata, handles)
+% hObject    handle to PlotFunList (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns PlotFunList contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from PlotFunList
+

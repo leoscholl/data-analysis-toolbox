@@ -1,15 +1,22 @@
-function [ nf ] = plotTuningCurve(ex, spike, uid, varargin)
+function [ nf ] = plotTuningCurve(nf, ex, spikes, uid, varargin)
 %plotTuningCurve opens and draws tuning curve figure
 % returns handle to NeuroFig holding the tuning curve
 
 % Parse optional inputs
 p = inputParser;
-p.addOptional('offset', min(0.5, ex.PreICI + ex.SufICI));
+p.addOptional('offset', min(0.5/ex.secondperunit, ex.PreICI + ex.SufICI));
 p.parse(varargin{:});
 offset = p.Results.offset;
 
+% Gather conditions
+conditionNames = fieldnames(ex.Cond);
+conditionName = conditionNames{1}; % Take the first one for now
+conditions = ex.Cond.(conditionName);
+if iscell(conditions)
+    conditions = cell2mat(conditions);
+end
+
 % Calculate MFR and F1
-spikes = spike.time(spike.unitid == uid);
 pre = nan(length(ex.CondTest.CondIndex), 1); 
 f0 = pre; f1 = pre;
 for t = 1:length(ex.CondTest.CondIndex)
@@ -20,8 +27,8 @@ for t = 1:length(ex.CondTest.CondIndex)
     pre(t) = f0f1(spikes, t0, t1, NaN);
     
     % Peri-stimulus
-    if isfield(ex.Cond, 'TemporalFreq')
-        tf = ex.Cond.TemporalFreq(ex.CondTest.CondIndex(t));
+    if isfield(ex.CondTestCond, 'TemporalFreq')
+        tf = ex.CondTestCond.TemporalFreq{t};
     elseif isfield(ex.EnvParam, 'TemporalFreq')
         tf = ex.EnvParam.TemporalFreq;
     else
@@ -29,8 +36,14 @@ for t = 1:length(ex.CondTest.CondIndex)
     end
     t0 = t1;
     t1 = ex.CondTest.CondOff(t);
-    [f0(t), f1(t)] = f0f1(spikes, t0, t1, tf);
+    [f0(t), f1(t)] = f0f1(spikes, t0, t1, tf/ex.secondperunit);
 end   
+
+if ex.secondperunit ~= 1
+    pre = pre/ex.secondperunit;
+    f0 = f0/ex.secondperunit;
+    f1 = f1/ex.secondperunit;
+end
 
 % Group according to condition index
 idx = unique(ex.CondTest.CondIndex);
@@ -49,13 +62,6 @@ for i = 1:length(idx)
     
 end
 
-% Gather conditions
-conditionNames = fieldnames(ex.Cond);
-conditionName = conditionNames{1}; % Take the first one for now
-conditions = ex.Cond.(conditionName);
-
-suffix = 'tc';
-nf = NeuroFig(ex.ID, spike.electrodeid, uid, suffix);
 hold on;
 
 % Plot data with SEMs
@@ -98,6 +104,7 @@ if contains(ex.ID, 'Ori')
     response(response < 0) = 0;
     [OSI, DSI] = osi(response, theta);
 end
+nf.suffix = 'tc';
 nf.dress('EnvParam', ex.EnvParam, 'OSI', OSI, 'DSI', DSI);
 hold off;
 

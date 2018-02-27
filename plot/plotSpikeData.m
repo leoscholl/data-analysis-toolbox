@@ -19,15 +19,28 @@ for i = 1:length(spike)
         exDir = sprintf('%s%s',ex.RecordSession,ex.RecordSite);
     end
     elecDir = sprintf('Ch%02d',spike(i).electrodeid);
-    if ~isdir(fullfile(figuresPath,exDir,elecDir))
-        mkdir(fullfile(figuresPath,exDir,elecDir))
+    fileDir = fullfile(figuresPath,exDir,elecDir);
+    if ~isdir(fileDir)
+        mkdir(fileDir)
     end
 
+    % Per-electrode figures
+    if ismember(func2str(plotFun), {'plotWaveforms'})
+        nf = NeuroFig(ex.ID, spike(i).electrodeid, []);
+        nf = plotFun(nf, ex, spike(i));
+        nf.print(fileDir, filename, 'png');
+        nf.close();
+        continue;
+    end
+    
     % Per-cell figures
     for j = 1:length(uuid)
-        u = uuid(j);
-        nf = plotFun(ex, spike(i), u);
-        nf.print(fullfile(figuresPath,exDir,elecDir), filename, 'png');
-        nf.close();    
+        spikes = spike(i).time(spike(i).unitid == uuid(j));
+        if ~isempty(spikes)
+            nf = NeuroFig(ex.ID, spike(i).electrodeid, uuid(j));
+            nf = plotFun(nf, ex, spikes, uuid(j));
+            nf.print(fileDir, filename, 'png');
+            nf.close();
+        end
     end
 end

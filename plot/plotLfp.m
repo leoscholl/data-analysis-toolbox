@@ -1,29 +1,28 @@
-function [ nf ] = plotPsth(nf, ex, spikes, uid, varargin)
-%PlotRasters opens and draws raster plot
+function nf = plotLfp(nf, ex, data, fs, time, varargin)
+%plotLfp Draw a per-condition plot of LFP data
 
 % Parse optional inputs
 p = inputParser;
 p.addOptional('offset', min(0.5/ex.secondperunit, (ex.PreICI + ex.SufICI)/2));
-p.addOptional('binSize', 0.02/ex.secondperunit);
-p.addOptional('normFun', []);
 p.parse(varargin{:});
 offset = p.Results.offset;
-binSize = p.Results.binSize;
-normFun = p.Results.normFun;
 
-% Make psth
+% Collect rasters
 dur = nanmean(diff(ex.CondTest.CondOn));
+tickDistance = max(0.1, round(dur/10, 1, 'significant')); % maximum 20 ticks
 stimDur = nanmean(ex.CondTest.CondOff - ex.CondTest.CondOn);
-nBins = round(dur/binSize);
+samples = ceil(dur*fs*ex.secondperunit);
+x = linspace(-offset, dur-offset, samples);
+lfp = zeros(length(ex.CondTest.CondIndex), samples);
 for t = 1:length(ex.CondTest.CondIndex)
     t0 = ex.CondTest.CondOn(t) - offset;
     t1 = t0 + dur;
-    hists(t, :) = psth(spikes, t0, t1, nBins, normFun);
+    if isnan(t0)
+        continue;
+    end
+    sub = subvec(data, t0*ex.secondperunit, t1*ex.secondperunit, fs, time);
+    lfp(t,1:min(length(sub),samples)) = sub(1:min(length(sub),samples))';
 end
-edges = -offset:dur/(nBins):dur-offset;
-centers = edges(1:end-1) + diff(edges)/2;
-tickDistance = max(0.1, round(dur/10, 1, ...
-    'significant')); % maximum 20 ticks
 
 % Gather conditions
 conditionNames = fieldnames(ex.Cond);
@@ -33,19 +32,18 @@ if iscell(conditions)
     conditions = cell2mat(conditions);
 end
 
+% Group conditions
+idx = unique(ex.CondTest.CondIndex);
+lfpMean = zeros(length(idx), samples);
+for i = 1:length(idx)
+    lfpMean(i,:) = mean(lfp(ex.CondTest.CondIndex == idx(i),:),1);
+end
+
+minY = min(lfpMean(:));
+maxY = max(lfpMean(:));
+
 hold on;
 
-% Group according to condition index
-idx = unique(ex.CondTest.CondIndex);
-maxY = 1;
-histogram = [];
-for i = 1:length(idx)
-    h = hists(ex.CondTest.CondIndex == idx(i),:);
-    h = mean(h,1)./binSize; % spike density
-    histogram(i,:) = h;
-    maxY = max([maxY h]);
-end
- 
 for i = 1:length(idx)
     
     % Make a two-column subplot
@@ -54,22 +52,21 @@ for i = 1:length(idx)
     else
         ax = subplot(1,1,1);
     end
-    
-    % Plot histogram
-    b = bar(ax,centers,histogram(i,:),'hist');
-    set(b, 'FaceColor',defaultColor(uid),...
-        'EdgeColor',defaultColor(uid));
-    axis(ax,[-offset dur-offset 0 maxY]);
 
+    plot(x, lfpMean(i,:), 'b');
+
+    axis(ax,[-offset dur-offset minY maxY]);
+    
     % XTick
     box(ax,'off');
+    axis(ax, [-offset dur-offset minY ...
+        maxY]);
     tick = 0:-tickDistance:-offset; % always include 0
     tick = [fliplr(tick) tickDistance:tickDistance:dur-offset];
     
-    % Mark stim duration in red
+    % Mark stim duration
     set(ax,'XTick',tick);
-    v = [0 0; stimDur 0; ...
-        stimDur maxY; 0 maxY];
+    v = [0 minY; stimDur minY; stimDur maxY; 0 maxY];
     f = [1 2 3 4];
     patch('Faces',f,'Vertices',v,'FaceColor',[0.5 0.5 0.5],...
         'FaceAlpha',0.1,'EdgeColor','none');
@@ -82,7 +79,7 @@ for i = 1:length(idx)
     else
         set(ax, 'XTickLabel', []);
     end
-    ylabel(ax, 'spikes/s');
+    ylabel(ax, 'Voltage [mV]');
     
     if length(idx) > 1 
         if isnumeric(conditions)
@@ -93,10 +90,10 @@ for i = 1:length(idx)
                 'FontWeight','Normal', 'Interpreter', 'none');
         end
     end
-    
-    
+   
     
 end
 hold off;
-nf.suffix = 'psth';
+nf.suffix = 'lfp';
 nf.dress();
+end

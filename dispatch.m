@@ -37,26 +37,47 @@ end
 
 % What to plot?
 if isempty(plotFun)
-    switch dataset.ex.ID
-        case {'LatencyTest', 'LaserON', 'LaserGratings', ...
-                'NaturalImages', 'NaturalVideos', 'spontanous'}
-            plotFun = {@plotRastergram, @plotPsth};
-        case {'RFmap', 'CatRFdetailed', 'CatRFfast', 'CatRFfast10x10'}
+    if strcmp(dataset.ex.sourceformat, 'VisStim')
+        switch dataset.ex.ID
+            case {'LatencyTest', 'LaserON', 'LaserGratings', ...
+                    'NaturalImages', 'NaturalVideos', 'spontanous'}
+                plotFun = {@plotRastergram, @plotPsth};
+            case {'RFmap', 'CatRFdetailed', 'CatRFfast', 'CatRFfast10x10'}
+                plotFun = @plotMap;
+            otherwise
+                plotFun = {@plotRastergram, @plotPsth, @plotTuningCurve};
+        end
+    else
+        nConds = length(fieldnames(dataset.ex.CondTestCond));
+        if nConds > 1
             plotFun = @plotMap;
-        otherwise
+        elseif nConds == 1
             plotFun = {@plotRastergram, @plotPsth, @plotTuningCurve};
+        else
+            plotFun  = {@plotRastergram, @plotPsth};
+        end
     end
 end
 
-ex = dataset.ex;
-spike = dataset.spike;
+% Separate to spikes and lfp
+lfpFunList = {'plotLfp'};
+isLfpFun = cellfun(@(x)ismember(func2str(x), lfpFunList), plotFun);
+spikeFun = plotFun(~isLfpFun);
+lfpFun = plotFun(isLfpFun);
+
+% Dispatch to plotting functions
+dataset.ex.secondperunit = dataset.secondperunit;
 [~, filename, ~] = fileparts(dataset.filepath);
 if isParallel
+    spike = dataset.spike;
+    ex = dataset.ex;
     parfor i = 1:length(spike)
-        plotSpikeData(ex, spike(i), figuresPath, filename, plotFun)
+        plotSpikeData(ex, spike(i), figuresPath, filename, spikeFun);
     end
 else
-    plotSpikeData(ex, spike, figuresPath, filename, plotFun);
+    plotSpikeData(dataset.ex, dataset.spike, figuresPath, filename, spikeFun);
 end
+plotLfpData(dataset.ex, dataset.lfp, figuresPath, filename, lfpFun);
+
 
 end

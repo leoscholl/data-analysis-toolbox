@@ -21,13 +21,19 @@ classdef NeuroFig < handle
     end
     
     methods
-        function obj = NeuroFig(test, electrode, unit, suffix)
+        function obj = NeuroFig(test, electrode, unit)
             %NeuroFig Construct an instance of this class
             %   Detailed explanation goes here
-            obj.test = test;
-            obj.electrode = electrode;
-            obj.unit = unit;
-            obj.suffix = suffix;
+            
+            if nargin ~= 3
+                obj.test = '';
+                obj.electrode = NaN;
+                obj.unit = NaN;
+            else
+                obj.test = test;
+                obj.electrode = electrode;
+                obj.unit = unit;
+            end
             
             % Set up a new figure
             obj.handle = figure('Visible','off','Color','White');
@@ -109,6 +115,9 @@ classdef NeuroFig < handle
             end
             set(obj.handle,'renderer','painters');
             [~, filename, ~] = fileparts(filename);
+            if isempty(obj.suffix)
+                obj.suffix = 'plot';
+            end
             fullname = sprintf('%s_Elec-%d_Unit-%d_%s.%s', filename, ...
                 obj.electrode, obj.unit, obj.suffix, format);
             saveas(obj.handle, fullfile(path, fullname));

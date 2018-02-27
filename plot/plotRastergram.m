@@ -1,31 +1,30 @@
-function [ nf ] = plotRastergram(ex, spike, uid, varargin)
+function [ nf ] = plotRastergram(nf, ex, spikes, uid, varargin)
 %PlotRasters opens and draws raster plot
 
 % Parse optional inputs
 p = inputParser;
-p.addOptional('offset', min(0.5, ex.PreICI + ex.SufICI));
+p.addOptional('offset', min(0.5/ex.secondperunit, (ex.PreICI + ex.SufICI)/2));
 p.parse(varargin{:});
 offset = p.Results.offset;
 
 % Collect rasters
-spikes = spike.time(spike.unitid == uid);
-dur = mean(diff(ex.CondTest.CondOn));
-stimDur = mean(ex.CondTest.CondOff - ex.CondTest.CondOn);
+dur = nanmean(diff(ex.CondTest.CondOn));
+tickDistance = max(0.1, round(dur/10, 1, 'significant')); % maximum 20 ticks
+stimDur = nanmean(ex.CondTest.CondOff - ex.CondTest.CondOn);
 for t = 1:length(ex.CondTest.CondIndex)
     t0 = ex.CondTest.CondOn(t) - offset;
     t1 = t0 + dur;
     raster{t} = spikeTimes(spikes, t0, t1) - offset;
 end
-tickDistance = max(0.1, round(dur/10, 1, ...
-    'significant')); % maximum 20 ticks
 
 % Gather conditions
 conditionNames = fieldnames(ex.Cond);
 conditionName = conditionNames{1}; % Take the first one for now
 conditions = ex.Cond.(conditionName);
+if iscell(conditions)
+    conditions = cell2mat(conditions);
+end
 
-suffix = 'raster';
-nf = NeuroFig(ex.ID, spike.electrodeid, uid, suffix);
 hold on;
 
 idx = unique(ex.CondTest.CondIndex);
@@ -98,4 +97,5 @@ for i = 1:length(idx)
     
 end
 hold off;
+nf.suffix = 'raster';
 nf.dress();

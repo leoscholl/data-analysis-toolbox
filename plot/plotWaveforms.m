@@ -1,4 +1,4 @@
-function [ nf ] = plotWaveforms(ex, spike)
+function [ nf ] = plotWaveforms(nf, ex, spike)
 %PlotWaveforms plots mean waveform for each unit
 
 fs = 30000;
@@ -7,8 +7,6 @@ fs = 30000;
 fill_between_lines = @(X,Y1,Y2,C) patch( [X fliplr(X)],  [Y1 fliplr(Y2)], ...
     1, 'FaceColor', C, 'EdgeColor', 'none');
 
-suffix = 'wf';
-nf = NeuroFig(ex.ID, spike.electrodeid, [], suffix);
 
 if isempty(spike.data)
     error(['No waveforms in ch ',num2str(spike.electrodeid)]);
@@ -45,6 +43,7 @@ xlabel('Time (ms)')
 ylabel('Voltage (uV)')
 
 nf.dress();
+nf.suffix = 'wf';
 
 end
 
