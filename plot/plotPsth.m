@@ -25,32 +25,41 @@ centers = edges(1:end-1) + diff(edges)/2;
 tickDistance = max(0.1, round(dur/10, 1, ...
     'significant')); % maximum 20 ticks
 
-% Gather conditions
-conditionNames = fieldnames(ex.Cond);
-conditionName = conditionNames{1}; % Take the first one for now
-conditions = ex.Cond.(conditionName);
-if iscell(conditions)
-    conditions = cell2mat(conditions);
+% Grouping
+if isempty(ex.Cond)
+    histogram = mean(hists,1)./binSize;
+    maxY = max(histogram);
+    labels = {};
+else
+    conditionNames = fieldnames(ex.Cond);
+    conditionName = conditionNames{1}; % Take the first one for now
+    conditions = ex.Cond.(conditionName);
+    conditions = reshape(conditions, length(conditions), 1);
+    cond = unique(cell2mat(conditions),'rows');
+
+    maxY = 0;
+    histogram = [];
+    for i = 1:length(cond)
+        group = cellfun(@(x)isequal(x,cond(i,:)), ex.CondTestCond.(conditionName));
+        h = hists(group,:);
+        h = mean(h,1)./binSize; % spike density
+        histogram(i,:) = h;
+        maxY = max([maxY h]);
+        if isnumeric(cond)
+            labels{i} = sprintf('%s = %.3f', conditionName, cond(i,:));
+        elseif iscellstr(cond)
+            labels{i} = cond(i,:);
+        end
+    end
 end
 
 hold on;
 
-% Group according to condition index
-idx = unique(ex.CondTest.CondIndex);
-maxY = 1;
-histogram = [];
-for i = 1:length(idx)
-    h = hists(ex.CondTest.CondIndex == idx(i),:);
-    h = mean(h,1)./binSize; % spike density
-    histogram(i,:) = h;
-    maxY = max([maxY h]);
-end
- 
-for i = 1:length(idx)
+for i = 1:size(histogram,1)
     
     % Make a two-column subplot
-    if length(idx) > 1
-        ax = subplot(ceil(length(idx)/2),2,i);
+    if size(histogram,1) > 1
+        ax = subplot(ceil(size(histogram,1)/2),2,i);
     else
         ax = subplot(1,1,1);
     end
@@ -75,8 +84,8 @@ for i = 1:length(idx)
         'FaceAlpha',0.1,'EdgeColor','none');
 
     % For subplots, only label the bottommost axes
-    if i == length(idx) || i == length(idx) - 1
-        if i == length(idx) || mod(length(idx),2) == 0
+    if i == size(histogram,1) || i == size(histogram,1) - 1
+        if i == size(histogram,1) || mod(size(histogram,1),2) == 0
             xlabel(ax, 'Time [s]');
         end
     else
@@ -84,14 +93,8 @@ for i = 1:length(idx)
     end
     ylabel(ax, 'spikes/s');
     
-    if length(idx) > 1 
-        if isnumeric(conditions)
-            title(ax, sprintf('%s = %.3f', conditionName, conditions(idx(i))), ...
-                'FontWeight','Normal', 'Interpreter', 'none');
-        elseif iscellstr(conditions)
-            title(ax, sprintf('%s', conditions{idx(i)}), ...
-                'FontWeight','Normal', 'Interpreter', 'none');
-        end
+    if size(histogram,1) > 1 
+        title(ax, labels{i}, 'FontWeight','Normal', 'Interpreter', 'none');
     end
     
     

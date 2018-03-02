@@ -48,13 +48,13 @@ if isempty(plotFun)
                 plotFun = {@plotRastergram, @plotPsth, @plotTuningCurve};
         end
     else
-        nConds = length(fieldnames(dataset.ex.CondTestCond));
-        if nConds > 1
-            plotFun = @plotMap;
-        elseif nConds == 1
-            plotFun = {@plotRastergram, @plotPsth, @plotTuningCurve};
+        if contains(dataset.ex.ID, 'RF')
+            plotFun = {@plotMap};
         else
-            plotFun  = {@plotRastergram, @plotPsth};
+            plotFun = {@plotRastergram, @plotTuningCurve};
+        end
+        if contains(dataset.ex.ID, 'Laser')
+            plotFun  = [plotFun, {@plotLfp}];
         end
     end
 end
