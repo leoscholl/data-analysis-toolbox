@@ -17,7 +17,7 @@ for i = 1:length(lfp.electrodeid)
         exDir = sprintf('%s%s',ex.RecordSession,ex.RecordSite);
     end
     elecDir = sprintf('Ch%02d',lfp.electrodeid(i));
-    fileDir = fullfile(figuresPath,exDir,elecDir);
+    fileDir = fullfile(figuresPath,ex.Subject_ID,exDir,elecDir);
     if ~isdir(fileDir)
         mkdir(fileDir)
     end

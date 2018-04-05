@@ -63,7 +63,8 @@ handles.output = hObject;
 % Load preferences
 global uiPrefsList
 uiPrefsList = {'ParallelCheck', 'DataDirBox', 'FiguresDirBox', ...
-    'SortingDirBox', 'SuffixBox', 'SourceFormatMenu', 'RawDataBox'};
+    'SortingDirBox', 'SuffixBox', 'SourceFormatMenu', 'RawDataBox', ...
+    'PlotFunList'};
 loadPrefs(handles);
 
 % Set the title
@@ -72,20 +73,14 @@ set(hObject, 'Name', 'analysis UI')
 % Hide the sorting buttons
 SourceFormatMenu_Callback(hObject, eventdata, handles)
 
-% Populate file table
-metafile = fullfile(get(handles.DataDirBox, 'String'),'metadata.mat');
-mt = NeuroAnalysis.IO.MetaTable(metafile);
-handles.mt = mt;
-if ~isempty(mt.Tests)
-    set(handles.FileList, 'String', {mt.Tests.filename} );
-    set(handles.FileList, 'UserData', mt.Tests );
-end
-
 % Set up the plot function list
 handles.plots = [1];
 
 % Update handles structure
 guidata(hObject, handles);
+
+% Populate file table
+RefreshButton_Callback(hObject, eventdata, handles);
 
 
 % --- Outputs from this function are returned to the command line.
@@ -129,7 +124,7 @@ function SearchStringBox_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of SearchStringBox as text
 %        str2double(get(hObject,'String')) returns contents of SearchStringBox as a double
-strs = regexp(get(hObject, 'String'),'\s?,\s?', 'split');
+strs = regexp(get(handles.SearchStringBox, 'String'),'\s?,\s?', 'split');
 mt = handles.mt;
 set(handles.FileList, 'Value', []);
 if mod(length(strs),2) == 0
@@ -140,7 +135,7 @@ elseif length(strs) == 1
     files = {mt.Tests.filename};
     match = cellfun(@(x)contains(x,strs{1},'IgnoreCase',true),files);
     set(handles.FileList, 'String', files(match));
-    set(handles.FileList, 'UserData', mt.Tests.(match));
+    set(handles.FileList, 'UserData', mt.Tests(match));
 else
     set(handles.FileList, 'String', {mt.Tests.filename});
     set(handles.FileList, 'UserData', mt.Tests);
@@ -171,16 +166,9 @@ function RefreshButton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 metafile = fullfile(get(handles.DataDirBox, 'String'),'metadata.mat');
 mt = NeuroAnalysis.IO.MetaTable(metafile);
+mt = mt.query('sourceformat', 'Ripple');
 handles.mt = mt;
-if ~isempty(mt.Tests)
-    set(handles.FileList, 'String', {mt.Tests.filename} );
-    set(handles.FileList, 'UserData', mt.Tests );
-else
-    set(handles.FileList, 'String', {} );
-    set(handles.FileList, 'UserData', [] );
-end
-    
-set(handles.FileList, 'Value', []);
+SearchStringBox_Callback(hObject, eventdata, handles);
 
 % Update handles structure
 guidata(hObject, handles);
@@ -271,9 +259,11 @@ files = arrayfun(@(x)x.files{1}, tests, 'UniformOutput', 0);
 
 sourceFormatMenu = cellstr(get(handles.SourceFormatMenu, 'String'));
 sourceFormat = sourceFormatMenu{get(handles.SourceFormatMenu, 'Value')};
+dataDir = get(handles.DataDirBox, 'String');
 
 for f = 1:length(files)
-    dataset = loadDataset(files{f}, sourceFormat);
+    filepath = fullfile(dataDir, files{f}(3:end));
+    dataset = loadDataset(filepath, sourceFormat);
     % Move the datasets to the matlab workspace
     [~, filename, ~] = fileparts(files{f});
     name = genvarname(sprintf('dataset_%s', filename));
@@ -287,14 +277,21 @@ function AddPlotFun_Callback(hObject, eventdata, handles)
 % hObject    handle to AddPlotFun (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
+plotFunList = get(handles.PlotFunList, 'String');
+plotFun = get(handles.AddPlotFunBox, 'String');
+plotFunList{end + 1} = plotFun;
+set(handles.PlotFunList, 'String', plotFunList);
 
 % --- Executes on button press in DelPlotFun.
 function DelPlotFun_Callback(hObject, eventdata, handles)
 % hObject    handle to DelPlotFun (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
+plotFunList = get(handles.PlotFunList, 'String');
+plotFun = plotFunList(get(handles.PlotFunList, 'Value'));
+plotFunList = setdiff(plotFunList, plotFun);
+set(handles.PlotFunList, 'String', plotFunList);
+set(handles.PlotFunList, 'Value', []);
 
 % --- Executes on button press in PlotFigures.
 function PlotFigures_Callback(hObject, eventdata, handles)
@@ -305,6 +302,8 @@ tests = get(handles.FileList, 'UserData');
 selected = get(handles.FileList, 'Value');
 tests = tests(selected);
 files = arrayfun(@(x)x.files{1}, tests, 'UniformOutput', 0);
+dataDir = get(handles.DataDirBox, 'String');
+files = cellfun(@(x)fullfile(dataDir, x(3:end)), files, 'UniformOutput', 0);
 
 figuresPath = get(handles.FiguresDirBox, 'String');
 sourceFormatMenu = cellstr(get(handles.SourceFormatMenu, 'String'));
@@ -336,8 +335,10 @@ switch string
         plotFun = @plotWaveforms;
     case 'LFP'
         plotFun = @plotLfp;
-    otherwise
+    case 'Default'
         plotFun = {};
+    otherwise
+        plotFun = str2func(string);
 end
 
 
@@ -415,6 +416,10 @@ for i = 1:length(uiPrefsList)
                     if isnumeric(prf) && prf <= length(str)
                         set(myhandle, 'Value', prf);
                     end
+                case 'listbox'
+                    if iscellstr(prf) || ischar(prf)
+                        set(myhandle, 'String', prf);
+                    end
             end
         end
     end
@@ -438,6 +443,9 @@ for i = 1:length(uiPrefsList)
             setpref('data_analysis_toolbox', prfname, prf);
         case 'popupmenu'
             prf = get(myhandle, 'Value');
+            setpref('data_analysis_toolbox', prfname, prf);
+        case 'listbox'
+            prf = get(myhandle, 'String');
             setpref('data_analysis_toolbox', prfname, prf);
     end
 end

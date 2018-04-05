@@ -19,7 +19,7 @@ for i = 1:length(spike)
         exDir = sprintf('%s%s',ex.RecordSession,ex.RecordSite);
     end
     elecDir = sprintf('Ch%02d',spike(i).electrodeid);
-    fileDir = fullfile(figuresPath,exDir,elecDir);
+    fileDir = fullfile(figuresPath,ex.Subject_ID,exDir,elecDir);
     if ~isdir(fileDir)
         mkdir(fileDir)
     end
@@ -39,7 +39,7 @@ for i = 1:length(spike)
         if ~isempty(spikes)
             nf = NeuroFig(ex.ID, spike(i).electrodeid, uuid(j));
             nf = plotFun(nf, ex, spikes, uuid(j));
-            nf.print(fileDir, filename, 'png');
+            nf.print(fileDir, filename);
             nf.close();
         end
     end

@@ -19,12 +19,12 @@ if iscell(dataset)
         dataset = dataset{1};
     elseif isParallel
         parfor i = 1:length(dataset)
-            dispatch(dataset{i}, figuresPath, false);
+            dispatch(dataset{i}, figuresPath, false, spikeFormat, plotFun);
         end
         return;
     else
         for i = 1:length(dataset)
-            dispatch(dataset{i}, figuresPath, false);
+            dispatch(dataset{i}, figuresPath, false, spikeFormat, plotFun);
         end
         return;
     end
@@ -60,8 +60,7 @@ if isempty(plotFun)
 end
 
 % Separate to spikes and lfp
-lfpFunList = {'plotLfp'};
-isLfpFun = cellfun(@(x)ismember(func2str(x), lfpFunList), plotFun);
+isLfpFun = cellfun(@(x)contains(lower(func2str(x)), 'lfp'), plotFun);
 spikeFun = plotFun(~isLfpFun);
 lfpFun = plotFun(isLfpFun);
 

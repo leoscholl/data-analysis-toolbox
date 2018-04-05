@@ -13,8 +13,6 @@ classdef NeuroFig < handle
         font = 'Helvetica';
         fontSize = 6;
         titleSize = 18;
-        params = {'Ori', 'Diameter', 'Size', 'Color', 'Position', ...
-            'Contrast', 'SpatialFreq', 'TemporalFreq', 'GratingType'};
     end
     
     properties (Access = private)
@@ -36,7 +34,10 @@ classdef NeuroFig < handle
             end
             
             % Set up a new figure
-            obj.handle = figure('Visible','off','Color','White');
+            obj.handle = figure('Visible','off','Color','White',...
+                'Position', [0 0 800 600], ...
+                'PaperSize', [8.5 6.37], 'PaperUnits', 'inches', ...
+                'PaperPositionMode', 'auto');
         end
         
         function dress(obj, varargin)
@@ -45,19 +46,11 @@ classdef NeuroFig < handle
             
             p = inputParser;
             p.addParameter('Title', '', @ischar);
-            p.addParameter('EnvParam', struct([]), @isstruct);
-            p.addParameter('OSI', [], @isnumeric);
-            p.addParameter('DSI', [], @isnumeric);
+            p.addParameter('Params', []);
             p.parse(varargin{:});
                        
             % Apply default annotation
-            params = NeuroAnalysis.Base.getstructfields(p.Results.EnvParam, ...
-                obj.params);
-            if ~isempty(p.Results.OSI) && ~isempty(p.Results.DSI)
-                params.OSI = p.Results.OSI;
-                params.DSI = p.Results.DSI;
-            end
-            str = obj.prepareAnnotation(params);
+            str = obj.prepareAnnotation(p.Results.Params);
             h = findobj(obj.handle,'Type','axes');
             
             % Only annotate single axes
@@ -110,17 +103,18 @@ classdef NeuroFig < handle
         
         function print(obj, path, filename, format)
             %print Print to file
-            if nargin < 3 || isempty(format)
+            if nargin < 4 || isempty(format)
                 format = 'png';
             end
-            set(obj.handle,'renderer','painters');
             [~, filename, ~] = fileparts(filename);
             if isempty(obj.suffix)
                 obj.suffix = 'plot';
             end
             fullname = sprintf('%s_Elec-%d_Unit-%d_%s.%s', filename, ...
                 obj.electrode, obj.unit, obj.suffix, format);
-            saveas(obj.handle, fullfile(path, fullname));
+            export_fig(obj.handle, fullfile(path, fullname), ...
+                sprintf('-%s', format), '-painters', '-r300', '-m2', ...
+                '-dg576x432', '-p0.02');
         end
         
         
