@@ -40,38 +40,11 @@ end
 % Interpolate
 x = uPos(:,1);
 y = uPos(:,2);
-[xq,yq] = meshgrid(min(x):2:max(x), ...
-    min(y):2:max(y));
+[xq,yq] = meshgrid(min(x):max(x), ...
+    min(y):max(y));
 vq = griddata(x,y,v,xq,yq);
 
 % Plot
-subplot(2,2,1);
-s = surf(xq,yq,vq);
-s.EdgeColor = 'none';
-hold on;
-p = plot3(x,y,v,'o');
-p.MarkerSize = 2;
-colormap('jet');
-xlabel('X [deg]');
-ylabel('Y [deg]');
-axis tight;
-box off;
-hold off;
-
-subplot(2,2,2);
-s = surf(xq,yq,vq);
-s.EdgeColor = 'none';
-hold on;
-colormap('jet');
-xlabel('X [deg]');
-ylabel('Y [deg]');
-axis tight;
-box off;
-hold off;
-[az, el] = view;
-view(az+180, el);
-
-subplot(2,2,3);
 s = surf(xq,yq,vq);
 s.EdgeColor = 'none';
 colormap('jet');
@@ -82,14 +55,6 @@ axis tight;
 box off;
 view(0,90);
 
-subplot(2,2,4);
-contourf(xq,yq,vq);
-colormap('jet');
-xlabel('X [deg]');
-ylabel('Y [deg]');
-colorbar;
-axis tight;
-box off;
 
 nf.suffix = 'map';
 nf.dress();

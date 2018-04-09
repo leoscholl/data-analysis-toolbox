@@ -53,8 +53,8 @@ if isempty(plotFun)
         else
             plotFun = {@plotRastergram, @plotTuningCurve};
         end
-        if contains(dataset.ex.ID, 'Laser')
-            plotFun  = [plotFun, {@plotLfp}];
+        if strcmp(dataset.ex.ID, 'Image') || strcmp(dataset.ex.ID, 'LaserImage')
+            plotFun = {};
         end
     end
 end
