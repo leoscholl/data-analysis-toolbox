@@ -1,5 +1,4 @@
-function [result] = dispatch(dataset, figuresPath, isParallel, ...
-    spikeFormat, plotFun)
+function [result] = dispatch(dataset, figuresPath, isParallel, plotFun)
 %dispatch Send dataset to the appropriate plotting/analysis functions
 
 if nargin < 5
@@ -13,27 +12,6 @@ if nargin < 3 || isempty(isParallel)
 end
 
 result = [];
-
-if iscell(dataset) 
-    if length(dataset) == 1
-        dataset = dataset{1};
-    elseif isParallel
-        parfor i = 1:length(dataset)
-            dispatch(dataset{i}, figuresPath, false, spikeFormat, plotFun);
-        end
-        return;
-    else
-        for i = 1:length(dataset)
-            dispatch(dataset{i}, figuresPath, false, spikeFormat, plotFun);
-        end
-        return;
-    end
-end
-
-if ischar(dataset)
-    % Need to load from file
-    dataset = loadDataset(dataset, spikeFormat);
-end
 
 % What to plot?
 if isempty(plotFun)
@@ -54,7 +32,7 @@ if isempty(plotFun)
             plotFun = {@plotRastergram, @plotTuningCurve};
         end
         if strcmp(dataset.ex.ID, 'Image') || strcmp(dataset.ex.ID, 'LaserImage')
-            plotFun = {};
+            return;
         end
     end
 end

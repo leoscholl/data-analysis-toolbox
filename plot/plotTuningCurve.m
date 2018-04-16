@@ -50,6 +50,7 @@ xConditions = ex.Cond.(xConditionName);
 xConditions = reshape(xConditions, length(xConditions), 1);
 xCond = unique(cell2mat(xConditions),'rows');
 dim = size(xCond, 2);
+x = xCond(:,1);
 
 hold on;
 legendItems = {};
@@ -68,19 +69,19 @@ if length(conditionNames) == 1
     end
 
     % Plot data with SEMs
-    errorbar(xCond,mF0,semF0,'k','LineWidth',1);
+    errorbar(x,mF0,semF0,'k','LineWidth',1);
     if any(~isnan(mF1) | ~isnan(semF1))
-        errorbar(xCond,mF1,semF1,'r');
+        errorbar(x,mF1,semF1,'r');
         legendItems = {'F0';'F1';'PreICI'};
     else
         legendItems = {'F0';'PreICI'};
     end
-    errorbar(xCond,mPre,semPre,'Color',[0.5 0.5 0.5]);
+    errorbar(x,mPre,semPre,'Color',[0.5 0.5 0.5]);
     
     if contains(ex.ID, 'Ori')
         baseline = mean(mF0);
-        valid = xCond >= 0;
-        theta = deg2rad(xCond(valid));
+        valid = x >= 0;
+        theta = deg2rad(x(valid));
         response = mF0(valid) - baseline;
         response(response < 0) = 0;
         [OSI, DSI] = osi(response, theta);
@@ -104,6 +105,8 @@ else
     condString = cellfun(@(x)sprintf('%0.3f_',x),cond,'UniformOutput', false);
     condString = cellfun(@(x)x(1:end-1),condString,'UniformOutput', false);
 
+    colors = jet(size(cond,1));
+    
     for l = 1:size(cond,1)
         
         group = zeros(length(ex.CondTest.CondIndex),1);
@@ -130,13 +133,13 @@ else
         end
 
         % Plot data with SEMs
-        errorbar(xCond,mF0,semF0);
+        errorbar(x,mF0,semF0,'Color',colors(l,:));
         legendItems = [legendItems; {['F0_',levelName]}];
 
         if contains(ex.ID, 'Ori')
             baseline = mean(mF0);
-            valid = xCond >= 0;
-            theta = deg2rad(xCond(valid));
+            valid = x >= 0;
+            theta = deg2rad(x(valid));
             response = mF0(valid) - baseline;
             response(response < 0) = 0;
             [OSI, DSI] = osi(response, theta);
@@ -153,10 +156,10 @@ legend('boxoff');
 
 xlabel(xConditionName, 'Interpreter', 'none');
 ylabel('Rate [spikes/s]');
-if issorted(xCond, 'strictmonotonic') 
-    set(gca,'XTick',xCond);
+if issorted(x, 'strictmonotonic') 
+    set(gca,'XTick',x);
 else
-    set(gca,'XTick',unique(xCond));
+    set(gca,'XTick',unique(x));
 end
 box off;
 

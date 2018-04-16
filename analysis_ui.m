@@ -316,7 +316,11 @@ plotFun = cellfun(@convertToPlotFun, plotFun, 'UniformOutput', false);
 plotFun = plotFun(~cellfun(@isempty, plotFun));
 
 setStatus(handles, 'plotting...');
-dispatch(files,figuresPath,isParallel,sourceFormat,plotFun);
+results = batch_process(files, figuresPath, isParallel, ...
+    sourceFormat, plotFun, true);
+assignin('base','results',results);
+pause(0.2);
+
 setStatus(handles, '');
 
 % --- Helper for converting string to function name

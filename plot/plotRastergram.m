@@ -28,8 +28,8 @@ else
     conditions = reshape(conditions, length(conditions), 1);
     cond = unique(cell2mat(conditions),'rows');
 
-    groups = false(length(cond),length(ex.CondTest.CondIndex));
-    for i = 1:length(cond)
+    groups = false(size(cond,1),length(ex.CondTest.CondIndex));
+    for i = 1:size(cond,1)
         group = cellfun(@(x)isequal(x,cond(i,:)), ex.CondTestCond.(conditionName));
         groups(i,:) = group';
         if isnumeric(cond)
