@@ -1,11 +1,8 @@
 function [result] = dispatch(dataset, figuresPath, isParallel, plotFun)
 %dispatch Send dataset to the appropriate plotting/analysis functions
 
-if nargin < 5
-    plotFun = [];
-end
 if nargin < 4
-    spikeFormat = [];
+    plotFun = [];
 end
 if nargin < 3 || isempty(isParallel)
     isParallel = false;

@@ -11,8 +11,8 @@ classdef NeuroFig < handle
         
         % Defaults
         font = 'Helvetica';
-        fontSize = 6;
-        titleSize = 18;
+        fontSize = 10;
+        titleSize = 28;
     end
     
     properties (Access = private)
@@ -35,8 +35,8 @@ classdef NeuroFig < handle
             
             % Set up a new figure
             obj.handle = figure('Visible','off','Color','White',...
-                'Position', [0 0 800 600], ...
-                'PaperSize', [8.5 6.37], 'PaperUnits', 'inches', ...
+                'Position', [0 0 1400 950], ...
+                'PaperUnits', 'inches', ...
                 'PaperPositionMode', 'auto');
         end
         
@@ -101,8 +101,11 @@ classdef NeuroFig < handle
             close(obj.handle);
         end
         
-        function print(obj, path, filename, format)
+        function print(obj, path, filename, format, pretty)
             %print Print to file
+            if nargin < 5 || isempty(pretty)
+                pretty = false;
+            end
             if nargin < 4 || isempty(format)
                 format = 'png';
             end
@@ -112,9 +115,23 @@ classdef NeuroFig < handle
             end
             fullname = sprintf('%s_Elec-%d_Unit-%d_%s.%s', filename, ...
                 obj.electrode, obj.unit, obj.suffix, format);
-            export_fig(obj.handle, fullfile(path, fullname), ...
-                sprintf('-%s', format), '-painters', '-r300', '-m2', ...
-                '-dg576x432', '-p0.02');
+            
+            if pretty
+                export_fig(obj.handle, fullfile(path, fullname), ...
+                    sprintf('-%s', format), '-painters', '-r300', '-m2', ...
+                    '-dg576x432', '-p0.02');
+            else
+                fig_pos = obj.handle.PaperPosition;
+                obj.handle.PaperSize = [fig_pos(3) fig_pos(4)];
+                frame = getframe(obj.handle);
+                [raster, raster_map] = frame2im(frame); % raster is the rasterized image, raster_map is the colormap
+                raster = raster(1:end-50,101:end-100,:);
+                if isempty(raster_map)
+                    imwrite(raster, fullfile(path, fullname));
+                else
+                    imwrite(raster, raster_map, fullfile(path, fullname));
+                end
+            end
         end
         
         

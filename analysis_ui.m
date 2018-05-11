@@ -127,7 +127,9 @@ function SearchStringBox_Callback(hObject, eventdata, handles)
 strs = regexp(get(handles.SearchStringBox, 'String'),'\s?,\s?', 'split');
 mt = handles.mt;
 set(handles.FileList, 'Value', []);
-if mod(length(strs),2) == 0
+if isempty(mt.Tests)
+    return;
+elseif mod(length(strs),2) == 0
     query = mt.query(strs{:});
     set(handles.FileList, 'String', {query.Tests.filename} );
     set(handles.FileList, 'UserData', query.Tests);
@@ -166,7 +168,9 @@ function RefreshButton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 metafile = fullfile(get(handles.DataDirBox, 'String'),'metadata.mat');
 mt = NeuroAnalysis.IO.MetaTable(metafile);
-mt = mt.query('sourceformat', 'Ripple');
+if ~isempty(mt.Tests)
+    mt = mt.query('sourceformat', 'Ripple');
+end
 handles.mt = mt;
 SearchStringBox_Callback(hObject, eventdata, handles);
 

@@ -30,31 +30,30 @@ end
 
 % Group
 [uPos, ~, iPos] = unique(pos, 'rows');
-v = nan(length(uPos),1);
-for i = 1:length(uPos)
-    mapPeri = mean(peri(iPos == i));
-    mapPre = mean(pre(iPos == i));
+v = nan(size(uPos,1),1);
+for i = 1:size(uPos,1)
+    mapPeri = nanmean(peri(iPos == i));
+    mapPre = nanmean(pre(iPos == i));
     v(i) =  mapPeri - mapPre;    
 end
 
 % Interpolate
 x = uPos(:,1);
 y = uPos(:,2);
-[xq,yq] = meshgrid(min(x):max(x), ...
-    min(y):max(y));
+pixelSize = mean(diff(unique(x)))/3;
+[xq,yq] = meshgrid(min(x):pixelSize:max(x), ...
+    min(y):pixelSize:max(y));
 vq = griddata(x,y,v,xq,yq);
 
 % Plot
-s = surf(xq,yq,vq);
-s.EdgeColor = 'none';
+imagesc(unique(x), unique(y), vq);
+set(gca, 'ydir', 'normal');
 colormap('jet');
-xlabel('X [deg]');
-ylabel('Y [deg]');
+xlabel(sprintf('%s X [deg]',conditionName), 'Interpreter', 'none');
+ylabel(sprintf('%s Y [deg]',conditionName), 'Interpreter', 'none');
 colorbar;
 axis tight;
 box off;
-view(0,90);
-
 
 nf.suffix = 'map';
 nf.dress();

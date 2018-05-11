@@ -110,9 +110,13 @@ else
     for l = 1:size(cond,1)
         
         group = zeros(length(ex.CondTest.CondIndex),1);
-        for f = 1:length(conditionNames)
-            group(cellfun(@(x)isequal(x, cond{l,f}), ...
-                ex.CondTestCond.(conditionNames{f}))) = 1;
+        for i = 1:length(ex.CondTest.CondIndex)
+            match = 1;
+            for f = 1:length(conditionNames)
+                match = match && cond{l,f} == ...
+                    ex.CondTestCond.(conditionNames{f}){i};
+            end
+            group(i) = match;
         end
         levelName = [conditionNames'; condString(l,:)];
         levelName = sprintf('%s_%s_', levelName{:});
