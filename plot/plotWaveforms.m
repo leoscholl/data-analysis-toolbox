@@ -1,4 +1,4 @@
-function [ nf ] = plotWaveforms(nf, ex, spike)
+function plotWaveforms(spike)
 %PlotWaveforms plots mean waveform for each unit
 
 fs = 30000;
@@ -41,9 +41,6 @@ legend boxoff;
 axis tight;
 xlabel('Time (ms)')
 ylabel('Voltage (uV)')
-
-nf.dress();
-nf.suffix = 'wf';
 
 end
 

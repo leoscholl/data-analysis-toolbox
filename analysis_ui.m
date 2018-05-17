@@ -332,21 +332,21 @@ function plotFun = convertToPlotFun(string)
 % string    human readable name of the plotting fun
 switch string
     case 'Rastergram'
-        plotFun = @plotRastergram;
+        plotFun = 'plotRastergram';
     case 'PSTH'
-        plotFun = @plotPsth;
+        plotFun = 'plotPsth';
     case 'Tuning curve'
-        plotFun = @plotTuningCurve;
+        plotFun = 'plotTuningCurve';
     case 'Map'
-        plotFun = @plotMap;
+        plotFun = 'plotMap';
     case 'Waveforms'
-        plotFun = @plotWaveforms;
+        plotFun = 'plotWaveforms';
     case 'LFP'
-        plotFun = @plotLfp;
+        plotFun = 'plotLfp';
     case 'Default'
         plotFun = {};
     otherwise
-        plotFun = str2func(string);
+        plotFun = string;
 end
 
 

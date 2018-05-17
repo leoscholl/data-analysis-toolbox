@@ -7,6 +7,7 @@ classdef NeuroFig < handle
         test        % Test name
         electrode   % Electrode number
         unit        % Unit number
+        info        % Other title information
         suffix      % to append on filename
         
         % Defaults
@@ -19,18 +20,15 @@ classdef NeuroFig < handle
     end
     
     methods
-        function obj = NeuroFig(test, electrode, unit)
+        function obj = NeuroFig(test, electrode, unit, varargin)
             %NeuroFig Construct an instance of this class
             %   Detailed explanation goes here
             
-            if nargin ~= 3
-                obj.test = '';
-                obj.electrode = NaN;
-                obj.unit = NaN;
-            else
-                obj.test = test;
-                obj.electrode = electrode;
-                obj.unit = unit;
+            obj.test = test;
+            obj.electrode = electrode;
+            obj.unit = unit;
+            if ~isempty(varargin)
+                obj.info = varargin;
             end
             
             % Set up a new figure
@@ -48,7 +46,7 @@ classdef NeuroFig < handle
             p.addParameter('Title', '', @ischar);
             p.addParameter('Params', []);
             p.parse(varargin{:});
-                       
+            
             % Apply default annotation
             str = obj.prepareAnnotation(p.Results.Params);
             h = findobj(obj.handle,'Type','axes');
@@ -110,13 +108,32 @@ classdef NeuroFig < handle
                 format = 'png';
             end
             [~, filename, ~] = fileparts(filename);
-            if isempty(obj.suffix)
-                obj.suffix = 'plot';
-            end
-            fullname = sprintf('%s_Elec-%d_Unit-%d_%s.%s', filename, ...
-                obj.electrode, obj.unit, obj.suffix, format);
             
-            if pretty
+            if isempty(obj.electrode)
+                electrode = '';
+            else
+                electrode = sprintf('_Elec_%d', obj.electrode);
+            end
+            if isempty(obj.unit)
+                unit = '';
+            else
+                unit = sprintf('_Unit_%d', obj.unit);
+            end
+            if isempty(obj.info)
+                info = '';
+            else
+                info = sprintf('_%s', obj.info{:});
+            end
+            if isempty(obj.suffix)
+                suffix = '_plot';
+            else
+                suffix = strcat('_',obj.suffix);
+            end
+            fullname = strcat(filename, electrode, unit, info, suffix, '.', format);
+            
+            if strcmp(format, 'fig')
+                savefig(obj.handle, fullfile(path, fullname), 'compact');
+            elseif pretty
                 export_fig(obj.handle, fullfile(path, fullname), ...
                     sprintf('-%s', format), '-painters', '-r300', '-m2', ...
                     '-dg576x432', '-p0.02');
@@ -141,12 +158,25 @@ classdef NeuroFig < handle
         
         function title = defaultTitle(obj)
             %makeTitle makes a title
-            if isempty(obj.unit)
-                title = sprintf('%s   Elec %d', obj.test, obj.electrode);
+            if isempty(obj.info)
+                info = '';
             else
-                title = sprintf('%s   Elec %d   Unit %d', obj.test, ...
-                    obj.electrode, obj.unit);    
+                info = sprintf('   %s', obj.info{:});
             end
+            if isempty(obj.test)
+                obj.test = '';
+            end
+            if isempty(obj.unit)
+                unit = '';
+            else
+                unit = sprintf('   Unit %d', obj.unit);
+            end
+            if isempty(obj.electrode)
+                electrode = '';
+            else
+                electrode = sprintf('   Elec %d', obj.electrode);
+            end
+            title = strcat(obj.test, electrode, unit, info);
         end
         
     end

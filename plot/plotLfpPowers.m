@@ -1,4 +1,4 @@
-function nf = plotLfpPowers(nf, ex, data, fs, time, varargin)
+function plotLfpPowers(data, fs)
 %plotLfp Draw a per-condition plot of LFP data
 %
 % delta 0-4hz
@@ -27,5 +27,3 @@ legend boxoff
 xlabel('time [s]')
 ylabel('Power');
 
-nf.suffix = 'lfp_power';
-nf.dress();
