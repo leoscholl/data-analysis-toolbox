@@ -12,16 +12,23 @@ switch style
     case 'image'
         imagesc(unique(x), unique(y), vq);
         set(gca, 'ydir', 'normal');
-        colorbar; colormap('jet');
+        if length(varargin) == 1
+            clims = varargin{1};
+        else
+            clims = [-max(abs(v)) max(abs(v))];
+        end
+        colorbar; colormap('jet'); caxis(clims);
     case 'outline'
         yrange = varargin{1};
         label = varargin{2};
         color = varargin{3};
-        [C,h] = contour(xq,yq,vq,yrange,'ShowText','off','Color',color);
+        C = contour(xq,yq,vq,yrange,'ShowText','off','Color',color);
         t = clabel(C);
         for i = 2:2:length(t)
             t(i).String = label;
         end
+    otherwise
+        error('Unknown style, use ''image'' or ''outline''');
 end
 xlabel(sprintf('%s X [deg]',factorName), 'Interpreter', 'none');
 ylabel(sprintf('%s Y [deg]',factorName), 'Interpreter', 'none');

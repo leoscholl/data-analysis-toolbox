@@ -1,5 +1,11 @@
 function result = processData(dataset, figuresPath, plotFun, isParallel)
 
+if length(dataset.ex.CondTest.CondIndex) < 3
+    warning('Dataset too small, cannot process');
+    result = [];
+    return;
+end
+
 % Make directories in sorted order
 path = containers.Map('KeyType','double','ValueType','char');
 if ~isempty(dataset.ex.RecordSession) && ~isempty(dataset.ex.RecordSite)

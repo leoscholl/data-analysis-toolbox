@@ -42,7 +42,7 @@ lfp = zeros(length(ex.CondTest.CondIndex), samples);
 for t = 1:length(ex.CondTest.CondIndex)
     t0 = ex.CondTest.CondOn(t) - offset;
     t1 = t0 + dur;
-    if isnan(t0)
+    if isnan(t0) || isnan(t1)
         continue;
     end
     sub = subvec(data, t0*ex.secondperunit, t1*ex.secondperunit, fs, time);

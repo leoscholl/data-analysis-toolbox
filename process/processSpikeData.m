@@ -43,6 +43,10 @@ baseParam = {'Ori', 'Diameter', 'Size', 'Color', 'Position', ...
     'Contrast', 'SpatialFreq', 'TemporalFreq', 'GratingType'};
 baseParam = NeuroAnalysis.Base.getstructfields(ex.EnvParam, ...
     baseParam);
+if isempty(baseParam)
+    baseParam = struct;
+end
+
 
 % Per-electrode figures
 for f = 1:length(plotFun)
@@ -164,7 +168,8 @@ for j = 1:length(uuid)
                     unit{j}.map.v(:,l) = v;
                     
                     % Plot
-                    plotMap(x,y,v,groupingFactor,'image');
+                    clim = max(max(abs(v)), 20); % arbitrary minimum?
+                    plotMap(x,y,v,groupingFactor,'image', [-clim clim]);
                     nf.suffix = 'map';
                     nf.dress();
                     nf.print(path, filename);
@@ -190,7 +195,7 @@ for j = 1:length(uuid)
                         rasters{c} = trials;
                     end
                     events = [-offset stimDur dur-offset];
-                    
+
                     plotRastergram(rasters, events, labels, defaultColor(uuid(j)));
                     nf.suffix = 'raster';
                     nf.dress();
