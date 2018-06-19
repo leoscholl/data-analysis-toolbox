@@ -20,13 +20,8 @@ switch style
         colorbar; colormap('jet'); caxis(clims);
     case 'outline'
         yrange = varargin{1};
-        label = varargin{2};
-        color = varargin{3};
-        C = contour(xq,yq,vq,yrange,'ShowText','off','Color',color);
-        t = clabel(C);
-        for i = 2:2:length(t)
-            t(i).String = label;
-        end
+        color = varargin{2};
+        contour(xq,yq,vq,yrange,'ShowText','off','Color',color);
     otherwise
         error('Unknown style, use ''image'' or ''outline''');
 end

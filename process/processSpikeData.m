@@ -3,13 +3,18 @@ function result = processSpikeData(spike, ...
 %processSpikeData Plot spiking data with the given list of plotting functions
 
 p = inputParser;
-p.addOptional('offset', min(0.5/ex.secondperunit, (ex.PreICI + ex.SufICI)/2));
-p.addOptional('binSize', 0.02/ex.secondperunit);
-p.addOptional('normFun', []);
+p.addParameter('offset', min(0.5/ex.secondperunit, (ex.PreICI + ex.SufICI)/2));
+p.addParameter('binSize', 0.02/ex.secondperunit);
+p.addParameter('normFun', []);
+p.addParameter('groupingFactor', defaultGroupingFactor(fieldnames(ex.CondTestCond)));
+p.addParameter('groupingMethod', 'remaining');
 p.parse(varargin{:});
+
 offset = p.Results.offset;
 binSize = p.Results.binSize;
 normFun = p.Results.normFun;
+groupingFactor = p.Results.groupingFactor;
+groupingMethod = p.Results.groupingMethod;
 
 if ~iscell(plotFun)
     plotFun = {plotFun};
@@ -19,23 +24,16 @@ result = struct;
 result.electrodeid = spike.electrodeid;
 
 % Grouping
-conditionNames = fieldnames(ex.Cond);
-% Take 'Final' factors by default, otherwise take the first
-gId = find(contains(conditionNames,'Final'),1);
-if isempty(gId)
-    groupingFactor = conditionNames{1};
-else
-    groupingFactor = conditionNames{gId};
-end
 [groupingValues, conditions, levelNames] = ...
-    groupConditions(ex, groupingFactor, 'remaining');
+    groupConditions(ex, groupingFactor, groupingMethod);
 result.groupingFactor = groupingFactor;
+result.groupingValues = groupingValues;
 result.levelNames = levelNames;
 
 % Labels for grouped conditions
 labels = cell(1,size(groupingValues,1));
 for i = 1:size(groupingValues,1)
-    labels{i} = strcat(groupingFactor, ' = ', sprintf(' %g', groupingValues(i,:)));
+    labels{i} = strcat(p.Results.groupingFactor, ' = ', sprintf(' %g', groupingValues(i,:)));
 end
 
 % Prepare annotation parameters
@@ -46,7 +44,6 @@ baseParam = NeuroAnalysis.Base.getstructfields(ex.EnvParam, ...
 if isempty(baseParam)
     baseParam = struct;
 end
-
 
 % Per-electrode figures
 for f = 1:length(plotFun)
@@ -124,14 +121,10 @@ for j = 1:length(uuid)
     
     
     % Calculate OSI and DSI for orientation stimuli
-    if contains(ex.ID, 'Ori')
+    if contains(ex.ID, 'Ori') && contains(groupingFactor, 'Ori')
         for l = 1:size(conditions,3)
-            baseline = mean(mF0(:,l));
-            valid = groupingValues(:,1) >= 0;
-            theta = deg2rad(groupingValues(valid,1));
-            response = mF0(valid) - baseline;
-            response(response < 0) = 0;
-            [OSI, DSI] = osi(response, theta);
+            theta = cellfun(@deg2rad, ex.CondTestCond.(groupingFactor));
+            [OSI, DSI] = osi(f0, theta);
             unit{j}.(['OSI',strrep(levelNames{l},'.','_')]) = OSI;
             unit{j}.(['DSI',strrep(levelNames{l},'.','_')]) = DSI;
         end
@@ -140,7 +133,7 @@ for j = 1:length(uuid)
         struct2cell(baseParam)' struct2cell(unit{j})'];
     mergedParam = struct(m{:});
     
-    
+    % Plotting
     for f = 1:length(plotFun)
         
         switch plotFun{f}

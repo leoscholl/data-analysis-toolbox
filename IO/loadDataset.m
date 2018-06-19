@@ -1,7 +1,7 @@
-function [dataset] = loadDataset(filePath, spikeFormat)
+function [dataset] = loadDataset(filePath, spikeFormat, fields)
 
 dataset = [];
-if nargin < 2 || isempty(spikeFormat)
+if ~exist('spikeFormat', 'var') || isempty(spikeFormat)
     spikeFormat = '';
 end
 if strcmp(spikeFormat, 'Ripple')
@@ -14,29 +14,34 @@ if ~exist(filePath, 'file')
     return;
 end
 try
-    file = load(filePath);
+    file = matfile(filePath);
 catch e
     warning('Possibly corrupt dataset (%s)\n%s', filePath, ...
         getReport(e,'basic','hyperlinks','off'));
     return;
 end
-if ~isfield(file, 'dataset')
-    warning('No dataset for %s', filePath);
-    return;
-end
     
-% Pick which spikes to load
-fields = {'digital', 'lfp', 'analog1k', 'analog30k', 'source', ...
+% Load wanted non-spike fields
+if ~exist('fields', 'var') || isempty(fields)
+    fields = fieldnames(file);
+end
+nonSpikeFields = {'digital', 'lfp', 'analog1k', 'analog30k', 'source', ...
     'secondperunit', 'sourceformat', 'ex', 'filepath'};
-spikeFields = setdiff(fieldnames(file.dataset), fields);
-dataset = rmfield(file.dataset, spikeFields);
+for f = 1:length(nonSpikeFields)
+    if ismember(nonSpikeFields{f}, fields)
+        dataset.(nonSpikeFields{f}) = file.(nonSpikeFields{f});
+    end
+end
+
+% Load spike field
+spikeFields = setdiff(fieldnames(file), nonSpikeFields);
 spikeFormat = strcat(lower(spikeFormat),'spike');
 if ismember(spikeFormat, spikeFields)
-    dataset.spike = file.dataset.(spikeFormat);
+    dataset.spike = file.(spikeFormat);
     dataset.spikeformat = spikeFormat;
 else
     warning('No spikes were found of the format %s', spikeFormat);
-    dataset.spike = file.dataset.spike;
+    dataset.spike = file.spike;
     dataset.spikeformat = 'spike';
 end
 

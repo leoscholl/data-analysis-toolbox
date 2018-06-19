@@ -1,11 +1,10 @@
-function plotLfp(time, lfp, events, labels)
-%plotLfp Draw a per-condition plot of LFP data
+function plotTimeFreq(time, freq, data, events, labels, zlabel)
+%plotTimeFreq
 
-minY = min(lfp(:));
-maxY = max(lfp(:));
 tickDistance = max(0.1, round((events(3)-events(1))/10, 1, 'significant')); % maximum 20 ticks
 
 hold on;
+maxC = max([1; data(:)]);
 
 for i = 1:length(labels)
     
@@ -13,24 +12,24 @@ for i = 1:length(labels)
     if length(labels) > 1
         ax = subplot(ceil(length(labels)/2),2,i);
     else
-        ax = subplot(1,1,1);
+        ax = gca;
     end
 
-    plot(time, lfp(i,:,:));
+    imagesc(time, freq, data(:,:,i));
+    set(gca, 'ydir', 'normal')
+    ylim([min(freq) max(freq)]);
+    colormap jet; caxis([0 maxC]); 
+    c = colorbar;
+    if exist('zlabel', 'var') && ~isempty(zlabel)
+        c.Label.String = zlabel;
+    end
     
     % XTick
+    xlim([events(1) events(3)]);
     box(ax,'off');
-    axis(ax, [events(1) events(3) minY ...
-        maxY]);
     tick = 0:-tickDistance:events(1); % always include 0
     tick = [fliplr(tick) tickDistance:tickDistance:events(3)];
     set(ax,'XTick',tick);
-
-    % Mark stim duration
-    v = [0 minY; events(2) minY; events(2) maxY; 0 maxY];
-    f = [1 2 3 4];
-    patch('Faces',f,'Vertices',v,'FaceColor',[0.5 0.5 0.5],...
-        'FaceAlpha',0.1,'EdgeColor','none');
 
     % For subplots, only label the bottommost axes
     if i == length(labels) || i == length(labels) - 1
@@ -40,7 +39,7 @@ for i = 1:length(labels)
     else
         set(ax, 'XTickLabel', []);
     end
-    ylabel(ax, 'Voltage [mV]');
+    ylabel(ax, 'Freq [Hz]');
     
     if length(labels) > 1 
         title(ax, labels{i}, ...

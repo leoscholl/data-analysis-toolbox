@@ -321,7 +321,7 @@ plotFun = plotFun(~cellfun(@isempty, plotFun));
 
 setStatus(handles, 'plotting...');
 results = batch_process(files, figuresPath, isParallel, ...
-    sourceFormat, plotFun, true);
+    sourceFormat, plotFun, true, 'groupingMethod', 'all');
 assignin('base','results',results);
 pause(0.2);
 

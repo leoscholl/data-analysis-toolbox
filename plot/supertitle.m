@@ -119,8 +119,8 @@ set(fig,'nextplot','add');
 if ~isempty(oldtitle)
     delete(oldtitle);
 end
-axes('pos',[0 1 1 1],'visible','off','Tag','suptitle');
-ht=text(.5,titleypos-1,str, 'Interpreter', 'none');
+ax = axes(fig,'pos',[0 1 1 1],'visible','off','Tag','suptitle');
+ht=text(ax,.5,titleypos-1,str, 'Interpreter', 'none');
 set(ht,'horizontalalignment','center','fontsize',fs);
 set(fig,'nextplot',np);
 % axes(haold);

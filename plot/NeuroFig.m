@@ -24,16 +24,22 @@ classdef NeuroFig < handle
             %NeuroFig Construct an instance of this class
             %   Detailed explanation goes here
             
-            obj.test = test;
-            obj.electrode = electrode;
-            obj.unit = unit;
+            if exist('test', 'var') && ~isempty(test)
+                obj.test = test;
+            end
+            if exist('electrode', 'var') && ~isempty(electrode)
+                obj.electrode = electrode;
+            end
+            if exist('unit', 'var') && ~isempty(unit)
+                obj.unit = unit;
+            end
             if ~isempty(varargin)
-                obj.info = varargin;
+                obj.info = varargin(~cellfun(@isempty,varargin));
             end
             
             % Set up a new figure
             obj.handle = figure('Visible','off','Color','White',...
-                'Position', [0 0 1400 950], ...
+                'Position', [0 0 900 600], ...
                 'PaperUnits', 'inches', ...
                 'PaperPositionMode', 'auto');
         end
@@ -41,9 +47,9 @@ classdef NeuroFig < handle
         function dress(obj, varargin)
             %dress Add (optionally) a title and/or an annotation to the
             %figure
-            
+                        
             p = inputParser;
-            p.addParameter('Title', '', @ischar);
+            p.addParameter('Title', obj.defaultTitle(), @ischar);
             p.addParameter('Params', []);
             p.parse(varargin{:});
             
@@ -77,9 +83,6 @@ classdef NeuroFig < handle
             
             % Apply default title
             title = p.Results.Title;
-            if isempty(title)
-                title = obj.defaultTitle();
-            end
             supertitle(obj.handle, title, 'FontSize', obj.titleSize, ...
                 'PlotFontSize', obj.fontSize);
             
@@ -142,7 +145,9 @@ classdef NeuroFig < handle
                 obj.handle.PaperSize = [fig_pos(3) fig_pos(4)];
                 frame = getframe(obj.handle);
                 [raster, raster_map] = frame2im(frame); % raster is the rasterized image, raster_map is the colormap
-                raster = raster(1:end-50,101:end-100,:);
+                h_crop = 20;
+                w_crop = 50;
+                raster = raster(1:end-h_crop,w_crop+1:end-w_crop,:);
                 if isempty(raster_map)
                     imwrite(raster, fullfile(path, fullname));
                 else
@@ -205,6 +210,8 @@ classdef NeuroFig < handle
                     c = x;
                 elseif isinteger(x) || all(round(x) == x)
                     c = horzcat(sprintf('%d ',x));
+                elseif isnumeric(x) && x < 0.001
+                    c = horzcat(sprintf('%g ',x));
                 elseif isnumeric(x)
                     c = horzcat(sprintf('%.3f ',x));
                 else

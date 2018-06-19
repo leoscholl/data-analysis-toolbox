@@ -1,4 +1,4 @@
-function [result] = dispatch(dataset, figuresPath, isParallel, plotFun)
+function [result] = dispatch(dataset, figuresPath, isParallel, plotFun, varargin)
 %dispatch Send dataset to the appropriate plotting/analysis functions
 
 if nargin < 4
@@ -35,6 +35,6 @@ if isempty(plotFun)
 end
 
 % Dispatch to plotting functions
-result = processData(dataset, figuresPath, plotFun, isParallel);
+result = processData(dataset, figuresPath, plotFun, isParallel, varargin{:});
 
 end
