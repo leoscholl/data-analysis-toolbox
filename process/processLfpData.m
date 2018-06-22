@@ -1,34 +1,25 @@
 function result = processLfpData(data, fs, time, electrodeid, ...
-    ex, path, filename, plotFun, varargin)
+    ex, groups, path, filename, actions, varargin)
 %processLfpData Plot lfp data with the given list of plotting functions
 
 p = inputParser;
 p.addParameter('offset', min(0.5/ex.secondperunit, (ex.PreICI + ex.SufICI)/2));
-p.addParameter('groupingFactor', defaultGroupingFactor(fieldnames(ex.CondTestCond)));
-p.addParameter('groupingMethod', 'remaining');
 p.parse(varargin{:});
 offset = p.Results.offset;
 
-if ~iscell(plotFun)
-    plotFun = {plotFun};
+if ~iscell(actions)
+    actions = {actions};
 end
+
+% Unpack inputs
+groupingFactor = groups.groupingFactor;
+groupingValues = groups.groupingValues;
+conditions = groups.conditions;
+levelNames = groups.levelNames;
+labels = groups.labels;
 
 result = struct;
 result.electrodeid = electrodeid;
-
-% Grouping
-[groupingValues, conditions, levelNames] = ...
-    groupConditions(ex, p.Results.groupingFactor, p.Results.groupingMethod);
-result.groupingFactor = p.Results.groupingFactor;
-result.groupingValues = groupingValues;
-result.levelNames = levelNames;
-
-% Labels for grouped conditions
-labels = cell(1,size(groupingValues,1));
-for i = 1:size(groupingValues,1)
-    labels{i} = strcat(p.Results.groupingFactor, ' = ', sprintf(' %g', groupingValues(i,:)));
-end
-result.labels = labels;
 
 dur = nanmean(diff(ex.CondTest.CondOn));
 stimDur = nanmean(ex.CondTest.CondOff - ex.CondTest.CondOn);
@@ -56,8 +47,8 @@ for l = 1:size(conditions,3)
     result.(['maxDelta',strrep(levelNames{l},'.','_')]) = groupingValues(i,:);
 end
 
-for f = 1:length(plotFun)
-    switch plotFun{f}
+for f = 1:length(actions)
+    switch actions{f}
         case 'plotLfp'
             for l = 1:size(conditions,3)
                 

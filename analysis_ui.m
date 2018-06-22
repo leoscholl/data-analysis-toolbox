@@ -22,7 +22,7 @@ function varargout = analysis_ui(varargin)
 
 % Edit the above text to modify the response to help analysis_ui
 
-% Last Modified by GUIDE v2.5 27-Feb-2018 12:40:57
+% Last Modified by GUIDE v2.5 21-Jun-2018 16:53:52
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -43,7 +43,6 @@ else
 end
 % End initialization code - DO NOT EDIT
 
-global uiPrefsList
 
 % --- Executes just before analysis_ui is made visible.
 function analysis_ui_OpeningFcn(hObject, eventdata, handles, varargin)
@@ -64,7 +63,7 @@ handles.output = hObject;
 global uiPrefsList
 uiPrefsList = {'ParallelCheck', 'DataDirBox', 'FiguresDirBox', ...
     'SortingDirBox', 'SuffixBox', 'SourceFormatMenu', 'RawDataBox', ...
-    'PlotFunList'};
+    'ActionList'};
 loadPrefs(handles);
 
 % Set the title
@@ -108,7 +107,6 @@ if isfield(handles, 's') && isa(handles.s, 'summaryTable')
 end
 
 % Save Preferences
-global uiPrefsList
 fprintf('Saving preferences...');
 savePrefs(handles);
 fprintf(' done.\n');
@@ -276,26 +274,26 @@ for f = 1:length(files)
 end
 
 
-% --- Executes on button press in AddPlotFun.
-function AddPlotFun_Callback(hObject, eventdata, handles)
-% hObject    handle to AddPlotFun (see GCBO)
+% --- Executes on button press in AddAction.
+function AddAction_Callback(hObject, eventdata, handles)
+% hObject    handle to AddAction (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-plotFunList = get(handles.PlotFunList, 'String');
-plotFun = get(handles.AddPlotFunBox, 'String');
-plotFunList{end + 1} = plotFun;
-set(handles.PlotFunList, 'String', plotFunList);
+actionsList = get(handles.ActionList, 'String');
+actions = get(handles.AddActionBox, 'String');
+actionsList{end + 1} = actions;
+set(handles.ActionList, 'String', actionsList);
 
-% --- Executes on button press in DelPlotFun.
-function DelPlotFun_Callback(hObject, eventdata, handles)
-% hObject    handle to DelPlotFun (see GCBO)
+% --- Executes on button press in DelAction.
+function DelAction_Callback(hObject, eventdata, handles)
+% hObject    handle to DelAction (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-plotFunList = get(handles.PlotFunList, 'String');
-plotFun = plotFunList(get(handles.PlotFunList, 'Value'));
-plotFunList = setdiff(plotFunList, plotFun);
-set(handles.PlotFunList, 'String', plotFunList);
-set(handles.PlotFunList, 'Value', []);
+actionsList = get(handles.ActionList, 'String');
+actions = actionsList(get(handles.ActionList, 'Value'));
+actionsList = setdiff(actionsList, actions);
+set(handles.ActionList, 'String', actionsList);
+set(handles.ActionList, 'Value', []);
 
 % --- Executes on button press in PlotFigures.
 function PlotFigures_Callback(hObject, eventdata, handles)
@@ -314,42 +312,18 @@ sourceFormatMenu = cellstr(get(handles.SourceFormatMenu, 'String'));
 sourceFormat = sourceFormatMenu{get(handles.SourceFormatMenu, 'Value')};
 isParallel = logical(get(handles.ParallelCheck, 'Value'));
 
-plotFunList = get(handles.PlotFunList, 'String');
-plotFun = plotFunList(get(handles.PlotFunList, 'Value'));
-plotFun = cellfun(@convertToPlotFun, plotFun, 'UniformOutput', false);
-plotFun = plotFun(~cellfun(@isempty, plotFun));
+actionList = get(handles.ActionList, 'String');
+actions = actionList(get(handles.ActionList, 'Value'));
+actions = actions(~cellfun(@isempty, actions));
+args = {};
 
 setStatus(handles, 'plotting...');
 results = batch_process(files, figuresPath, isParallel, ...
-    sourceFormat, plotFun, true, 'groupingMethod', 'all');
+    sourceFormat, actions, true, args{:});
 assignin('base','results',results);
 pause(0.2);
 
 setStatus(handles, '');
-
-% --- Helper for converting string to function name
-function plotFun = convertToPlotFun(string)
-% string    human readable name of the plotting fun
-switch string
-    case 'Rastergram'
-        plotFun = 'plotRastergram';
-    case 'PSTH'
-        plotFun = 'plotPsth';
-    case 'Tuning curve'
-        plotFun = 'plotTuningCurve';
-    case 'Map'
-        plotFun = 'plotMap';
-    case 'Waveforms'
-        plotFun = 'plotWaveforms';
-    case 'LFP'
-        plotFun = 'plotLfp';
-    case 'Default'
-        plotFun = {};
-    otherwise
-        plotFun = string;
-end
-
-
 
 % --- Executes on selection change in SourceFormatMenu.
 function SourceFormatMenu_Callback(hObject, eventdata, handles)
@@ -627,10 +601,9 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-
 % --- Executes during object creation, after setting all properties.
-function PlotFunList_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to PlotFunList (see GCBO)
+function ActionList_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to ActionList (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -640,18 +613,18 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-function AddPlotFunBox_Callback(hObject, eventdata, handles)
-% hObject    handle to AddPlotFunBox (see GCBO)
+function AddActionBox_Callback(hObject, eventdata, handles)
+% hObject    handle to AddActionBox (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of AddPlotFunBox as text
-%        str2double(get(hObject,'String')) returns contents of AddPlotFunBox as a double
+% Hints: get(hObject,'String') returns contents of AddActionBox as text
+%        str2double(get(hObject,'String')) returns contents of AddActionBox as a double
 
 
 % --- Executes during object creation, after setting all properties.
-function AddPlotFunBox_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to AddPlotFunBox (see GCBO)
+function AddActionBox_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to AddActionBox (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -660,14 +633,4 @@ function AddPlotFunBox_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
-
-
-% --- Executes on selection change in PlotFunList.
-function PlotFunList_Callback(hObject, eventdata, handles)
-% hObject    handle to PlotFunList (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns PlotFunList contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from PlotFunList
 

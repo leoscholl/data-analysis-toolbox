@@ -1,11 +1,13 @@
 function result = processSummaryData(spikeResult, lfpResult, ...
-    ex, path, filename, plotFun, varargin)
+    ex, groups, path, filename, actions, varargin)
 %processSummaryData
 
-if ~iscell(plotFun)
-    plotFun = {plotFun};
+if ~iscell(actions)
+    actions = {actions};
 end
 
+result.groups = groups;
+result.actions = actions;
 result.spike = [spikeResult{:}];
 result.lfp = [lfpResult{:}];
 if isempty(result.lfp)
@@ -16,8 +18,8 @@ if isempty(result.spike)
     return;
 end
 
-for f = 1:length(plotFun)
-    switch plotFun{f}
+for f = 1:length(actions)
+    switch actions{f}
         case 'plotMap'
             thr = 10; % minimum firing rate (spikes/s)
             for l = 1:length(result.spike(1).levelNames)

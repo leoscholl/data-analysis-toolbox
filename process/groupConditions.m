@@ -12,9 +12,9 @@ if ~exist('groupingFactor', 'var') || isempty(groupingFactor)
 end
 
 if ~exist('filter', 'var') || isempty(filter)
-    filter = true(1, length(ex.CondTest.CondIndex));
+    filter = true(size(ex.CondTest.CondIndex));
 else
-    filter = reshape(filter, 1, length(filter));
+    filter = reshape(filter, size(ex.CondTest.CondIndex));
 end
 
 if ~exist('groupingMethod', 'var') || isempty(groupingMethod)
@@ -82,7 +82,7 @@ if strcmp(groupingMethod, 'remaining') % collapse remaining conditions into one
     for l = 1:size(rCond,1)
 
 
-        group = zeros(length(ex.CondTest.CondIndex),1);
+        group = zeros(size(ex.CondTest.CondIndex));
         for i = 1:length(ex.CondTest.CondIndex)
             match = 1;
             for f = 1:length(remainingFactorNames)
@@ -94,7 +94,6 @@ if strcmp(groupingMethod, 'remaining') % collapse remaining conditions into one
         for i = 1:size(groupingValues, 1)
             condition = cellfun(@(x,y)isequal(x,groupingValues(i,:)),...
                 ex.CondTestCond.(groupingFactor));
-            condition = reshape(condition, length(condition), 1);
             conditions(i,:,l) = filter & condition & group;
         end
         levelName = [remainingFactorNames; condString(l,:)];
@@ -115,7 +114,7 @@ elseif strcmp(groupingMethod, 'none')
         condString = cellfun(@(x)x(1:end-1),condString,'UniformOutput', false);
         
         for l = 1:size(rCond,1)
-            group = zeros(1, length(ex.CondTest.CondIndex));
+            group = zeros(size(ex.CondTest.CondIndex));
             for i = 1:length(ex.CondTest.CondIndex)
                 group(i) = rCond{l} == ...
                     ex.CondTestCond.(remainingFactorNames{f}){i};

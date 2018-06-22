@@ -39,7 +39,7 @@ classdef NeuroFig < handle
             
             % Set up a new figure
             obj.handle = figure('Visible','off','Color','White',...
-                'Position', [0 0 900 600], ...
+                'Position', [0 0 1200 900], ...
                 'PaperUnits', 'inches', ...
                 'PaperPositionMode', 'auto');
         end
@@ -210,10 +210,8 @@ classdef NeuroFig < handle
                     c = x;
                 elseif isinteger(x) || all(round(x) == x)
                     c = horzcat(sprintf('%d ',x));
-                elseif isnumeric(x) && x < 0.001
-                    c = horzcat(sprintf('%g ',x));
                 elseif isnumeric(x)
-                    c = horzcat(sprintf('%.3f ',x));
+                    c = horzcat(sprintf('%g ',x));
                 else
                     c = '?';
                 end

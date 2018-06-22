@@ -1,40 +1,32 @@
-function result = processSpikeData(spike, ...
-    ex, path, filename, plotFun, varargin)
+function result = processSpikeData(spike, ex, groups, path, filename, actions, varargin)
 %processSpikeData Plot spiking data with the given list of plotting functions
 
 p = inputParser;
 p.addParameter('offset', min(0.5/ex.secondperunit, (ex.PreICI + ex.SufICI)/2));
 p.addParameter('binSize', 0.02/ex.secondperunit);
 p.addParameter('normFun', []);
-p.addParameter('groupingFactor', defaultGroupingFactor(fieldnames(ex.CondTestCond)));
-p.addParameter('groupingMethod', 'remaining');
-p.parse(varargin{:});
+if isstruct(varargin)
+    p.parse(varargin);
+else
+    p.parse(varargin{:});
+end
 
+if ~iscell(actions)
+    actions = {actions};
+end
+
+% Unpack inputs
+groupingFactor = groups.groupingFactor;
+groupingValues = groups.groupingValues;
+conditions = groups.conditions;
+levelNames = groups.levelNames;
+labels = groups.labels;
 offset = p.Results.offset;
 binSize = p.Results.binSize;
 normFun = p.Results.normFun;
-groupingFactor = p.Results.groupingFactor;
-groupingMethod = p.Results.groupingMethod;
-
-if ~iscell(plotFun)
-    plotFun = {plotFun};
-end
 
 result = struct;
 result.electrodeid = spike.electrodeid;
-
-% Grouping
-[groupingValues, conditions, levelNames] = ...
-    groupConditions(ex, groupingFactor, groupingMethod);
-result.groupingFactor = groupingFactor;
-result.groupingValues = groupingValues;
-result.levelNames = levelNames;
-
-% Labels for grouped conditions
-labels = cell(1,size(groupingValues,1));
-for i = 1:size(groupingValues,1)
-    labels{i} = strcat(p.Results.groupingFactor, ' = ', sprintf(' %g', groupingValues(i,:)));
-end
 
 % Prepare annotation parameters
 baseParam = {'Ori', 'Diameter', 'Size', 'Color', 'Position', ...
@@ -46,8 +38,8 @@ if isempty(baseParam)
 end
 
 % Per-electrode figures
-for f = 1:length(plotFun)
-    switch plotFun{f}
+for f = 1:length(actions)
+    switch actions{f}
         case 'plotWaveforms'
             nf = NeuroFig(ex.ID, spike.electrodeid, []);
             plotWaveforms(spike);
@@ -134,9 +126,9 @@ for j = 1:length(uuid)
     mergedParam = struct(m{:});
     
     % Plotting
-    for f = 1:length(plotFun)
+    for f = 1:length(actions)
         
-        switch plotFun{f}
+        switch actions{f}
             case 'plotTuningCurve'
                 nf = NeuroFig(ex.ID, spike.electrodeid, uuid(j));
                 plotTuningCurve(groupingValues, data, groupingFactor, levelNames);
