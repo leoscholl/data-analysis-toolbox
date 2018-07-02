@@ -163,11 +163,6 @@ classdef NeuroFig < handle
         
         function title = defaultTitle(obj)
             %makeTitle makes a title
-            if isempty(obj.info)
-                info = '';
-            else
-                info = sprintf('   %s', obj.info{:});
-            end
             if isempty(obj.test)
                 obj.test = '';
             end
@@ -181,7 +176,12 @@ classdef NeuroFig < handle
             else
                 electrode = sprintf('   Elec %d', obj.electrode);
             end
-            title = strcat(obj.test, electrode, unit, info);
+            title = strcat(obj.test, electrode, unit);
+            if ~isempty(obj.info)
+                info = sprintf('   %s', obj.info{:});
+                title = {title, info(4:end)};
+            end
+
         end
         
     end

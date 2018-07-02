@@ -5,6 +5,8 @@ p = inputParser;
 p.addParameter('offset', min(0.5/ex.secondperunit, (ex.PreICI + ex.SufICI)/2));
 p.addParameter('binSize', 0.02/ex.secondperunit);
 p.addParameter('normFun', []);
+p.addParameter('ignoreNonResponsive', true);
+p.addParameter('groupTuningCurves', true);
 if isstruct(varargin)
     p.parse(varargin);
 else
@@ -16,17 +18,20 @@ if ~iscell(actions)
 end
 
 % Unpack inputs
-groupingFactor = groups.groupingFactor;
-groupingValues = groups.groupingValues;
+groupingFactor = groups.factor;
+groupingValues = groups.values;
 conditions = groups.conditions;
 levelNames = groups.levelNames;
 labels = groups.labels;
 offset = p.Results.offset;
 binSize = p.Results.binSize;
 normFun = p.Results.normFun;
+ignoreNonResponsive = strcmp('true', p.Results.ignoreNonResponsive) || ...
+    (islogical(p.Results.ignoreNonResponsive) && p.Results.ignoreNonResponsive);
+groupTuningCurves = strcmp('true', p.Results.groupTuningCurves) || ...
+    (islogical(p.Results.groupTuningCurves) && p.Results.groupTuningCurves);
 
-result = struct;
-result.electrodeid = spike.electrodeid;
+result = [];
 
 % Prepare annotation parameters
 baseParam = {'Ori', 'Diameter', 'Size', 'Color', 'Position', ...
@@ -56,14 +61,22 @@ uuid = spike.uuid;
 unit = cell(1, length(uuid));
 for j = 1:length(uuid)
     spikes = spike.time(spike.unitid == uuid(j));
-    unit{j}.uuid = uuid(j);
     if isempty(spikes)
         continue;
     end
     
+    unit{j}.Subject_ID = ex.Subject_ID;
+    unit{j}.RecordSession = ex.RecordSession;
+    unit{j}.RecordSite = ex.RecordSite;
+    unit{j}.electrodeid = spike.electrodeid;
+    unit{j}.uid = uuid(j);
+    
+    test = struct;
+    param = struct;
+
     % Calculate MFR and F1
     pre = nan(length(ex.CondTest.CondIndex), 1);
-    f0 = pre; f1 = pre;
+    f0 = pre; f1 = pre; sp = pre;
     for t = 1:length(ex.CondTest.CondIndex)
         
         % Pre-stimulus
@@ -82,6 +95,7 @@ for j = 1:length(uuid)
         t0 = t1;
         t1 = ex.CondTest.CondOff(t);
         [f0(t), f1(t)] = f0f1(spikes, t0, t1, tf/ex.secondperunit);
+        sp(t) = length(spikeTimes(spikes, t0, t1));
     end
     
     % Fix time units
@@ -93,49 +107,85 @@ for j = 1:length(uuid)
     
     % Organize MFR into proper conditions
     mF0 = nan(size(groupingValues,1), size(conditions,3));
-    semF0 = mF0; mPre = mF0; semPre = mF0; mF1 = mF0; semF1 = mF0;
+    mPre = nan(size(groupingValues,1), size(conditions,3));
+    fano = nan(size(groupingValues,1), size(conditions,3));
+    response = false(size(groupingValues,1), size(conditions,3));
+    data = [];
     for l = 1:size(conditions,3)
         for i = 1:size(groupingValues,1)
+            data.f0{i,:,l} = f0(conditions(i,:,l))';
+            data.f1{i,:,l} = f1(conditions(i,:,l))';
+            data.pre{i,:,l} = pre(conditions(i,:,l))';
             mF0(i,l) = nanmean(f0(conditions(i,:,l)));
-            semF0(i,l) = sem(f0(conditions(i,:,l)));
             mPre(i,l) = nanmean(pre(conditions(i,:,l)));
-            semPre(i,l) = sem(pre(conditions(i,:,l)));
-            mF1(i,l) = nanmean(f1(conditions(i,:,l)));
-            semF1(i,l) = sem(f1(conditions(i,:,l)));
+            fano(i,l) = nanvar(sp(conditions(i,:,l)))/nanmean(sp(conditions(i,:,l)));
+            response(i,l) = isresponsive(pre(conditions(i,:,l)),f0(conditions(i,:,l)));
         end
         
         % Save optimal condition at each level
         [~, i] = max(mF0(:,l));
-        unit{j}.(['maxF1',strrep(levelNames{l},'.','_')]) = groupingValues(i,:);
+        param(l).maxF0 = groupingValues(i,:);
+        test.maxF0{l} = groupingValues(i,:);
     end
-    data.mF0 = mF0; data.semF0 = semF0; data.mPre = mPre;
-    data.semPre = semPre; data.mF1 = mF1; data.semF1 = semF1;
     
+    % Do a basic test of responsiveness
+    if ignoreNonResponsive && ~any(response(:)) % && mean2(sum(conditions,2)) > 4
+        unit{j} = [];
+        continue;
+    end
+    
+    % Store mfr data
+    test.data = data;
+    test.data.fano = fano;
     
     % Calculate OSI and DSI for orientation stimuli
     if contains(ex.ID, 'Ori') && contains(groupingFactor, 'Ori')
+        theta = cellfun(@deg2rad, ex.CondTestCond.(groupingFactor));
         for l = 1:size(conditions,3)
-            theta = cellfun(@deg2rad, ex.CondTestCond.(groupingFactor));
-            [OSI, DSI] = osi(f0, theta);
-            unit{j}.(['OSI',strrep(levelNames{l},'.','_')]) = OSI;
-            unit{j}.(['DSI',strrep(levelNames{l},'.','_')]) = DSI;
+            level = any(conditions(:,:,l),1);
+            [OSI, DSI] = osi(f0(level), theta(level));
+            param(l).OSI = OSI;
+            param(l).DSI = DSI;
+            test.osi(1,l) = OSI;
+            test.dsi(1,l) = DSI;
         end
     end
-    m = [fieldnames(baseParam)' fieldnames(unit{j})'; ...
-        struct2cell(baseParam)' struct2cell(unit{j})'];
-    mergedParam = struct(m{:});
+    
     
     % Plotting
     for f = 1:length(actions)
         
         switch actions{f}
             case 'plotTuningCurve'
-                nf = NeuroFig(ex.ID, spike.electrodeid, uuid(j));
-                plotTuningCurve(groupingValues, data, groupingFactor, levelNames);
-                nf.suffix = 'tc';
-                nf.dress('Params', mergedParam);
-                nf.print(path, filename);
-                nf.close();
+                if groupTuningCurves                    
+                    nf = NeuroFig(ex.ID, spike.electrodeid, uuid(j));
+                    if size(conditions,3) > 1
+                        data = rmfield(data, {'f1', 'pre'});
+                    end
+                    plotTuningCurve(groupingValues, data, groupingFactor, levelNames);
+                    nf.suffix = 'tc';
+                    nf.dress('Params', baseParam);
+                    nf.print(path, filename);
+                    nf.close();
+                else
+                    for l = 1:size(conditions,3)
+                        nf = NeuroFig(ex.ID, spike.electrodeid, uuid(j), levelNames{l});
+                        leveldata = struct;
+                        fields = fieldnames(data);
+                        for k = 1:length(fields)
+                            leveldata.(fields{k}) = data.(fields{k})(:,:,l);
+                        end
+                        plotTuningCurve(groupingValues, leveldata, groupingFactor, []);
+                        nf.suffix = 'tc';
+                        
+                        m = [fieldnames(baseParam)' fieldnames(param(l))'; ...
+                        struct2cell(baseParam)' struct2cell(param(l))'];
+                        mergedParam = struct(m{:});
+                        nf.dress('Params', mergedParam);
+                        nf.print(path, filename);
+                        nf.close();
+                    end
+                end
                 
             case 'plotMap'
                 if ~contains(groupingFactor, 'position', 'IgnoreCase', true)
@@ -143,14 +193,14 @@ for j = 1:length(uuid)
                 end
                 x = groupingValues(:,1);
                 y = groupingValues(:,2);
-                unit{j}.map.x = x;
-                unit{j}.map.y = y;
-                unit{j}.map.v = zeros(length(x),size(conditions,3));
+                test.map.x = x;
+                test.map.y = y;
+                test.map.v = zeros(length(x),size(conditions,3));
                 for l = 1:size(conditions,3)
                     
                     nf = NeuroFig(ex.ID, spike.electrodeid, uuid(j), levelNames{l});
                     v = mF0(:,l) - mPre(:,l);
-                    unit{j}.map.v(:,l) = v;
+                    test.map.v(:,l) = v;
                     
                     % Plot
                     clim = max(max(abs(v)), 20); % arbitrary minimum?
@@ -226,8 +276,28 @@ for j = 1:length(uuid)
         
     end
     
+    unit{j}.(ex.ID) = {test};
+    
 end
 
-result.unit = [unit{:}];
+result = [unit{:}];
 
+end
+
+function h = isresponsive(pre, post, alpha)
+
+if ~exist('alpha', 'var') || isempty(alpha)
+    alpha = 0.01;
+end
+
+h = 0;
+valid = ~isnan(pre) & ~isnan(post);
+pre = pre(valid);
+post = post(valid);
+if ~isempty(pre) && ~isempty(post)
+    h = ttest(pre, post, 'alpha', alpha);
+    if isnan(h)
+        h = 0;
+    end
+end
 end

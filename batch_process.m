@@ -1,4 +1,4 @@
-function [results] = batch_process(files, figuresPath, isParallel, ...
+function [results] = batch_process(files, figuresPath, mt, isParallel, ...
     spikeFormat, actions, verbose, varargin)
 %batch_process process multiple files
 %   Detailed explanation goes here
@@ -19,13 +19,13 @@ if iscell(files)
         files = files{1};
     elseif isParallel
         parfor i = 1:length(files)
-            results(i) = batch_process(files{i}, figuresPath, false, ...
+            results(i) = batch_process(files{i}, figuresPath, mt, false, ...
                 spikeFormat, actions, verbose, varargin{:});
         end
         return;
     else
         for i = 1:length(files)
-            results(i) = batch_process(files{i}, figuresPath, false, ...
+            results(i) = batch_process(files{i}, figuresPath, mt, false, ...
                 spikeFormat, actions, verbose, varargin{:});
         end
         return;
@@ -37,6 +37,10 @@ results.source = files;
 results.status = 0;
 results.result = [];
 results.error = [];
+
+if verbose
+    fprintf('Processing dataset:    %s\n', files);
+end
 
 % Load from file
 dataset = loadDataset(files, spikeFormat);
@@ -56,6 +60,18 @@ try
     end
     results.result = processData(dataset, figuresPath, actions, ...
         false, varargin{:});    results.status = 1;
+    
+    if ~isempty(mt) && ...
+            ~isempty(results.result) && ...
+            isfield(results.result, 'spike')
+        units = results.result.spike;
+        for u = 1:length(units)
+            test = units(u);
+            test.sourceformat = 'Result';
+            test.(dataset.ex.ID){1}.groups = results.result.groups;
+            mt.addRow(test);
+        end
+    end
 
 catch e
     warning('Error in dataset %s\n%s', files, ...

@@ -10,19 +10,27 @@ p = inputParser;
 p.KeepUnmatched = true;
 p.addParameter('groupingFactor', defaultGroupingFactor(fieldnames(dataset.ex.CondTestCond)));
 p.addParameter('groupingMethod', 'remaining');
+p.addParameter('groupingFilter', []);
 p.parse(varargin{:});
 
 % Grouping
-groups.groupingFactor = p.Results.groupingFactor;
-groups.groupingMethod = p.Results.groupingMethod;
-[groups.groupingValues, groups.conditions, groups.levelNames] = ...
-    groupConditions(dataset.ex, groups.groupingFactor, groups.groupingMethod);
+groups.factor = p.Results.groupingFactor;
+groups.method = p.Results.groupingMethod;
+groups.filter = p.Results.groupingFilter;
+if isempty(groups.filter)
+    filter = [];
+else
+    filter = groups.filter(dataset.ex);
+end
+[groups.values, groups.conditions, groups.levelNames] = ...
+    groupConditions(dataset.ex, groups.factor, groups.method, ...
+    filter);
 
 % Labels for grouped conditions
-groups.labels = cell(1,size(groups.groupingValues,1));
-for i = 1:size(groups.groupingValues,1)
-    groups.labels{i} = strcat(groups.groupingFactor, ' = ', ...
-        sprintf(' %g', groups.groupingValues(i,:)));
+groups.labels = cell(1,size(groups.values,1));
+for i = 1:size(groups.values,1)
+    groups.labels{i} = strcat(groups.factor, ' = ', ...
+        sprintf(' %g', groups.values(i,:)));
 end
 
 % Make directories in sorted order

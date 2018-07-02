@@ -18,7 +18,7 @@ if nargin == 1
     fig = gcf;
     str = varargin{1};
 else
-    if isobject(varargin{1}) && ischar(varargin{2})
+    if isobject(varargin{1})
         fig = varargin{1};
         str = varargin{2};
         if nargin > 2
@@ -72,7 +72,7 @@ h = findobj(fig,'Type','axes');
 
 % Just use a regular title if there is only one axis
 if length(h) == 1
-    title(h(1), str, 'FontSize', fs, 'FontWeight', 'normal');
+    title(h(1), str, 'FontSize', fs, 'FontWeight', 'normal', 'Interpreter', 'none');
     return;
 end
 

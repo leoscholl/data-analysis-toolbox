@@ -21,11 +21,15 @@ if ~exist('groupingMethod', 'var') || isempty(groupingMethod)
     groupingMethod = 'all';
 end
 
-% No factors = 1 condition
-if isempty(ex.CondTestCond)
-    groupingValues = [];
+% No factors or merge factors = 1 condition
+if isempty(ex.CondTestCond) || strcmp(groupingMethod, 'merge')
+    groupingValues = [1];
     conditions = filter;
-    conditionNames = {''};
+    if strcmp(groupingMethod, 'merge')
+        conditionNames = {'merge'};
+    else
+        conditionNames = {''};
+    end
     return;
 end
 
@@ -46,15 +50,15 @@ for f = 1:length(factorNames)
     % If any two factors share the same condition indices, only include the
     % first one (e.g. PositionOffset and Position_Final)
     u = [];
-    all = [groupingConditions remainingFactors conditions];
+    allConds = [groupingConditions remainingFactors conditions];
     allNames = [{''} remainingFactorNames factorNames{f}];
     dim = [-1 dim size(conditions,2)];
-    for i = 1:size(all,2)
-        [~, ~, u(:,i)] = unique(cell2mat(all(:,i)),'rows');
+    for i = 1:size(allConds,2)
+        [~, ~, u(:,i)] = unique(cell2mat(allConds(:,i)),'rows');
     end
     [~, c] = unique(u', 'rows');
     c = setdiff(c,1);
-    remainingFactors = all(:,c);
+    remainingFactors = allConds(:,c);
     remainingFactorNames = allNames(c);
     dim = dim(c);
     rCond = unique(cell2mat(remainingFactors),'rows');
@@ -135,3 +139,8 @@ else
     error(['Unknown collapsing method. Choose ''all'' (default), ',...
         '''remaining'', or ''none''.']);
 end
+
+% Remove any empty levels after filtering
+empty = squeeze(all(all(~conditions,2)));
+conditions(:,:,empty) = [];
+conditionNames(empty) = [];

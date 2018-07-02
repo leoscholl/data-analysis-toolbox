@@ -3,7 +3,9 @@ function result = processLfpData(data, fs, time, electrodeid, ...
 %processLfpData Plot lfp data with the given list of plotting functions
 
 p = inputParser;
+p.KeepUnmatched = true;
 p.addParameter('offset', min(0.5/ex.secondperunit, (ex.PreICI + ex.SufICI)/2));
+p.addParameter('ignoreNonResponsive', true);
 p.parse(varargin{:});
 offset = p.Results.offset;
 
@@ -12,14 +14,18 @@ if ~iscell(actions)
 end
 
 % Unpack inputs
-groupingFactor = groups.groupingFactor;
-groupingValues = groups.groupingValues;
+groupingFactor = groups.factor;
+groupingValues = groups.values;
 conditions = groups.conditions;
 levelNames = groups.levelNames;
 labels = groups.labels;
 
 result = struct;
+result.Subject_ID = ex.Subject_ID;
+result.RecordSession = ex.RecordSession;
+result.RecordSite = ex.RecordSite;
 result.electrodeid = electrodeid;
+test = struct;
 
 dur = nanmean(diff(ex.CondTest.CondOn));
 stimDur = nanmean(ex.CondTest.CondOff - ex.CondTest.CondOn);
@@ -44,7 +50,7 @@ for l = 1:size(conditions,3)
     end
     % Save optimal condition at each level
     [~, i] = max(max(abs(lfpMean(:,:,l)),[],2));
-    result.(['maxDelta',strrep(levelNames{l},'.','_')]) = groupingValues(i,:);
+    test.maxDelta{l} = groupingValues(i,:);
 end
 
 for f = 1:length(actions)
@@ -122,4 +128,7 @@ for f = 1:length(actions)
             continue;
     end
 end
+
+result.(ex.ID) = {test};
+
 end

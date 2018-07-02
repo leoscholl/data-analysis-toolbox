@@ -22,7 +22,7 @@ function varargout = analysis_ui(varargin)
 
 % Edit the above text to modify the response to help analysis_ui
 
-% Last Modified by GUIDE v2.5 21-Jun-2018 16:53:52
+% Last Modified by GUIDE v2.5 25-Jun-2018 16:10:52
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -263,16 +263,26 @@ sourceFormatMenu = cellstr(get(handles.SourceFormatMenu, 'String'));
 sourceFormat = sourceFormatMenu{get(handles.SourceFormatMenu, 'Value')};
 dataDir = get(handles.DataDirBox, 'String');
 
+datasets = cell(1,length(files));
 for f = 1:length(files)
-    filepath = fullfile(dataDir, files{f}(3:end));
-    dataset = loadDataset(filepath, sourceFormat);
-    % Move the datasets to the matlab workspace
-    [~, filename, ~] = fileparts(files{f});
-    name = genvarname(sprintf('dataset_%s', filename));
-    assignin('base',name,dataset);
-    pause(0.1);
+    filepath = fullfile(dataDir, files{f});
+    datasets{f} = loadDataset(filepath, sourceFormat);   
 end
+assignin('base','datasets',datasets);
+pause(0.1);
 
+% --- Executes on button press in LoadFilenames.
+function LoadFilenames_Callback(hObject, eventdata, handles)
+% hObject    handle to LoadFilenames (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+tests = get(handles.FileList, 'UserData');
+selected = get(handles.FileList, 'Value');
+tests = tests(selected);
+dataDir = get(handles.DataDirBox, 'String');
+files = arrayfun(@(x)fullfile(dataDir, x.files{1}), tests, 'UniformOutput', 0);
+assignin('base','files',files);
+pause(0.1);
 
 % --- Executes on button press in AddAction.
 function AddAction_Callback(hObject, eventdata, handles)
@@ -315,12 +325,15 @@ isParallel = logical(get(handles.ParallelCheck, 'Value'));
 actionList = get(handles.ActionList, 'String');
 actions = actionList(get(handles.ActionList, 'Value'));
 actions = actions(~cellfun(@isempty, actions));
-args = {};
+args = strsplit(handles.Args.String, {' ', ','}, 'CollapseDelimiters', true);
+args = args(1:floor(length(args)/2)*2); % only allow name-value pairs
 
 setStatus(handles, 'plotting...');
-results = batch_process(files, figuresPath, isParallel, ...
+% mt = NeuroAnalysis.IO.MetaTable('temp');
+results = batch_process(files, figuresPath, [], isParallel, ...
     sourceFormat, actions, true, args{:});
 assignin('base','results',results);
+%assignin('base','mt',mt);
 pause(0.2);
 
 setStatus(handles, '');
@@ -634,3 +647,24 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
+
+function Args_Callback(hObject, eventdata, handles)
+% hObject    handle to Args (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of Args as text
+%        str2double(get(hObject,'String')) returns contents of Args as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function Args_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to Args (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end

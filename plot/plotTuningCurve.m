@@ -4,22 +4,39 @@ function plotTuningCurve(cond, data, groupingFactor, levelNames)
 hold on;
 legendItems = {};
 
-% Plot data with SEMs
-nLevels = size(data.mF0,2);
-colors = jet(nLevels);
-if nLevels == 1
-    errorbar(cond(:,1),data.mF0,data.semF0,'k','LineWidth',1);
-    if any(~isnan(data.mF1) | ~isnan(data.semF1))
-        errorbar(cond(:,1),data.mF1,data.semF1,'r');
-        legendItems = {'F0';'F1';'PreICI'};
-    else
-        legendItems = {'F0';'PreICI'};
-    end
-    errorbar(cond(:,1),data.mPre,data.semPre,'Color',[0.5 0.5 0.5]);
+% Prepare colors
+items = fieldnames(data);
+nLevels = size(data.(items{1}),3);
+if nLevels == 1 && length(items) == 3
+    colors(1,:,1) = [0 0 0];
+    colors(1,:,2) = [1 0 0];
+    colors(1,:,3) = [0.5 0.5 0.5];
+elseif nLevels == 1
+    colors = reshape(hsv(length(items)), 1, 3, length(items));
 else
+    colors = repmat(jet(nLevels), 1, 1, length(items));
+end
+
+% Plot data with SEMs
+for i = 1:length(items)
+    pop = data.(items{i});
+    if ~iscell(pop)
+        pop = num2cell(pop);
+    end
     for l = 1:nLevels
-        errorbar(cond(:,1),data.mF0(:,l),data.semF0(:,l),'Color',colors(l,:));
-        legendItems = [legendItems; {['F0_',levelNames{l}]}];
+        m = nan(1,size(pop,1));
+        s = nan(1,size(pop,1));
+        for c = 1:size(pop,1)
+            m(c) = nanmean([pop{c,:,l}]);
+            s(c) = sem([pop{c,:,l}]);
+        end
+        errorbar(cond(:,1),m,s,'Color',colors(l,:,i));
+        if isempty(levelNames) || isempty(levelNames{l})
+            legendItems = [legendItems; items{i}];
+        else
+            legendItems = [legendItems; ...
+            {strcat(items{i},sprintf('_%s',levelNames{l}))}];
+        end
     end
 end
 

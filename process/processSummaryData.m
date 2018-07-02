@@ -21,38 +21,38 @@ end
 for f = 1:length(actions)
     switch actions{f}
         case 'plotMap'
-            thr = 10; % minimum firing rate (spikes/s)
-            for l = 1:length(result.spike(1).levelNames)
-                nf = NeuroFig(ex.ID, [], [], 'summary', result.spike(1).levelNames{l});
+            for l = 1:length(groups.levelNames)
+                nf = NeuroFig(ex.ID, [], [], 'summary', groups.levelNames{l});
                 label = {};
                 hold on
-                for e = 1:length(result.spike)
-                    unit = result.spike(e).unit;
-                    uu = 1; x = []; y = []; v = []; uid = [];
-                    for u = 1:length(unit)
-                        map = unit(u).map;
-                        if max(map.v(:,l) > thr)
-                            uid(uu) = unit(u).uuid;
-                            x(:,uu) = map.x;
-                            y(:,uu) = map.y;
-                            v(:,uu) = map.v(:,l);
-                            uu = uu + 1;
-                        end
-                    end
-                    hue = rand;
-                    for u = 1:length(uid)
-                        m = mean(v(:,u));
-                        s = std(v(:,u));
-                        localThr = m+s;
-                        contours = [localThr, localThr];
-                        saturation = max(0.1, max(v(:,u))/max(v(:)));
-                        color = hsv2rgb([hue saturation 1]);
-                        label{end+1} = sprintf('elec %d unit %d',...
-                            result.spike(e).electrodeid, uid(u));
-                        plotMap(x(:,u), y(:,u), v(:,u), ...
-                            result.spike(e).groupingFactor, 'outline', ...
-                            contours, color);
-                    end
+                electrodes = [result.spike.electrodeid];
+                uelectrodes = unique(electrodes);
+                hue = linspace(0,1,length(uelectrodes)+1); % hue for each elec
+                
+                v = zeros(length(result.spike(1).(ex.ID){1}.map.v), length(result.spike));
+                for u = 1:length(result.spike)
+                    v(:,u) = result.spike(u).(ex.ID){1}.map.v(:,l);
+                end
+                
+                for u = 1:length(result.spike)
+                    electrodeid = result.spike(u).electrodeid;
+                    uid = result.spike(u).uid;
+                    map = result.spike(u).(ex.ID){1}.map;
+  
+                    m = mean(v(:,u));
+                    s = std(v(:,u));
+                    localThr = m+s;
+                    contours = [localThr, localThr];
+                    
+                    % Saturation reflects relative strength of response
+                    saturation = sum(abs(v(:,u)))/max(sum(abs(v),1)); 
+                    color = hsv2rgb([hue(electrodeid==uelectrodes) saturation 1]);
+                    label{end+1} = sprintf('elec %d unit %d',...
+                        electrodeid, uid);
+                    plotMap(map.x, map.y, v(:,u), ...
+                        groups.factor, 'outline', ...
+                        contours, color);
+
                 end
                 legend(label);
                 nf.suffix = 'map';
