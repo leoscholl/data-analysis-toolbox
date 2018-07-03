@@ -25,31 +25,39 @@ for f = 1:length(actions)
                 nf = NeuroFig(ex.ID, [], [], 'summary', groups.levelNames{l});
                 label = {};
                 hold on
-                electrodes = [result.spike.electrodeid];
-                uelectrodes = unique(electrodes);
-                hue = linspace(0,1,length(uelectrodes)+1); % hue for each elec
                 
-                v = zeros(length(result.spike(1).(ex.ID){1}.map.v), length(result.spike));
+                % Remove any units with low maximum firing rates
+                thr = 10;
+                spike = [];
                 for u = 1:length(result.spike)
-                    v(:,u) = result.spike(u).(ex.ID){1}.map.v(:,l);
+                    if max(result.spike(u).(ex.ID){1}.map.v(:,l)) > thr
+                        spike = [spike; result.spike(u)];
+                    end
                 end
                 
-                for u = 1:length(result.spike)
-                    electrodeid = result.spike(u).electrodeid;
-                    uid = result.spike(u).uid;
-                    map = result.spike(u).(ex.ID){1}.map;
+                % Allocate a hue for each electrode
+                electrodes = [spike.electrodeid];
+                uelectrodes = unique(electrodes);
+                hue = linspace(0,1,length(uelectrodes)+1);
+                
+                % Plot each unit
+                for u = 1:length(spike)
+                    electrodeid = spike(u).electrodeid;
+                    uid = spike(u).uid;
+                    map = spike(u).(ex.ID){1}.map;
   
-                    m = mean(v(:,u));
-                    s = std(v(:,u));
+                    m = mean(map.v(:,l));
+                    s = std(map.v(:,l));
                     localThr = m+s;
                     contours = [localThr, localThr];
                     
-                    % Saturation reflects relative strength of response
-                    saturation = sum(abs(v(:,u)))/max(sum(abs(v),1)); 
-                    color = hsv2rgb([hue(electrodeid==uelectrodes) saturation 1]);
+                    % Value reflects unit number
+                    uuid = unique([spike(electrodeid == electrodes).uid]);
+                    value = double(uid+1)/double(max(uuid)+1);
+                    color = hsv2rgb([hue(electrodeid==uelectrodes) 1 value]);
                     label{end+1} = sprintf('elec %d unit %d',...
                         electrodeid, uid);
-                    plotMap(map.x, map.y, v(:,u), ...
+                    plotMap(map.x, map.y, map.v(:,l), ...
                         groups.factor, 'outline', ...
                         contours, color);
 

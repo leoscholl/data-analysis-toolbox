@@ -52,7 +52,7 @@ for f = 1:length(factorNames)
     u = [];
     allConds = [groupingConditions remainingFactors conditions];
     allNames = [{''} remainingFactorNames factorNames{f}];
-    dim = [-1 dim size(conditions,2)];
+    dim = [-1 dim size(conditions{1},2)];
     for i = 1:size(allConds,2)
         [~, ~, u(:,i)] = unique(cell2mat(allConds(:,i)),'rows');
     end
@@ -78,7 +78,7 @@ end
 
 if strcmp(groupingMethod, 'remaining') % collapse remaining conditions into one
     
-    condString = cellfun(@(x)sprintf('%0.3f_',x),rCond,'UniformOutput', false);
+    condString = cellfun(@(x)sprintf('%g_',x),rCond,'UniformOutput', false);
     condString = cellfun(@(x)x(1:end-1),condString,'UniformOutput', false);
 
     conditions = false(size(groupingValues,1), length(ex.CondTest.CondIndex), size(rCond,1));
@@ -90,8 +90,8 @@ if strcmp(groupingMethod, 'remaining') % collapse remaining conditions into one
         for i = 1:length(ex.CondTest.CondIndex)
             match = 1;
             for f = 1:length(remainingFactorNames)
-                match = match && rCond{l,f} == ...
-                    ex.CondTestCond.(remainingFactorNames{f}){i};
+                match = match && all(rCond{l,f} == ...
+                    ex.CondTestCond.(remainingFactorNames{f}){i});
             end
             group(i) = match;
         end
@@ -114,14 +114,14 @@ elseif strcmp(groupingMethod, 'none')
         rCond = unique(cell2mat(remainingFactors(:,f)),'rows');
         rCond = mat2cell(rCond, ones(1,size(rCond,1)), dim(f));
         
-        condString = cellfun(@(x)sprintf('%0.3f_',x),rCond,'UniformOutput', false);
+        condString = cellfun(@(x)sprintf('%g_',x),rCond,'UniformOutput', false);
         condString = cellfun(@(x)x(1:end-1),condString,'UniformOutput', false);
         
         for l = 1:size(rCond,1)
             group = zeros(size(ex.CondTest.CondIndex));
             for i = 1:length(ex.CondTest.CondIndex)
-                group(i) = rCond{l} == ...
-                    ex.CondTestCond.(remainingFactorNames{f}){i};
+                group(i) = all(rCond{l} == ...
+                    ex.CondTestCond.(remainingFactorNames{f}){i});
             end
             for i = 1:size(groupingValues, 1)
                 condition = cellfun(@(x,y)isequal(x,groupingValues(i,:)),...

@@ -52,7 +52,7 @@ for i = 1:size(histograms,1)
     % For subplots, only label the bottommost axes
     if i == size(histograms,1) || i == size(histograms,1) - 1
         if i == size(histograms,1) || mod(size(histograms,1),2) == 0
-            xlabel(ax, 'Time [s]');
+            if any(events >= 500) xlabel(ax, 'Time [ms]'), else xlabel(ax, 'Time [s]'), end;
         end
     else
         set(ax, 'XTickLabel', []);

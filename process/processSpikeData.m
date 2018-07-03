@@ -5,7 +5,7 @@ p = inputParser;
 p.addParameter('offset', min(0.5/ex.secondperunit, (ex.PreICI + ex.SufICI)/2));
 p.addParameter('binSize', 0.02/ex.secondperunit);
 p.addParameter('normFun', []);
-p.addParameter('ignoreNonResponsive', true);
+p.addParameter('ignoreNonResponsive', false);
 p.addParameter('groupTuningCurves', true);
 if isstruct(varargin)
     p.parse(varargin);
@@ -129,7 +129,7 @@ for j = 1:length(uuid)
     end
     
     % Do a basic test of responsiveness
-    if ignoreNonResponsive && ~any(response(:)) % && mean2(sum(conditions,2)) > 4
+    if ignoreNonResponsive && ~any(response(:))
         unit{j} = [];
         continue;
     end
@@ -203,7 +203,7 @@ for j = 1:length(uuid)
                     test.map.v(:,l) = v;
                     
                     % Plot
-                    clim = max(max(abs(v)), 20); % arbitrary minimum?
+                    clim = max(abs(v));
                     plotMap(x,y,v,groupingFactor,'image', [-clim clim]);
                     nf.suffix = 'map';
                     nf.dress();

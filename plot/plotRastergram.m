@@ -60,7 +60,7 @@ for i = 1:length(rasters)
     % For subplots, only label the bottommost axes
     if i == length(rasters) || i == length(rasters) - 1
         if i == length(rasters) || mod(length(rasters),2) == 0
-            xlabel(ax, 'Time [s]');
+            if any(events >= 500) xlabel(ax, 'Time [ms]'), else xlabel(ax, 'Time [s]'), end;
         end
     else
         set(ax, 'XTickLabel', []);

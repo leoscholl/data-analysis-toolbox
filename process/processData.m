@@ -9,7 +9,7 @@ end
 p = inputParser;
 p.KeepUnmatched = true;
 p.addParameter('groupingFactor', defaultGroupingFactor(fieldnames(dataset.ex.CondTestCond)));
-p.addParameter('groupingMethod', 'remaining');
+p.addParameter('groupingMethod', 'all');
 p.addParameter('groupingFilter', []);
 p.parse(varargin{:});
 
