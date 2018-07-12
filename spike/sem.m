@@ -4,6 +4,7 @@ function [e] = sem(x, dim)
 if nargin < 2
     [~, dim] = max(size(x));
 end
+if isempty(x), e = NaN; return, end
 e = nanstd(x,[],dim)/sqrt(size(x,dim));
 end
 

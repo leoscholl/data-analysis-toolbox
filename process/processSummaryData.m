@@ -2,6 +2,12 @@ function result = processSummaryData(spikeResult, lfpResult, ...
     ex, groups, path, filename, actions, varargin)
 %processSummaryData
 
+p = inputParser;
+p.KeepUnmatched = true;
+p.addParameter('mappingThreshold', 10);
+p.parse(varargin{:});
+thr = p.Results.mappingThreshold;
+
 if ~iscell(actions)
     actions = {actions};
 end
@@ -22,25 +28,27 @@ for f = 1:length(actions)
     switch actions{f}
         case 'plotMap'
             for l = 1:length(groups.levelNames)
-                nf = NeuroFig(ex.ID, [], [], 'summary', groups.levelNames{l});
-                label = {};
-                hold on
-                
+
                 % Remove any units with low maximum firing rates
-                thr = 10;
                 spike = [];
                 for u = 1:length(result.spike)
                     if max(result.spike(u).(ex.ID){1}.map.v(:,l)) > thr
                         spike = [spike; result.spike(u)];
                     end
                 end
-                
+                if isempty(spike)
+                    continue;
+                end
+
                 % Allocate a hue for each electrode
                 electrodes = [spike.electrodeid];
                 uelectrodes = unique(electrodes);
                 hue = linspace(0,1,length(uelectrodes)+1);
                 
                 % Plot each unit
+                nf = NeuroFig(ex.ID, [], [], 'summary', groups.levelNames{l});
+                label = {};
+                hold on
                 for u = 1:length(spike)
                     electrodeid = spike(u).electrodeid;
                     uid = spike(u).uid;

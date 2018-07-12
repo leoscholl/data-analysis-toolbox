@@ -4,7 +4,7 @@ function pathMap = makeElectrodeDirs(dataset, basePath)
 
 dataDir = makeDatasetDir(dataset, basePath);
 pathMap = containers.Map('KeyType','double','ValueType','char');
-electrodes = union([dataset.spike.electrodeid], dataset.lfp.electrodeid);
+electrodes = union([dataset.spike.electrodeid], dataset.lfp.electrodeid, 'sorted');
 for i = 1:length(electrodes)
     elecDir = fullfile(dataDir, sprintf('Ch%02d',electrodes(i)));
     if ~isdir(elecDir)

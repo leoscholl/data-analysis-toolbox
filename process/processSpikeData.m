@@ -124,7 +124,7 @@ for j = 1:length(uuid)
         
         % Save optimal condition at each level
         [~, i] = max(mF0(:,l));
-        param(l).maxF0 = groupingValues(i,:);
+        param(l).maxF0 = i;
         test.maxF0{l} = groupingValues(i,:);
     end
     
@@ -139,7 +139,8 @@ for j = 1:length(uuid)
     test.data.fano = fano;
     
     % Calculate OSI and DSI for orientation stimuli
-    if contains(ex.ID, 'Ori') && contains(groupingFactor, 'Ori')
+    if contains(ex.ID, 'Ori') && ischar(groupingFactor) && ...
+            contains(groupingFactor, 'Ori')
         theta = cellfun(@deg2rad, ex.CondTestCond.(groupingFactor));
         for l = 1:size(conditions,3)
             level = any(conditions(:,:,l),1);
@@ -157,12 +158,17 @@ for j = 1:length(uuid)
         
         switch actions{f}
             case 'plotTuningCurve'
-                if groupTuningCurves                    
+                if iscell(groupingValues) || size(groupingValues,2) > 1
+                    cond = 1:size(groupingValues,1);
+                    factor = 'condition';
+                else
+                    cond = groupingValues;
+                    factor = groupingFactor;
+                end
+                if size(conditions,3) > 1 && groupTuningCurves                    
                     nf = NeuroFig(ex.ID, spike.electrodeid, uuid(j));
-                    if size(conditions,3) > 1
-                        data = rmfield(data, {'f1', 'pre'});
-                    end
-                    plotTuningCurve(groupingValues, data, groupingFactor, levelNames);
+                    data = rmfield(data, {'f1', 'pre'});
+                    plotTuningCurve(cond, data, factor, levelNames);
                     nf.suffix = 'tc';
                     nf.dress('Params', baseParam);
                     nf.print(path, filename);
@@ -175,7 +181,7 @@ for j = 1:length(uuid)
                         for k = 1:length(fields)
                             leveldata.(fields{k}) = data.(fields{k})(:,:,l);
                         end
-                        plotTuningCurve(groupingValues, leveldata, groupingFactor, []);
+                        plotTuningCurve(cond, leveldata, factor, []);
                         nf.suffix = 'tc';
                         
                         m = [fieldnames(baseParam)' fieldnames(param(l))'; ...

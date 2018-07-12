@@ -30,7 +30,7 @@ for i = 1:length(items)
             m(c) = nanmean([pop{c,:,l}]);
             s(c) = sem([pop{c,:,l}]);
         end
-        errorbar(cond(:,1),m,s,'Color',colors(l,:,i));
+        errorbar(cond,m,s,'Color',colors(l,:,i));
         if isempty(levelNames) || isempty(levelNames{l})
             legendItems = [legendItems; items{i}];
         else

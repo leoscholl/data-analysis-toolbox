@@ -17,6 +17,9 @@ else
     else
         actions = {'plotRastergram', 'plotTuningCurve'};
     end
+    if contains(ex.ID, 'Laser')
+        actions = [actions, {'plotPsth'}];
+    end
     if strcmp(ex.ID, 'Image') || strcmp(ex.ID, 'LaserImage')
         return;
     end

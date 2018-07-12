@@ -1,14 +1,21 @@
-function [groupingValues, conditions, conditionNames] = ...
+function groups = ...
     groupConditions(ex, groupingFactor, groupingMethod, filter)
-%factorLevels Define conditions based on different grouping schemes
+%groupConditions Define conditions based on different grouping schemes
+%
+% groupingMethod:
+%   'all' - group everything into the groupingFactor
+%   'remaining' - after grouping into the groupingFactor, group everything
+%       else into separate levels of one factor
+%   'first' - after grouping into the groupingFactor, don't do any more
+%       grouping
+%   'none' - don't use the groupingFactor, just use the unique conditions
+%       to make one level
+%   'merge' - merge everything into one condition
+
 
 if ~exist('groupingFactor', 'var') || isempty(groupingFactor)
     conditionNames = fieldnames(ex.CondTestCond);
-    % Take Final if possible, otherwise take the first by default
-    groupingFactor = conditionNames{contains(conditionNames, 'Final')};
-    if isempty(groupingFactor)
-        groupingFactor = conditionNames{1}; 
-    end
+    groupingFactor = defaultGroupingFactor(conditionNames);
 end
 
 if ~exist('filter', 'var') || isempty(filter)
@@ -17,42 +24,44 @@ else
     filter = reshape(filter, size(ex.CondTest.CondIndex));
 end
 
-if ~exist('groupingMethod', 'var') || isempty(groupingMethod)
-    groupingMethod = 'all';
+% Identify unique conditions
+allFactors = fieldnames(ex.CondTestCond);
+allConds = [];
+allDim = [];
+for f = 1:length(allFactors)
+    factor = allFactors{f};
+    conditions = ex.CondTestCond.(factor);
+    conditions = reshape(conditions, length(conditions), 1);
+    conditions = conditions(filter);
+    allConds = [allConds conditions];
+    allDim = [allDim size(conditions{1},2)];
 end
-
-% No factors or merge factors = 1 condition
-if isempty(ex.CondTestCond) || strcmp(groupingMethod, 'merge')
-    groupingValues = [1];
-    conditions = filter;
-    if strcmp(groupingMethod, 'merge')
-        conditionNames = {'merge'};
-    else
-        conditionNames = {''};
-    end
-    return;
-end
+[uniqueValues, ~, idx] = unique(cell2mat(allConds),'rows');
 
 % Organize conditions into groups
 factorNames = setdiff(fieldnames(ex.CondTestCond), groupingFactor);
-groupingConditions = ex.CondTestCond.(groupingFactor);
-groupingConditions = reshape(groupingConditions, length(groupingConditions), 1);
-groupingValues = unique(cell2mat(groupingConditions),'rows');
+if ~isempty(groupingFactor)
+    groupingConditions = ex.CondTestCond.(groupingFactor);
+    groupingConditions = reshape(groupingConditions, length(groupingConditions), 1);
+    groupingConditions = groupingConditions(filter);
+    groupingValues = unique(cell2mat(groupingConditions),'rows');
+end
 
 remainingFactors = {};
 remainingFactorNames = {};
-dim = [];
+rDim = [];
 for f = 1:length(factorNames)
     factor = factorNames{f};
     conditions = ex.CondTestCond.(factor);
     conditions = reshape(conditions, length(conditions), 1);
-    
+    conditions = conditions(filter);
+
     % If any two factors share the same condition indices, only include the
     % first one (e.g. PositionOffset and Position_Final)
     u = [];
     allConds = [groupingConditions remainingFactors conditions];
     allNames = [{''} remainingFactorNames factorNames{f}];
-    dim = [-1 dim size(conditions{1},2)];
+    rDim = [-1 rDim size(conditions{1},2)];
     for i = 1:size(allConds,2)
         [~, ~, u(:,i)] = unique(cell2mat(allConds(:,i)),'rows');
     end
@@ -60,29 +69,50 @@ for f = 1:length(factorNames)
     c = setdiff(c,1);
     remainingFactors = allConds(:,c);
     remainingFactorNames = allNames(c);
-    dim = dim(c);
+    rDim = rDim(c);
     rCond = unique(cell2mat(remainingFactors),'rows');
-    rCond = mat2cell(rCond, ones(1,size(rCond,1)), dim);
+    rCond = mat2cell(rCond, ones(1,size(rCond,1)), rDim);
 end
 
-if strcmp(groupingMethod, 'all') || isempty(remainingFactors)
+if ~exist('groupingMethod', 'var') || isempty(groupingMethod)
+    if length(uniqueValues) > 12
+        groupingMethod = 'remaining';
+    else
+        groupingMethod = 'none';
+    end
+end
+
+if isempty(ex.CondTestCond) || strcmp(groupingMethod, 'merge')
+    
+    % No factors or merge factors = 1 condition
+    groupingFactor = 'merge';
+    groupingValues = [1];
+    conditions = filter;
+    if strcmp(groupingMethod, 'merge')
+        labels = {'merge'};
+    else
+        labels = {''};
+    end
+
+elseif strcmp(groupingMethod, 'all') || isempty(remainingFactors)
+
+    % No additional factors
     conditions = false(size(groupingValues,1), length(ex.CondTest.CondIndex));
-    conditionNames = {''};
+    labels = {''};
     
     for i = 1:size(groupingValues, 1)
-        conditions(i,:) = filter & cellfun(@(x)isequal(x,groupingValues(i,:)), ...
+        conditions(i,:) = cellfun(@(x)isequal(x,groupingValues(i,:)), ...
             ex.CondTestCond.(groupingFactor));
     end
-    return;
-end
-
-if strcmp(groupingMethod, 'remaining') % collapse remaining conditions into one
     
+elseif strcmp(groupingMethod, 'remaining') 
+    
+    % Collapse remaining conditions into one
     condString = cellfun(@(x)sprintf('%g_',x),rCond,'UniformOutput', false);
     condString = cellfun(@(x)x(1:end-1),condString,'UniformOutput', false);
 
     conditions = false(size(groupingValues,1), length(ex.CondTest.CondIndex), size(rCond,1));
-    conditionNames = cell(1, size(rCond,1));
+    labels = cell(1, size(rCond,1));
     for l = 1:size(rCond,1)
 
 
@@ -98,21 +128,22 @@ if strcmp(groupingMethod, 'remaining') % collapse remaining conditions into one
         for i = 1:size(groupingValues, 1)
             condition = cellfun(@(x,y)isequal(x,groupingValues(i,:)),...
                 ex.CondTestCond.(groupingFactor));
-            conditions(i,:,l) = filter & condition & group;
+            conditions(i,:,l) = condition & group;
         end
         levelName = [remainingFactorNames; condString(l,:)];
         levelName = sprintf('%s_%s_', levelName{:});
-        conditionNames{l} = levelName(1:end-1);
+        labels{l} = levelName(1:end-1);
     end
 
-elseif strcmp(groupingMethod, 'none')
+elseif strcmp(groupingMethod, 'first')
     
+    % Don't collapse anything
     conditions = false(size(groupingValues,1), length(ex.CondTest.CondIndex), 0);
-    conditionNames = cell(1, 0);
+    labels = cell(1, 0);
     ll = 1;
     for f = 1:size(remainingFactors,2)
         rCond = unique(cell2mat(remainingFactors(:,f)),'rows');
-        rCond = mat2cell(rCond, ones(1,size(rCond,1)), dim(f));
+        rCond = mat2cell(rCond, ones(1,size(rCond,1)), rDim(f));
         
         condString = cellfun(@(x)sprintf('%g_',x),rCond,'UniformOutput', false);
         condString = cellfun(@(x)x(1:end-1),condString,'UniformOutput', false);
@@ -126,21 +157,51 @@ elseif strcmp(groupingMethod, 'none')
             for i = 1:size(groupingValues, 1)
                 condition = cellfun(@(x,y)isequal(x,groupingValues(i,:)),...
                     ex.CondTestCond.(groupingFactor));
-                conditions(i,:,ll) = filter & condition & group;
+                conditions(i,:,ll) = condition & group;
             end
             levelName = [remainingFactorNames{f}; condString(l)];
             levelName = sprintf('%s_%s_', levelName{:});
-            conditionNames{ll} = levelName(1:end-1);
+            labels{ll} = levelName(1:end-1);
             ll = ll + 1;
         end
     end
     
+elseif strcmp(groupingMethod, 'none')
+    
+    % No grouping, just use unique condition indices
+    groupingFactor = allFactors;
+    groupingValues = uniqueValues;
+    conditions = false(size(groupingValues,1), length(ex.CondTest.CondIndex));
+    for i = 1:size(groupingValues, 1)
+        conditions(i,:) = arrayfun(@(x)x==i, idx);
+    end
+    groupingValues = mat2cell(groupingValues, ones(1,size(groupingValues,1)), allDim);
+    labels = {''};
 else
     error(['Unknown collapsing method. Choose ''all'' (default), ',...
         '''remaining'', or ''none''.']);
 end
 
-% Remove any empty levels after filtering
-empty = squeeze(all(all(~conditions,2)));
-conditions(:,:,empty) = [];
-conditionNames(empty) = [];
+% Organize into structure
+groups.factor = groupingFactor;
+groups.values = groupingValues;
+groups.conditions = conditions;
+groups.levelNames = labels;
+
+% Generate labels for grouped conditions
+groups.labels = cell(1,size(groups.values,1));
+if iscell(groups.factor)
+    for i = 1:size(groups.values,1)
+        label = cell(1,length(groups.factor));
+        for j = 1:length(groups.factor)
+            label{j} = strcat(groups.factor{j}, ' =', ...
+                sprintf(' %g', groups.values{i,j}));
+        end
+        groups.labels{i} = strjoin(label, ', ');
+    end
+else  
+    for i = 1:size(groups.values,1)
+        groups.labels{i} = strcat(groups.factor, ' =', ...
+            sprintf(' %g', groups.values(i,:)));
+    end
+end
