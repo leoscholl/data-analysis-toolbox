@@ -14,15 +14,15 @@ p.addParameter('groupingFilter', []);
 p.parse(varargin{:});
 
 % Grouping
-groups.method = p.Results.groupingMethod;
-groups.filter = p.Results.groupingFilter;
-if isempty(groups.filter)
+if isempty(p.Results.groupingFilter)
     filter = [];
+elseif isnumeric(p.Results.groupingFilter)
+    filter = p.Results.groupingFilter;
 else
-    filter = groups.filter(dataset.ex);
+    filter = p.Results.groupingFilter(dataset.ex);
 end
 groups = groupConditions(dataset.ex, p.Results.groupingFactor, ...
-    groups.method, filter);
+    p.Results.groupingMethod, filter);
 
 % Event timing mode
 ex = dataset.ex; ex.secondperunit = dataset.secondperunit;
@@ -35,6 +35,7 @@ path = makeElectrodeDirs(dataset, figuresPath);
 
 % Process and plot
 [~, filename, ~] = fileparts(dataset.filepath);
+filename = strcat(filename, '_group_', groups.method);
 spike = [];
 lfp = [];
 if isfield(dataset, 'spike')

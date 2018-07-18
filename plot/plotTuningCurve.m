@@ -42,6 +42,8 @@ end
 
 % Configure axes, legend, title
 axis tight;
+lim = axis;
+ylim([0 lim(4)]);
 legend(legendItems,'Location','NorthEast','Interpreter','none');
 legend('boxoff');
 

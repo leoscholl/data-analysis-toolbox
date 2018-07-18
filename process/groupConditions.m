@@ -101,7 +101,7 @@ elseif strcmp(groupingMethod, 'all') || isempty(remainingFactors)
     labels = {''};
     
     for i = 1:size(groupingValues, 1)
-        conditions(i,:) = cellfun(@(x)isequal(x,groupingValues(i,:)), ...
+        conditions(i,:) = filter & cellfun(@(x)isequal(x,groupingValues(i,:)), ...
             ex.CondTestCond.(groupingFactor));
     end
     
@@ -128,7 +128,7 @@ elseif strcmp(groupingMethod, 'remaining')
         for i = 1:size(groupingValues, 1)
             condition = cellfun(@(x,y)isequal(x,groupingValues(i,:)),...
                 ex.CondTestCond.(groupingFactor));
-            conditions(i,:,l) = condition & group;
+            conditions(i,:,l) = filter & condition & group;
         end
         levelName = [remainingFactorNames; condString(l,:)];
         levelName = sprintf('%s_%s_', levelName{:});
@@ -157,7 +157,7 @@ elseif strcmp(groupingMethod, 'first')
             for i = 1:size(groupingValues, 1)
                 condition = cellfun(@(x,y)isequal(x,groupingValues(i,:)),...
                     ex.CondTestCond.(groupingFactor));
-                conditions(i,:,ll) = condition & group;
+                conditions(i,:,ll) = filter & condition & group;
             end
             levelName = [remainingFactorNames{f}; condString(l)];
             levelName = sprintf('%s_%s_', levelName{:});
@@ -182,7 +182,14 @@ else
         '''remaining'', or ''none''.']);
 end
 
+% Remove any empty levels after filtering
+empty = squeeze(all(all(~conditions,2)));
+conditions(:,:,empty) = [];
+labels(empty) = [];
+
 % Organize into structure
+groups.filter = filter;
+groups.method = groupingMethod;
 groups.factor = groupingFactor;
 groups.values = groupingValues;
 groups.conditions = conditions;

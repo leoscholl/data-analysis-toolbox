@@ -33,8 +33,8 @@ for i = 1:length(rasters)
     xx=ones(3*nSpikes,1)*nan;
     yy=ones(3*nSpikes,1)*nan;
     if ~isempty(allSpikes)
-        yy(1:3:3*nSpikes)=allTrials;
-        yy(2:3:3*nSpikes)=allTrials+1;
+        yy(1:3:3*nSpikes)=allTrials-0.5;
+        yy(2:3:3*nSpikes)=allTrials+0.5;
         
         %scale the time axis to ms
         xx(1:3:3*nSpikes)=allSpikes;
@@ -44,8 +44,8 @@ for i = 1:length(rasters)
 
     % XTick
     box(ax,'off');
-    axis(ax, [events(1) events(3) 0 ...
-        length(spikesCond)+1]);
+    axis(ax, [events(1) events(3) 0.5 ...
+        length(spikesCond)+0.5]);
     tick = 0:-tickDistance:events(1); % always include 0
     tick = [fliplr(tick) tickDistance:tickDistance:events(3)];
     set(ax,'XTick',tick);

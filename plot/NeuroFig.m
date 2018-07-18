@@ -42,6 +42,9 @@ classdef NeuroFig < handle
                 'Position', [0 0 1200 900], ...
                 'PaperUnits', 'inches', ...
                 'PaperPositionMode', 'auto');
+            
+            % Save this object within the figure
+            obj.handle.UserData = obj;
         end
         
         function dress(obj, varargin)
@@ -133,13 +136,16 @@ classdef NeuroFig < handle
                 suffix = strcat('_',obj.suffix);
             end
             fullname = strcat(filename, electrode, unit, info, suffix, '.', format);
+            figname = strcat(filename, electrode, unit, info, suffix, '.fig');
+            set(obj.handle, 'CreateFcn', 'set(gcf,''Visible'',''on'')');
             
             if strcmp(format, 'fig')
-                savefig(obj.handle, fullfile(path, fullname), 'compact');
+                savefig(obj.handle, fullfile(path, figname), 'compact');
             elseif pretty
                 export_fig(obj.handle, fullfile(path, fullname), ...
                     sprintf('-%s', format), '-painters', '-r300', '-m2', ...
                     '-dg576x432', '-p0.02');
+                savefig(obj.handle, fullfile(path, figname), 'compact');
             else
                 fig_pos = obj.handle.PaperPosition;
                 obj.handle.PaperSize = [fig_pos(3) fig_pos(4)];
@@ -153,7 +159,9 @@ classdef NeuroFig < handle
                 else
                     imwrite(raster, raster_map, fullfile(path, fullname));
                 end
+                savefig(obj.handle, fullfile(path, figname), 'compact');
             end
+            
         end
         
         

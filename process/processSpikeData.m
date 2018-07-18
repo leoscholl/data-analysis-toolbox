@@ -3,10 +3,11 @@ function result = processSpikeData(spike, ex, groups, path, filename, actions, v
 
 p = inputParser;
 p.addParameter('offset', min(0.5/ex.secondperunit, (ex.PreICI + ex.SufICI)/2));
+p.addParameter('latency', 0.05/ex.secondperunit);
 p.addParameter('binSize', 0.02/ex.secondperunit);
 p.addParameter('normFun', []);
 p.addParameter('ignoreNonResponsive', false);
-p.addParameter('groupTuningCurves', true);
+p.addParameter('groupTuningCurves', false);
 if isstruct(varargin)
     p.parse(varargin);
 else
@@ -24,6 +25,7 @@ conditions = groups.conditions;
 levelNames = groups.levelNames;
 labels = groups.labels;
 offset = p.Results.offset;
+latency = p.Results.latency;
 binSize = p.Results.binSize;
 normFun = p.Results.normFun;
 ignoreNonResponsive = strcmp('true', p.Results.ignoreNonResponsive) || ...
@@ -80,7 +82,7 @@ for j = 1:length(uuid)
     for t = 1:length(ex.CondTest.CondIndex)
         
         % Pre-stimulus
-        t1 = ex.CondTest.CondOn(t);
+        t1 = ex.CondTest.CondOn(t) + latency;
         t0 = t1 - offset;
         pre(t) = f0f1(spikes, t0, t1, NaN);
         
@@ -92,8 +94,8 @@ for j = 1:length(uuid)
         else
             tf = NaN;
         end
-        t0 = t1;
-        t1 = ex.CondTest.CondOff(t);
+        t0 =  ex.CondTest.CondOn(t) + latency;
+        t1 = ex.CondTest.CondOff(t) + latency;
         [f0(t), f1(t)] = f0f1(spikes, t0, t1, tf/ex.secondperunit);
         sp(t) = length(spikeTimes(spikes, t0, t1));
     end
