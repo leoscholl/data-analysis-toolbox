@@ -1,7 +1,7 @@
 function result = processData(dataset, figuresPath, actions, isParallel, varargin)
 
 if length(dataset.ex.CondTest.CondIndex) < 3
-    warning('Not enough condition tests, cannot process');
+    warning('Not enough condition tests, cannot process %s', dataset.filepath);
     result = [];
     return;
 end

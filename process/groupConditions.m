@@ -5,7 +5,7 @@ function groups = ...
 % groupingMethod:
 %   'all' - group everything into the groupingFactor
 %   'remaining' - after grouping into the groupingFactor, group everything
-%       else into separate levels of one factor
+%       else into unique conditions
 %   'first' - after grouping into the groupingFactor, don't do any more
 %       grouping
 %   'none' - don't use the groupingFactor, just use the unique conditions
