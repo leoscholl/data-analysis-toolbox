@@ -21,7 +21,7 @@ else
         actions = [actions, {'plotPsth'}];
     end
     if strcmp(ex.ID, 'Image') || strcmp(ex.ID, 'LaserImage')
-        return;
+        actions = {'skip'};
     end
 end
 

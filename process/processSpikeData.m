@@ -237,9 +237,10 @@ for j = 1:length(uuid)
                         end
                         rasters{c} = trials;
                     end
+                    valid = ~cellfun(@isempty,rasters);
                     events = [-offset stimDur dur-offset];
 
-                    plotRastergram(rasters, events, labels, defaultColor(uuid(j)));
+                    plotRastergram(rasters(valid), events, labels(valid), defaultColor(uuid(j)));
                     nf.suffix = 'raster';
                     nf.dress();
                     nf.print(path, filename);
@@ -265,12 +266,13 @@ for j = 1:length(uuid)
                         end
                         hists(c,:) = mean(trials,1)./binSize/ex.secondperunit;
                     end
+                    valid = all(~isnan(hists),2);
                     
                     edges = -offset:dur/(nBins):dur-offset;
                     centers = edges(1:end-1) + diff(edges)/2;
                     events = [-offset stimDur dur-offset];
                     
-                    plotPsth(centers, hists, events, labels, defaultColor(uuid(j)))
+                    plotPsth(centers, hists(valid,:), events, labels(valid), defaultColor(uuid(j)))
                     nf.suffix = 'psth';
                     nf.dress();
                     nf.print(path, filename);

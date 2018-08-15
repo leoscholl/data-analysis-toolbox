@@ -1,16 +1,26 @@
 function groups = ...
-    groupConditions(ex, groupingFactor, groupingMethod, filter)
+    groupConditions(ex, groupingFactor, groupingMethod, filter, ignoreFactors)
 %groupConditions Define conditions based on different grouping schemes
 %
-% groupingMethod:
-%   'all' - group everything into the groupingFactor
-%   'remaining' - after grouping into the groupingFactor, group everything
+% groupingFactor (optional):
+%   <factor name> - group conditions by this factor
+%
+% groupingMethod (optional, default 'none'):
+%   'all' - group everything into groupingFactor
+%   'remaining' - after grouping into groupingFactor, group everything
 %       else into unique conditions
 %   'first' - after grouping into the groupingFactor, don't do any more
 %       grouping
 %   'none' - don't use the groupingFactor, just use the unique conditions
 %       to make one level
 %   'merge' - merge everything into one condition
+%
+% filter (optional):
+%   logical vector of length(condition tests) - filter condition tests
+%
+% ignoreFactors (optional):
+%   list of factor names to ignore
+%
 
 
 if ~exist('groupingFactor', 'var') || isempty(groupingFactor)
@@ -24,38 +34,41 @@ else
     filter = reshape(filter, size(ex.CondTest.CondIndex));
 end
 
+if ~exist('ignoreFactors', 'var') || isempty(ignoreFactors)
+    ignoreFactors = {};
+elseif ~iscell(ignoreFactors)
+    ignoreFactors = {ignoreFactors};
+end
+
 % Identify unique conditions
-allFactors = fieldnames(ex.CondTestCond);
+allFactors = setdiff(fieldnames(ex.CondTestCond), ignoreFactors);
 allConds = [];
 allDim = [];
 for f = 1:length(allFactors)
     factor = allFactors{f};
     conditions = ex.CondTestCond.(factor);
     conditions = reshape(conditions, length(conditions), 1);
-    conditions = conditions(filter);
     allConds = [allConds conditions];
     allDim = [allDim size(conditions{1},2)];
 end
 [uniqueValues, ~, idx] = unique(cell2mat(allConds),'rows');
 
 % Organize conditions into groups
-factorNames = setdiff(fieldnames(ex.CondTestCond), groupingFactor);
 if ~isempty(groupingFactor)
     groupingConditions = ex.CondTestCond.(groupingFactor);
     groupingConditions = reshape(groupingConditions, length(groupingConditions), 1);
-    groupingConditions = groupingConditions(filter);
     groupingValues = unique(cell2mat(groupingConditions),'rows');
 end
 
 remainingFactors = {};
 remainingFactorNames = {};
 rDim = [];
+factorNames = setdiff(allFactors, groupingFactor);
 for f = 1:length(factorNames)
     factor = factorNames{f};
     conditions = ex.CondTestCond.(factor);
     conditions = reshape(conditions, length(conditions), 1);
-    conditions = conditions(filter);
-
+    
     % If any two factors share the same condition indices, only include the
     % first one (e.g. PositionOffset and Position_Final)
     u = [];
@@ -88,22 +101,17 @@ if isempty(ex.CondTestCond) || strcmp(groupingMethod, 'merge')
     groupingFactor = 'merge';
     groupingValues = [1];
     conditions = filter;
-    if strcmp(groupingMethod, 'merge')
-        labels = {'merge'};
-    else
-        labels = {''};
-    end
+    labels = {''};
 
 elseif strcmp(groupingMethod, 'all') || isempty(remainingFactors)
 
     % No additional factors
     conditions = false(size(groupingValues,1), length(ex.CondTest.CondIndex));
-    labels = {''};
-    
     for i = 1:size(groupingValues, 1)
         conditions(i,:) = filter & cellfun(@(x)isequal(x,groupingValues(i,:)), ...
             ex.CondTestCond.(groupingFactor));
     end
+    labels = {''};
     
 elseif strcmp(groupingMethod, 'remaining') 
     
@@ -169,12 +177,14 @@ elseif strcmp(groupingMethod, 'first')
 elseif strcmp(groupingMethod, 'none')
     
     % No grouping, just use unique condition indices
-    groupingFactor = allFactors;
-    groupingValues = uniqueValues;
-    conditions = false(size(groupingValues,1), length(ex.CondTest.CondIndex));
-    for i = 1:size(groupingValues, 1)
-        conditions(i,:) = arrayfun(@(x)x==i, idx);
+    idxfilt = unique(idx(filter));
+    conditions = false(length(idxfilt), length(ex.CondTest.CondIndex));
+    for i = 1:length(idxfilt)
+        group = reshape(arrayfun(@(x)x==idxfilt(i), idx), size(ex.CondTest.CondIndex));
+        conditions(i,:) = filter & group;
     end
+    groupingFactor = allFactors;
+    groupingValues = uniqueValues(idxfilt,:);
     groupingValues = mat2cell(groupingValues, ones(1,size(groupingValues,1)), allDim);
     labels = {''};
 else

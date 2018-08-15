@@ -12,9 +12,9 @@ if nLevels == 1 && length(items) == 3
     colors(1,:,2) = [1 0 0];
     colors(1,:,3) = [0.5 0.5 0.5];
 elseif nLevels == 1
-    colors = reshape(hsv(length(items)), 1, 3, length(items));
+    colors = reshape(distinguishable_colors(length(items)), 1, 3, length(items));
 else
-    colors = repmat(jet(nLevels), 1, 1, length(items));
+    colors = repmat(distinguishable_colors(nLevels), 1, 1, length(items));
 end
 
 % Plot data with SEMs
@@ -30,7 +30,7 @@ for i = 1:length(items)
             m(c) = nanmean([pop{c,:,l}]);
             s(c) = sem([pop{c,:,l}]);
         end
-        errorbar(cond,m,s,'Color',colors(l,:,i));
+        errorbar(cond,m,s,'Color',colors(l,:,i),'LineWidth',1);
         if isempty(levelNames) || isempty(levelNames{l})
             legendItems = [legendItems; items{i}];
         else

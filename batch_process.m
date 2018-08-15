@@ -75,10 +75,7 @@ try
 
 catch e
     fprintf(2,'Error in dataset %s\n%s\n', files, ...
-        getReport(e,'basic','hyperlinks','off'));
-    for i = 1:length(e.stack)
-        fprintf(2, 'in file %s line %d\n', e.stack(i).name, e.stack(i).line);
-    end
+        getReport(e,'extended'));
     results.error = e;
 end
 

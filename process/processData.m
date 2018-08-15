@@ -1,5 +1,24 @@
 function result = processData(dataset, figuresPath, actions, isParallel, varargin)
 
+if contains(actions, 'skip')
+    result = [];
+    disp('Skipping %s', dataset.filepath);
+    return;
+end
+
+% Trim condition table
+nct = sum(dataset.ex.CondTest.CondIndex > 0);
+nct = min(nct, sum(~isnan(dataset.ex.CondTest.CondOn)));
+nct = min(nct, sum(~isnan(dataset.ex.CondTest.CondOff)));
+ctf = fieldnames(dataset.ex.CondTest);
+ctcf = fieldnames(dataset.ex.CondTestCond);
+for f = 1:length(ctf)
+    dataset.ex.CondTest.(ctf{f}) = dataset.ex.CondTest.(ctf{f})(1:nct);
+end
+for f = 1:length(ctcf)
+    dataset.ex.CondTestCond.(ctcf{f}) = dataset.ex.CondTestCond.(ctcf{f})(1:nct);
+end
+
 if length(dataset.ex.CondTest.CondIndex) < 3
     warning('Not enough condition tests, cannot process %s', dataset.filepath);
     result = [];
@@ -11,6 +30,7 @@ p.KeepUnmatched = true;
 p.addParameter('groupingFactor', '');
 p.addParameter('groupingMethod', '');
 p.addParameter('groupingFilter', []);
+p.addParameter('ignoreFactors', {});
 p.parse(varargin{:});
 
 % Grouping
@@ -19,10 +39,10 @@ if isempty(p.Results.groupingFilter)
 elseif isnumeric(p.Results.groupingFilter)
     filter = p.Results.groupingFilter;
 else
-    filter = p.Results.groupingFilter(dataset.ex);
+    filter = p.Results.groupingFilter(dataset.ex.CondTestCond);
 end
 groups = groupConditions(dataset.ex, p.Results.groupingFactor, ...
-    p.Results.groupingMethod, filter);
+    p.Results.groupingMethod, filter, p.Results.ignoreFactors);
 
 % Event timing mode
 ex = dataset.ex; ex.secondperunit = dataset.secondperunit;
@@ -77,7 +97,7 @@ if ~isempty(lfp)
 end
 
 % Summarize
-path = makeDatasetDir(dataset, figuresPath);
+path = makeDatasetDir(ex.Subject_ID, ex.RecordSite, ex.RecordSession, figuresPath);
 result = processSummaryData(spikeResult, lfpResult, ex, groups, ...
     path, filename, actions, p.Unmatched);
 

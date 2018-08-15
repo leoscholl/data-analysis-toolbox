@@ -1,10 +1,10 @@
-function dir = makeDatasetDir(dataset, basePath)
-if ~isempty(dataset.ex.RecordSession) && ~isempty(dataset.ex.RecordSite)
-    session = sprintf('%s_%s',dataset.ex.RecordSession,dataset.ex.RecordSite);
+function dir = makeDatasetDir(id, site, session, basePath)
+if ~isempty(session) && ~isempty(site)
+    session = sprintf('%s_%s',session,site);
 else
-    session = sprintf('%s%s',dataset.ex.RecordSession,dataset.ex.RecordSite);
+    session = sprintf('%s%s',session,site);
 end
-dir = fullfile(basePath,dataset.ex.Subject_ID,session);
+dir = fullfile(basePath,id,session);
 if ~exist(dir, 'dir')
     mkdir(dir);
 end

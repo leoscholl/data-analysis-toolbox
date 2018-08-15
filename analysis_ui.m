@@ -99,17 +99,8 @@ function figure1_CloseRequestFcn(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Make sure any summary data is exported
-if isfield(handles, 's') && isa(handles.s, 'summaryTable')
-    fprintf('Exporting summary...');
-%     fileName = handles.s.export();
-    fprintf(' done.\n');
-end
-
 % Save Preferences
-fprintf('Saving preferences...');
 savePrefs(handles);
-fprintf(' done.\n');
 
 % Close the figure
 delete(hObject);
@@ -325,8 +316,15 @@ isParallel = logical(get(handles.ParallelCheck, 'Value'));
 actionList = get(handles.ActionList, 'String');
 actions = actionList(get(handles.ActionList, 'Value'));
 actions = actions(~cellfun(@isempty, actions));
-args = strsplit(handles.Args.String, {' ', ','}, 'CollapseDelimiters', true);
+args = strsplit(handles.Args.String, {', '}, 'CollapseDelimiters', true);
 args = args(1:floor(length(args)/2)*2); % only allow name-value pairs
+for i = 1:length(args)
+    try
+        args{i} = eval(args{i});
+        fprintf('arg %d: %s', i, evalc('disp(args{i})'));
+    catch
+    end
+end
 
 setStatus(handles, 'plotting...');
 % mt = NeuroAnalysis.IO.MetaTable('temp');

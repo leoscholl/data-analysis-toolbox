@@ -29,7 +29,7 @@ end
 plot(t, y);
 
 axis tight
-set(gca, 'CameraUpVector', [1 0 0]);
+%set(gca, 'CameraUpVector', [1 0 0]);
 legend({'delta (0-4 Hz)';'theta (4-8 Hz)';'alpha (8-13 Hz)';'beta (13-25 Hz)';...
     'low gamma (25-55 Hz)';'high gamma'},...
                 'Location','northwest','FontSize',6);
