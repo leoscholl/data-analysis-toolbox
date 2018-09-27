@@ -75,70 +75,42 @@ for j = 1:length(uuid)
     
     test = struct;
     param = struct;
-
-    % Calculate MFR and F1
-    pre = nan(length(ex.CondTest.CondIndex), 1);
-    f0 = pre; f1 = pre; sp = pre;
-    for t = 1:length(ex.CondTest.CondIndex)
+    
+    % Extract spikes
+    nct = length(ex.CondTest.CondIndex);
+    pre = cell(nct, 1);
+    peri = pre;
+    for t = 1:nct
         
         % Pre-stimulus
         t1 = ex.CondTest.CondOn(t) + latency;
         t0 = t1 - offset;
-        pre(t) = f0f1(spikes, t0, t1, NaN);
+        pre{t} = spikeTimes(spikes, t0, t1);
         
         % Peri-stimulus
-        if isfield(ex.CondTestCond, 'TemporalFreq')
-            tf = ex.CondTestCond.TemporalFreq{t};
-        elseif isfield(ex.EnvParam, 'TemporalFreq')
-            tf = ex.EnvParam.TemporalFreq;
-        else
-            tf = NaN;
-        end
         t0 =  ex.CondTest.CondOn(t) + latency;
         t1 = ex.CondTest.CondOff(t) + latency;
-        [f0(t), f1(t)] = f0f1(spikes, t0, t1, tf/ex.secondperunit);
-        sp(t) = length(spikeTimes(spikes, t0, t1));
+        peri{t} = spikeTimes(spikes, t0, t1);
     end
-    
-    % Fix time units
-    if ex.secondperunit ~= 1
-        pre = pre/ex.secondperunit;
-        f0 = f0/ex.secondperunit;
-        f1 = f1/ex.secondperunit;
+    unit{j}.pre = pre;
+    unit{j}.peri = peri;
+
+    % Calculate F0 and F1 for pre- and peri-stimulus intervals
+    if isfield(ex.CondTestCond, 'TemporalFreq')
+        tf = cell2mat(ex.CondTestCond.TemporalFreq);
+    elseif isfield(baseParam, 'TemporalFreq')
+        tf = repmat(baseParam.TemporalFreq, 1, nct);
+    else
+        tf = nan(1, nct);
     end
-    
-    % Organize MFR into proper conditions
-    mF0 = nan(size(groupingValues,1), size(conditions,3));
-    mPre = nan(size(groupingValues,1), size(conditions,3));
-    fano = nan(size(groupingValues,1), size(conditions,3));
-    response = false(size(groupingValues,1), size(conditions,3));
-    data = [];
-    for l = 1:size(conditions,3)
-        for i = 1:size(groupingValues,1)
-            data.f0{i,:,l} = f0(conditions(i,:,l))';
-            data.f1{i,:,l} = f1(conditions(i,:,l))';
-            data.pre{i,:,l} = pre(conditions(i,:,l))';
-            mF0(i,l) = nanmean(f0(conditions(i,:,l)));
-            mPre(i,l) = nanmean(pre(conditions(i,:,l)));
-            fano(i,l) = nanvar(sp(conditions(i,:,l)))/nanmean(sp(conditions(i,:,l)));
-            response(i,l) = isresponsive(pre(conditions(i,:,l)),f0(conditions(i,:,l)));
-        end
-        
-        % Save optimal condition at each level
-        [~, i] = max(mF0(:,l));
-        param(l).maxF0 = i;
-        test.maxF0{l} = groupingValues(i,:);
-    end
-    
-    % Do a basic test of responsiveness
-    if ignoreNonResponsive && ~any(response(:))
-        unit{j} = [];
-        continue;
-    end
-    
-    % Store mfr data
-    test.data = data;
-    test.data.fano = fano;
+    pref0 = f0f1(pre, ex.CondTest.CondOff-ex.CondTest.CondOn, tf);
+    [perif0, perif1] = f0f1(peri, ex.CondTest.CondOff-ex.CondTest.CondOn, tf);
+    pref0 = pref0./ex.secondperunit;
+    perif0 = perif0./ex.secondperunit;
+    perif1 = perif1./ex.secondperunit;
+    unit{j}.pref0 = pref0;
+    unit{j}.perif0 = perif0;
+    unit{j}.perif1 = perif1;
     
     % Calculate OSI and DSI for orientation stimuli
     if contains(ex.ID, 'Ori') && ischar(groupingFactor) && ...
@@ -146,7 +118,7 @@ for j = 1:length(uuid)
         theta = cellfun(@deg2rad, ex.CondTestCond.(groupingFactor));
         for l = 1:size(conditions,3)
             level = any(conditions(:,:,l),1);
-            [OSI, DSI] = osi(f0(level), theta(level));
+            [OSI, DSI] = osi(perif0(level), theta(level));
             param(l).OSI = OSI;
             param(l).DSI = DSI;
             test.osi(1,l) = OSI;
@@ -154,12 +126,12 @@ for j = 1:length(uuid)
         end
     end
     
-    
     % Plotting
     for f = 1:length(actions)
         
         switch actions{f}
             case 'plotTuningCurve'
+                data = [];
                 if iscell(groupingValues) || size(groupingValues,2) > 1
                     cond = 1:size(groupingValues,1);
                     factor = 'condition';
@@ -167,10 +139,10 @@ for j = 1:length(uuid)
                     cond = groupingValues;
                     factor = groupingFactor;
                 end
-                if size(conditions,3) > 1 && groupTuningCurves                    
+                if size(conditions,3) > 1 && groupTuningCurves
                     nf = NeuroFig(ex.ID, spike.electrodeid, uuid(j));
-                    data = rmfield(data, {'f1', 'pre'});
-                    plotTuningCurve(cond, data, factor, levelNames);
+                    data.F0 = perif0;
+                    plotTuningCurve(cond, data, conditions, factor, levelNames);
                     nf.suffix = 'tc';
                     nf.dress('Params', baseParam);
                     nf.print(path, filename);
@@ -178,16 +150,13 @@ for j = 1:length(uuid)
                 else
                     for l = 1:size(conditions,3)
                         nf = NeuroFig(ex.ID, spike.electrodeid, uuid(j), levelNames{l});
-                        leveldata = struct;
-                        fields = fieldnames(data);
-                        for k = 1:length(fields)
-                            leveldata.(fields{k}) = data.(fields{k})(:,:,l);
-                        end
-                        plotTuningCurve(cond, leveldata, factor, []);
+                        data.pre = pref0;
+                        data.F0 = perif0;
+                        data.F1 = perif1;
+                        plotTuningCurve(cond, data, conditions(:,:,l), factor, []);
                         nf.suffix = 'tc';
-                        
                         m = [fieldnames(baseParam)' fieldnames(param(l))'; ...
-                        struct2cell(baseParam)' struct2cell(param(l))'];
+                            struct2cell(baseParam)' struct2cell(param(l))'];
                         mergedParam = struct(m{:});
                         nf.dress('Params', mergedParam);
                         nf.print(path, filename);
@@ -207,23 +176,30 @@ for j = 1:length(uuid)
                 for l = 1:size(conditions,3)
                     
                     nf = NeuroFig(ex.ID, spike.electrodeid, uuid(j), levelNames{l});
-                    v = mF0(:,l) - mPre(:,l);
-                    test.map.v(:,l) = v;
+                    v = perCondition(perif0 - pref0, conditions(:,:,l));
+                    
+                    % Prepare normalized map for summary
+                    m = mean(v);
+                    s = std(v);
+                    test.map.v(:,l) = (v-m)/s;
                     
                     % Plot
-                    clim = max(abs(v));
-                    plotMap(x,y,v,groupingFactor,'image', [-clim clim]);
+                    clim = max(abs(test.map.v(:,l)));
+                    plotMap(x,y,test.map.v(:,l),groupingFactor,'image', [-clim clim]);
                     nf.suffix = 'map';
                     nf.dress();
                     nf.print(path, filename);
                     nf.close();
+                    
+                    
+
                 end
                 
             case 'plotRastergram'
                 for l = 1:size(conditions,3)
                     
                     nf = NeuroFig(ex.ID, spike.electrodeid, uuid(j), levelNames{l});
-                    
+
                     % Collect rasters
                     dur = nanmean(diff(ex.CondTest.CondOn));
                     stimDur = nanmean(ex.CondTest.CondOff - ex.CondTest.CondOn);
@@ -239,7 +215,7 @@ for j = 1:length(uuid)
                     end
                     valid = ~cellfun(@isempty,rasters);
                     events = [-offset stimDur dur-offset];
-
+                    
                     plotRastergram(rasters(valid), events, labels(valid), defaultColor(uuid(j)));
                     nf.suffix = 'raster';
                     nf.dress();
@@ -274,6 +250,16 @@ for j = 1:length(uuid)
                     
                     plotPsth(centers, hists(valid,:), events, labels(valid), defaultColor(uuid(j)))
                     nf.suffix = 'psth';
+                    nf.dress();
+                    nf.print(path, filename);
+                    nf.close();
+                end
+                
+            case 'plotPolar'
+                for l = 1:size(conditions,3)
+                    nf = NeuroFig(ex.ID, spike.electrodeid, uuid(j), levelNames{l});
+                    plotPolar(groupingValues, data.f0(:,:,l));
+                    nf.suffix = 'polar';
                     nf.dress();
                     nf.print(path, filename);
                     nf.close();

@@ -41,7 +41,7 @@ elseif isnumeric(p.Results.groupingFilter)
 else
     filter = p.Results.groupingFilter(dataset.ex.CondTestCond);
 end
-groups = groupConditions(dataset.ex, p.Results.groupingFactor, ...
+groups = groupConditions(dataset.ex.CondTestCond, p.Results.groupingFactor, ...
     p.Results.groupingMethod, filter, p.Results.ignoreFactors);
 
 % Event timing mode

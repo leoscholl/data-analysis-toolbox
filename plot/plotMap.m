@@ -17,7 +17,8 @@ switch style
         else
             clims = [-max(abs(v)) max(abs(v))];
         end
-        colorbar; colormap('jet'); caxis(clims);
+        c = colorbar; colormap('jet'); caxis(clims); 
+        c.Label.String = 'Z-score';
     case 'outline'
         yrange = varargin{1};
         color = varargin{2};

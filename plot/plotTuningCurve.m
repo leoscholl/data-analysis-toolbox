@@ -1,4 +1,4 @@
-function plotTuningCurve(cond, data, groupingFactor, levelNames)
+function plotTuningCurve(cond, data, conditions, groupingFactor, levelNames)
 %plotTuningCurve draws tuning curve figure
 
 hold on;
@@ -6,7 +6,7 @@ legendItems = {};
 
 % Prepare colors
 items = fieldnames(data);
-nLevels = size(data.(items{1}),3);
+nLevels = size(conditions,3);
 if nLevels == 1 && length(items) == 3
     colors(1,:,1) = [0 0 0];
     colors(1,:,2) = [1 0 0];
@@ -20,16 +20,8 @@ end
 % Plot data with SEMs
 for i = 1:length(items)
     pop = data.(items{i});
-    if ~iscell(pop)
-        pop = num2cell(pop);
-    end
     for l = 1:nLevels
-        m = nan(1,size(pop,1));
-        s = nan(1,size(pop,1));
-        for c = 1:size(pop,1)
-            m(c) = nanmean([pop{c,:,l}]);
-            s(c) = sem([pop{c,:,l}]);
-        end
+        [m, s] = perCondition(pop, conditions(:,:,l));
         errorbar(cond,m,s,'Color',colors(l,:,i),'LineWidth',1);
         if isempty(levelNames) || isempty(levelNames{l})
             legendItems = [legendItems; items{i}];

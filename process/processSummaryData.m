@@ -4,7 +4,7 @@ function result = processSummaryData(spikeResult, lfpResult, ...
 
 p = inputParser;
 p.KeepUnmatched = true;
-p.addParameter('mappingThreshold', 10);
+p.addParameter('mappingThreshold', 3); % number of standard deviations
 p.parse(varargin{:});
 thr = p.Results.mappingThreshold;
 
