@@ -2,7 +2,7 @@ function result = processData(dataset, figuresPath, actions, isParallel, varargi
 
 if contains(actions, 'skip')
     result = [];
-    disp('Skipping %s', dataset.filepath);
+    fprintf('Skipping %s\n', dataset.filepath);
     return;
 end
 
