@@ -1,6 +1,16 @@
 function [f0,f1] = f0f1(varargin)
-%F0F1 Summary of this function goes here
-%   Detailed explanation goes here
+%F0F1 calculates F0 and F1 at a given frequency for given spike trains 
+% [f0, f1] = f0f1(spikes, ts, tf)
+%   spikes - (n x 1) cell array of peri-stimulus spike trains
+%   ts - (n x 1) vector of durations for each spike train
+%   tf - (n x 1) vector of temporal frequencies for each spike train 
+%
+% [f0, f1] = f0f1(spikes, t0, t1, tf)
+%   spikes - (m x 1) vector of spike times
+%   t0 - start time
+%   t1 - end time
+%   tf - temporal frequency
+%
 if iscell(varargin{1}) && nargin == 3
     spikes = varargin{1};
     t = varargin{2};

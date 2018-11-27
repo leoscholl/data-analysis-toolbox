@@ -40,7 +40,7 @@ legend(legendItems,'Location','NorthEast','Interpreter','none');
 legend('boxoff');
 
 xlabel(groupingFactor, 'Interpreter', 'none');
-ylabel('Rate [spikes/s]');
+ylabel('Rate (spikes/s)');
 if issorted(cond, 'strictmonotonic') 
     set(gca,'XTick',cond);
 else

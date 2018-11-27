@@ -4,7 +4,7 @@ function result = processSummaryData(spikeResult, lfpResult, ...
 
 p = inputParser;
 p.KeepUnmatched = true;
-p.addParameter('mappingThreshold', 3); % number of standard deviations
+p.addParameter('mappingThreshold', 8); % size of standard deviation
 p.parse(varargin{:});
 thr = p.Results.mappingThreshold;
 
@@ -29,10 +29,11 @@ for f = 1:length(actions)
         case 'plotMap'
             for l = 1:length(groups.levelNames)
 
-                % Remove any units with low maximum firing rates
+                % Remove any units with firing rates below threshold
                 spike = [];
                 for u = 1:length(result.spike)
-                    if max(result.spike(u).(ex.ID){1}.map.v(:,l)) > thr
+                    s = std(result.spike(u).(ex.ID){1}.map.v(:,l));
+                    if s > thr
                         spike = [spike; result.spike(u)];
                     end
                 end

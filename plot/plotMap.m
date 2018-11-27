@@ -18,7 +18,7 @@ switch style
             clims = [-max(abs(v)) max(abs(v))];
         end
         c = colorbar; colormap('jet'); caxis(clims); 
-        c.Label.String = 'Z-score';
+        c.Label.String = 'Rate (spikes/s)';
     case 'outline'
         yrange = varargin{1};
         color = varargin{2};

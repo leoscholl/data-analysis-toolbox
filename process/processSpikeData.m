@@ -74,7 +74,10 @@ for j = 1:length(uuid)
     unit{j}.uid = uuid(j);
     
     test = struct;
-    param = struct;
+    clearvars param
+    for l = 1:size(conditions,3)
+        param(l) = struct;
+    end
     
     % Extract spikes
     nct = length(ex.CondTest.CondIndex);
@@ -85,12 +88,12 @@ for j = 1:length(uuid)
         % Pre-stimulus
         t1 = ex.CondTest.CondOn(t) + latency;
         t0 = t1 - offset;
-        pre{t} = spikeTimes(spikes, t0, t1);
+        pre{t} = spikeTimes(spikes, t0, t1).*ex.secondperunit;
         
         % Peri-stimulus
         t0 =  ex.CondTest.CondOn(t) + latency;
         t1 = ex.CondTest.CondOff(t) + latency;
-        peri{t} = spikeTimes(spikes, t0, t1);
+        peri{t} = spikeTimes(spikes, t0, t1).*ex.secondperunit;
     end
     unit{j}.pre = pre;
     unit{j}.peri = peri;
@@ -103,11 +106,10 @@ for j = 1:length(uuid)
     else
         tf = nan(1, nct);
     end
-    pref0 = f0f1(pre, ex.CondTest.CondOff-ex.CondTest.CondOn, tf);
-    [perif0, perif1] = f0f1(peri, ex.CondTest.CondOff-ex.CondTest.CondOn, tf);
-    pref0 = pref0./ex.secondperunit;
-    perif0 = perif0./ex.secondperunit;
-    perif1 = perif1./ex.secondperunit;
+    ts = ones(length(pre),1)*offset*ex.secondperunit;
+    pref0 = f0f1(pre, ts, tf);
+    ts = (ex.CondTest.CondOff-ex.CondTest.CondOn).*ex.secondperunit;
+    [perif0, perif1] = f0f1(peri, ts, tf);
     unit{j}.pref0 = pref0;
     unit{j}.perif0 = perif0;
     unit{j}.perif1 = perif1;
@@ -150,9 +152,9 @@ for j = 1:length(uuid)
                 else
                     for l = 1:size(conditions,3)
                         nf = NeuroFig(ex.ID, spike.electrodeid, uuid(j), levelNames{l});
-                        data.pre = pref0;
                         data.F0 = perif0;
                         data.F1 = perif1;
+                        data.pre = pref0;
                         plotTuningCurve(cond, data, conditions(:,:,l), factor, []);
                         nf.suffix = 'tc';
                         m = [fieldnames(baseParam)' fieldnames(param(l))'; ...
@@ -176,12 +178,7 @@ for j = 1:length(uuid)
                 for l = 1:size(conditions,3)
                     
                     nf = NeuroFig(ex.ID, spike.electrodeid, uuid(j), levelNames{l});
-                    v = perCondition(perif0 - pref0, conditions(:,:,l));
-                    
-                    % Prepare normalized map for summary
-                    m = mean(v);
-                    s = std(v);
-                    test.map.v(:,l) = (v-m)/s;
+                    test.map.v(:,l) = perCondition(perif0 - pref0, conditions(:,:,l));
                     
                     % Plot
                     clim = max(abs(test.map.v(:,l)));
