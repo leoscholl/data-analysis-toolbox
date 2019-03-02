@@ -2,7 +2,6 @@ function result = processSpikeData(spike, ex, groups, path, filename, actions, v
 %processSpikeData Plot spiking data with the given list of plotting functions
 
 p = inputParser;
-p.addParameter('offset', min(0.5/ex.secondperunit, (ex.PreICI + ex.SufICI)/2));
 p.addParameter('latency', 0.05/ex.secondperunit);
 p.addParameter('binSize', 0.02/ex.secondperunit);
 p.addParameter('normFun', []);
@@ -24,7 +23,6 @@ groupingValues = groups.values;
 conditions = groups.conditions;
 levelNames = groups.levelNames;
 labels = groups.labels;
-offset = p.Results.offset;
 latency = p.Results.latency;
 binSize = p.Results.binSize;
 normFun = p.Results.normFun;
@@ -82,21 +80,28 @@ for j = 1:length(uuid)
     % Extract spikes
     nct = length(ex.CondTest.CondIndex);
     pre = cell(nct, 1);
-    peri = pre;
+    peri = pre; post = pre;
     for t = 1:nct
         
         % Pre-stimulus
         t1 = ex.CondTest.CondOn(t) + latency;
-        t0 = t1 - offset;
+        t0 = t1 - ex.PreICI;
         pre{t} = spikeTimes(spikes, t0, t1).*ex.secondperunit;
         
         % Peri-stimulus
-        t0 =  ex.CondTest.CondOn(t) + latency;
+        t0 = ex.CondTest.CondOn(t) + latency;
         t1 = ex.CondTest.CondOff(t) + latency;
         peri{t} = spikeTimes(spikes, t0, t1).*ex.secondperunit;
+        
+        % Post-stimulus
+        t0 = ex.CondTest.CondOff(t) + latency;
+        t1 = t0 + ex.SufICI;
+        post{t} = spikeTimes(spikes, t0, t1).*ex.secondperunit;
+        
     end
     unit{j}.pre = pre;
     unit{j}.peri = peri;
+    unit{j}.post = post;
 
     % Calculate F0 and F1 for pre- and peri-stimulus intervals
     if isfield(ex.CondTestCond, 'TemporalFreq')
@@ -106,13 +111,24 @@ for j = 1:length(uuid)
     else
         tf = nan(1, nct);
     end
-    ts = ones(length(pre),1)*offset*ex.secondperunit;
+    ts = ones(length(pre),1)*ex.PreICI*ex.secondperunit;
     pref0 = f0f1(pre, ts, tf);
     ts = (ex.CondTest.CondOff-ex.CondTest.CondOn).*ex.secondperunit;
     [perif0, perif1] = f0f1(peri, ts, tf);
+    ts = ones(length(pre),1)*ex.SufICI*ex.secondperunit;
+    postf0 = f0f1(post, ts, tf);
     unit{j}.pref0 = pref0;
     unit{j}.perif0 = perif0;
     unit{j}.perif1 = perif1;
+    unit{j}.postf0 = postf0;
+    
+    % Construct rasters
+    dur = reshape(ex.CondTest.CondOff - ex.CondTest.CondOn, nct, 1).*ex.secondperunit;
+    pre = cellfun(@(x)x-ex.PreICI*ex.secondperunit, pre, 'UniformOutput', 0);
+    post = cellfun(@(x,t)x+t, post, num2cell(dur), 'UniformOutput', 0);
+    rasters = cellfun(@(x,y,z)[x y z], ...
+        pre, peri, post, 'UniformOutput', 0)';
+    unit{j}.rasters = rasters;
     
     % Calculate OSI and DSI for orientation stimuli
     if contains(ex.ID, 'Ori') && ischar(groupingFactor) && ...
@@ -127,7 +143,7 @@ for j = 1:length(uuid)
             test.dsi(1,l) = DSI;
         end
     end
-    
+
     % Plotting
     for f = 1:length(actions)
         
@@ -197,23 +213,17 @@ for j = 1:length(uuid)
                     
                     nf = NeuroFig(ex.ID, spike.electrodeid, uuid(j), levelNames{l});
 
-                    % Collect rasters
-                    dur = nanmean(diff(ex.CondTest.CondOn));
+                    % Group rasters
                     stimDur = nanmean(ex.CondTest.CondOff - ex.CondTest.CondOn);
-                    rasters = cell(1,size(conditions,1));
+                    rasterGroups = cell(1,size(conditions,1));
                     for c = 1:size(conditions,1)
-                        t0 = ex.CondTest.CondOn(conditions(c,:,l)) - offset;
-                        t1 = t0 + dur;
-                        trials = cell(1,length(t0));
-                        for t = 1:length(t0)
-                            trials{t} = spikeTimes(spikes, t0(t), t1(t)) - offset;
-                        end
-                        rasters{c} = trials;
+                        rasterGroups{c} = rasters(conditions(c,:,l));
                     end
-                    valid = ~cellfun(@isempty,rasters);
-                    events = [-offset stimDur dur-offset];
+
+                    valid = ~cellfun(@isempty,rasterGroups);
+                    events = [-ex.PreICI stimDur stimDur+ex.SufICI]*ex.secondperunit;
                     
-                    plotRastergram(rasters(valid), events, labels(valid), defaultColor(uuid(j)));
+                    plotRastergram(rasterGroups(valid), events, labels(valid), defaultColor(uuid(j)));
                     nf.suffix = 'raster';
                     nf.dress();
                     nf.print(path, filename);
@@ -225,13 +235,13 @@ for j = 1:length(uuid)
                     
                     nf = NeuroFig(ex.ID, spike.electrodeid, uuid(j), levelNames{l});
                     
-                    % Collect histograms
-                    dur = nanmean(diff(ex.CondTest.CondOn));
+                    % Collect histograms with offset
                     stimDur = nanmean(ex.CondTest.CondOff - ex.CondTest.CondOn);
+                    dur = ex.PreICI + stimDur + ex.SufICI;
                     nBins = round(dur/binSize);
                     hists = zeros(size(conditions,1),nBins);
                     for c = 1:size(conditions,1)
-                        t0 = ex.CondTest.CondOn(conditions(c,:,l)) - offset;
+                        t0 = ex.CondTest.CondOn(conditions(c,:,l)) - ex.PreICI;
                         t1 = t0 + dur;
                         trials = zeros(length(t0), nBins);
                         for t = 1:length(t0)
@@ -241,9 +251,9 @@ for j = 1:length(uuid)
                     end
                     valid = all(~isnan(hists),2);
                     
-                    edges = -offset:dur/(nBins):dur-offset;
-                    centers = edges(1:end-1) + diff(edges)/2;
-                    events = [-offset stimDur dur-offset];
+                    edges = -ex.PreICI:dur/(nBins):dur-ex.PreICI;
+                    centers = (edges(1:end-1) + diff(edges)/2)*ex.secondperunit;
+                    events = [-ex.PreICI stimDur dur-ex.PreICI]*ex.secondperunit;
                     
                     plotPsth(centers, hists(valid,:), events, labels(valid), defaultColor(uuid(j)))
                     nf.suffix = 'psth';

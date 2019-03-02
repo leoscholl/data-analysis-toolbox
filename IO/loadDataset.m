@@ -41,7 +41,7 @@ if ismember(spikeFormat, spikeFields)
     dataset.spikeformat = spikeFormat;
 else
     warning('No spikes were found of the format %s', spikeFormat);
-    dataset.spike = file.spike;
+    dataset.spike = [];
     dataset.spikeformat = 'spike';
 end
 

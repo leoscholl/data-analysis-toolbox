@@ -29,7 +29,11 @@ end
 
 function [f0,f1] = if0f1(spikes, t0, t1, tf)
 f1 = NaN;
+f0 = NaN;
 T = t1 - t0;
+if T == 0
+    return
+end
 N = max(1, ceil(tf/T));
 x = psth(spikes, t0, t1, N);
 ifr = x./(T/N);

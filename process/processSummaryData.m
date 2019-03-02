@@ -4,7 +4,7 @@ function result = processSummaryData(spikeResult, lfpResult, ...
 
 p = inputParser;
 p.KeepUnmatched = true;
-p.addParameter('mappingThreshold', 8); % size of standard deviation
+p.addParameter('mappingThreshold', 10); % minimum firing rate
 p.parse(varargin{:});
 thr = p.Results.mappingThreshold;
 
@@ -12,6 +12,9 @@ if ~iscell(actions)
     actions = {actions};
 end
 
+result.pre = repmat(ex.PreICI, length(ex.CondTest.CondIndex),1);
+result.peri = ex.CondTest.CondOff-ex.CondTest.CondOn;
+result.post = repmat(ex.SufICI, length(ex.CondTest.CondIndex),1);
 result.groups = groups;
 result.actions = actions;
 result.spike = [spikeResult{:}];
@@ -32,7 +35,7 @@ for f = 1:length(actions)
                 % Remove any units with firing rates below threshold
                 spike = [];
                 for u = 1:length(result.spike)
-                    s = std(result.spike(u).(ex.ID){1}.map.v(:,l));
+                    s = max(result.spike(u).(ex.ID){1}.map.v(:,l));
                     if s > thr
                         spike = [spike; result.spike(u)];
                     end

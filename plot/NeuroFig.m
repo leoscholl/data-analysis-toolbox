@@ -105,6 +105,10 @@ classdef NeuroFig < handle
             close(obj.handle);
         end
         
+        function scf(obj)
+            set(0,'CurrentFigure', obj.handle);
+        end            
+        
         function print(obj, path, filename, format, pretty)
             %print Print to file
             if nargin < 5 || isempty(pretty)
