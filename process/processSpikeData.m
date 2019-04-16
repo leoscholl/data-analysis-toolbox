@@ -102,6 +102,7 @@ for j = 1:length(uuid)
     unit{j}.pre = pre;
     unit{j}.peri = peri;
     unit{j}.post = post;
+    unit{j}.latency = latency;
 
     % Calculate F0 and F1 for pre- and peri-stimulus intervals
     if isfield(ex.CondTestCond, 'TemporalFreq')
