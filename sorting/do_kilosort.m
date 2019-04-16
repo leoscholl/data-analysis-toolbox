@@ -1,12 +1,13 @@
 function [ spike ] = do_kilosort( bin, nChan )
 
-addpath(genpath('C:\Users\leo\Google Drive\Matlab\Toolboxes\KiloSort2-master')) % path to kilosort folder
-configPath = 'C:\Users\leo\Google Drive\Matlab\data-analysis-toolbox\sorting';
-rootH = 'I:\Sorting';
+addpath(genpath('C:\Users\LyonLab\Documents\MATLAB\Kilosort2')) % path to kilosort folder
+rootH = 'E:\Sorting';
 
 ops.NchanTOT    = nChan; % total number of channels in your recording
 ops.fproc       = fullfile(rootH, 'temp_wh.dat'); % proc file on a fast SSD
 ops.trange = [0 Inf]; % time range to sort
+
+ops.chanMap = genLinearChanMap(nChan);
 
 %% this block runs all the steps of the algorithm
 
@@ -58,6 +59,15 @@ end
 
 
 %%
+
+function chanMap = genLinearChanMap(nChan);
+chanMap.chanMap = 1:nChan;
+chanMap.xcoords = ones(1,nChan);
+chanMap.ycoords = 1:nChan;
+chanMap.connected = true(1,nChan);
+chanMap.kcoords = 1:nChan;
+end
+
 function [spike]=extractrez(rez)
 % spikeTimes will be in samples, not seconds
 rez.W = gather(single(rez.Wphy));

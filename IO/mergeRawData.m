@@ -7,13 +7,14 @@ nextEnd = 0;
 spikes = {};
 index = {};
 
-destPath = fileparts(destination);
+[destPath, destination] = fileparts(destination);
+destination = fullfile(destPath, destination); % remove ext
 if ~exist(destPath,'dir')
     mkdir(destPath);
 end
-
+fid = fopen([destination, '.bin'],'w');
+fclose(fid);
 import NeuroAnalysis.Ripple.*;
-
 for f = 1:length(varargin)
     
     [filePath, fileName, ext] = fileparts(varargin{f});
@@ -54,7 +55,7 @@ for f = 1:length(varargin)
     t = 1;
     while t < rawItemCounts(1)
         
-        IndexCount = min(t+MAX_INDEX_READ/length(RawEntityID), max(rawItemCounts));
+        IndexCount = min(t+round(MAX_INDEX_READ/length(RawEntityID)), min(rawItemCounts));
         
         [ns_RESULT, analogInfo] = ns_GetAnalogInfo(hFile, RawEntityID(1));
         sampleRate = analogInfo.SampleRate; % Recording duration in 's'
