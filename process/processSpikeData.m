@@ -222,7 +222,7 @@ for j = 1:length(uuid)
                     end
 
                     valid = ~cellfun(@isempty,rasterGroups);
-                    events = [-ex.PreICI stimDur stimDur+ex.SufICI]*ex.secondperunit;
+                    events = [-ex.PreICI+latency stimDur+latency stimDur+ex.SufICI+latency]*ex.secondperunit;
                     
                     plotRastergram(rasterGroups(valid), events, labels(valid), defaultColor(uuid(j)));
                     nf.suffix = 'raster';
