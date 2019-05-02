@@ -2,7 +2,7 @@ function result = processSpikeData(spike, ex, groups, path, filename, actions, v
 %processSpikeData Plot spiking data with the given list of plotting functions
 
 p = inputParser;
-p.addParameter('latency', 0.05/ex.secondperunit);
+p.addParameter('latency', 0.02/ex.secondperunit);
 p.addParameter('binSize', 0.02/ex.secondperunit);
 p.addParameter('normFun', []);
 p.addParameter('ignoreNonResponsive', false);
