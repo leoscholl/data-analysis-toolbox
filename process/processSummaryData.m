@@ -12,9 +12,9 @@ if ~iscell(actions)
     actions = {actions};
 end
 
-result.pre = repmat(ex.PreICI, length(ex.CondTest.CondIndex),1);
+result.pre = repmat(ex.PreICI, 1, length(ex.CondTest.CondIndex));
 result.peri = ex.CondTest.CondOff-ex.CondTest.CondOn;
-result.post = repmat(ex.SufICI, length(ex.CondTest.CondIndex),1);
+result.post = repmat(ex.SufICI, 1, length(ex.CondTest.CondIndex));
 result.groups = groups;
 result.actions = actions;
 result.spike = [spikeResult{:}];

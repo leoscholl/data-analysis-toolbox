@@ -1,7 +1,7 @@
 function [ spike ] = do_kilosort( bin, nChan )
 
-addpath(genpath('C:\Users\LyonLab\Documents\MATLAB\Kilosort2')) % path to kilosort folder
-rootH = 'E:\Sorting';
+addpath(genpath('C:\Users\leo\Google Drive\Matlab\Toolboxes\Kilosort2')) % path to kilosort folder
+rootH = 'I:\Sorting';
 
 ops.NchanTOT    = nChan; % total number of channels in your recording
 ops.fproc       = fullfile(rootH, 'temp_wh.dat'); % proc file on a fast SSD

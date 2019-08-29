@@ -80,7 +80,7 @@ for j = 1:length(uuid)
     % Extract spikes
     nct = length(ex.CondTest.CondIndex);
     pre = cell(nct, 1);
-    peri = pre; post = pre;
+    peri = pre; post = pre; rasters = pre;
     for t = 1:nct
         
         % Pre-stimulus
@@ -98,10 +98,16 @@ for j = 1:length(uuid)
         t1 = t0 + ex.SufICI;
         post{t} = spikeTimes(spikes, t0, t1).*ex.secondperunit;
         
+        % Raster
+        t0 = ex.CondTest.CondOn(t) - ex.PreICI;
+        t1 = ex.CondTest.CondOff(t) + ex.SufICI;
+        rasters{t} = (spikeTimes(spikes, t0, t1) - ex.PreICI).*ex.secondperunit;
+        
     end
     unit{j}.pre = pre;
     unit{j}.peri = peri;
     unit{j}.post = post;
+    unit{j}.rasters = rasters;
     unit{j}.latency = latency;
 
     % Calculate F0 and F1 for pre- and peri-stimulus intervals
@@ -122,14 +128,6 @@ for j = 1:length(uuid)
     unit{j}.perif0 = perif0;
     unit{j}.perif1 = perif1;
     unit{j}.postf0 = postf0;
-    
-    % Construct rasters
-    dur = reshape(ex.CondTest.CondOff - ex.CondTest.CondOn, nct, 1).*ex.secondperunit;
-    pre = cellfun(@(x)x-ex.PreICI*ex.secondperunit, pre, 'UniformOutput', 0);
-    post = cellfun(@(x,t)x+t, post, num2cell(dur), 'UniformOutput', 0);
-    rasters = cellfun(@(x,y,z)[x y z], ...
-        pre, peri, post, 'UniformOutput', 0)';
-    unit{j}.rasters = rasters;
     
     % Calculate OSI and DSI for orientation stimuli
     if contains(ex.ID, 'Ori') && ischar(groupingFactor) && ...

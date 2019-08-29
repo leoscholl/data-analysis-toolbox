@@ -58,6 +58,7 @@ path = makeElectrodeDirs(dataset, figuresPath);
 filename = strcat(filename, '_group_', groups.method);
 spike = [];
 lfp = [];
+electrodeid = [];
 if isfield(dataset, 'spike')
     spike = dataset.spike;
 end

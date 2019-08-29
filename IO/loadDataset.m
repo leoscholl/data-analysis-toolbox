@@ -24,6 +24,8 @@ end
 % Load wanted non-spike fields
 if ~exist('fields', 'var') || isempty(fields)
     fields = fieldnames(file);
+else
+    fields = union(fields, {'source', 'secondperunit', 'sourceformat', 'filepath'});
 end
 nonSpikeFields = {'digital', 'lfp', 'analog1k', 'analog30k', 'source', ...
     'secondperunit', 'sourceformat', 'ex', 'filepath'};
