@@ -18,10 +18,7 @@ else
         actions = {'plotRastergram', 'plotTuningCurve'};
     end
     if contains(ex.ID, 'Laser') || contains(ex.ID, 'Flash')
-        actions = [actions, {'plotPsth'}];
-    end
-    if contains(ex.ID, 'Laser')
-        actions = [actions, {'plotLfp'}];
+        actions = [actions, {'plotPsth', 'plotLfp'}];
     end
     if strcmp(ex.ID, 'Image') || strcmp(ex.ID, 'LaserImage')
         actions = {'skip'};

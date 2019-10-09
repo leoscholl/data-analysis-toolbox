@@ -92,7 +92,7 @@ for f = 1:length(factorNames)
 end
 
 if ~exist('groupingMethod', 'var') || isempty(groupingMethod)
-    if length(uniqueValues) > 12
+    if length(uniqueValues) > 4
         groupingMethod = 'remaining';
     else
         groupingMethod = 'none';
