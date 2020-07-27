@@ -17,6 +17,7 @@ for i = 1:length(labels)
     end
 
     plot(time, lfp(i,:,:));
+    hold on;
     
     % XTick
     box(ax,'off');

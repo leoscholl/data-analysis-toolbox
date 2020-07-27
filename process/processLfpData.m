@@ -41,6 +41,8 @@ for t = 1:length(ex.CondTest.CondIndex)
     lfp(t,1:min(length(sub),samples)) = sub(1:min(length(sub),samples))';
 end
 events = [-offset stimDur dur-offset];
+result.time = x;
+result.events = events;
 
 % Organize MFR into proper conditions
 lfpMean = nan(size(groupingValues,1), size(lfp,2), size(conditions,3));
@@ -52,6 +54,7 @@ for l = 1:size(conditions,3)
     [~, i] = max(max(abs(lfpMean(:,:,l)),[],2));
     test.maxDelta{l} = groupingValues(i,:);
 end
+result.mean = lfpMean;
 
 for f = 1:length(actions)
     switch actions{f}
@@ -76,7 +79,7 @@ for f = 1:length(actions)
 
             % Wavelet convolution of whole dataset
             wTime = -1:(1/fs):1; % time vector for wavelet
-            wFreq = 4:60; % vector of wavelet frequencies
+            wFreq = 10:90; % vector of wavelet frequencies
             n = 6; % number of wavelet cycles
             wLength = length(wTime); % length of the wavelet
             % Initialize a matrix for the convolution results

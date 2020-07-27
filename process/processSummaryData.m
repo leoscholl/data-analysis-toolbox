@@ -5,6 +5,8 @@ function result = processSummaryData(spikeResult, lfpResult, ...
 p = inputParser;
 p.KeepUnmatched = true;
 p.addParameter('mappingThreshold', 10); % minimum firing rate
+p.addParameter('electrodeMap', []);
+p.addParameter('ignoreElectrodes', []);
 p.parse(varargin{:});
 thr = p.Results.mappingThreshold;
 
@@ -12,9 +14,10 @@ if ~iscell(actions)
     actions = {actions};
 end
 
-result.pre = repmat(ex.PreICI, 1, length(ex.CondTest.CondIndex));
-result.peri = ex.CondTest.CondOff-ex.CondTest.CondOn;
-result.post = repmat(ex.SufICI, 1, length(ex.CondTest.CondIndex));
+result.ex = ex;
+result.pre = repmat(ex.PreICI, 1, length(ex.CondTest.CondIndex)).*ex.secondperunit;
+result.peri = reshape(ex.CondTest.CondOff-ex.CondTest.CondOn, 1, length(ex.CondTest.CondIndex)).*ex.secondperunit;
+result.post = repmat(ex.SufICI, 1, length(ex.CondTest.CondIndex)).*ex.secondperunit;
 result.groups = groups;
 result.actions = actions;
 result.spike = [spikeResult{:}];
@@ -79,6 +82,46 @@ for f = 1:length(actions)
                 nf.dress();
                 nf.print(path, filename);
                 nf.close();
+            end
+            
+                        
+        case 'CSD'
+            
+            if isempty(result.lfp)
+                continue;
+            end
+            if isempty(p.Results.electrodeMap)
+                warning('No electrode map given');
+                continue;
+            end
+            depth = p.Results.electrodeMap(str2double(ex.RecordSite), double([result.lfp.electrodeid]));
+            trash = ismember([result.lfp.electrodeid],p.Results.ignoreElectrodes);
+            depth = depth(~trash);
+            
+            % Inverse delta current source density estimation of mean lfp
+            b0 = 0.54;
+            b1 = 0.23;
+            diam = 0.5*1e-3;
+            cond = 0.3;
+            cond_top = 0.3;
+            for c=1:size(groups.conditions,1)
+                for l=1:size(groups.conditions,3)
+                    data = [];
+                    for e=1:length(result.lfp)
+                        data(e,:) = result.lfp(e).mean(c,:,l);
+                    end
+                    
+                    CSD = F_delta(depth,diam,cond,cond_top)^-1*data(~trash,:);
+                    [n1,n2]=size(CSD);
+                    CSD_add = [];
+                    CSD_add(1,:) = zeros(1,n2);   %add top and buttom row with zeros
+                    CSD_add(n1+2,:)=zeros(1,n2);
+                    CSD_add(2:n1+1,:)=CSD;        %CSD_add has n1+2 rows
+                    CSD = S_general(n1+2,b0,b1)*CSD_add; % CSD has n1 rows
+                    for e=1:size(CSD,1)
+                        result.lfp([result.lfp.electrodeid] == e).csd(c,:,l) = CSD(e,:);
+                    end
+                end
             end
     end
 end

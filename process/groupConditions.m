@@ -58,6 +58,7 @@ end
 [uniqueValues, ~, idx] = unique(cell2mat(allConds),'rows');
 
 % Organize conditions into groups
+groupingConditions = {};
 if ~isempty(groupingFactor)
     groupingConditions = ctCond.(groupingFactor);
     groupingConditions = reshape(groupingConditions, length(groupingConditions), 1);
@@ -113,7 +114,7 @@ elseif strcmp(groupingMethod, 'all') || isempty(remainingFactors)
     conditions = false(size(groupingValues,1), nct);
     for i = 1:size(groupingValues, 1)
         conditions(i,:) = filter & cellfun(@(x)isequal(x,groupingValues(i,:)), ...
-            ctCond.(groupingFactor));
+            reshape(ctCond.(groupingFactor), 1, length(ctCond.(groupingFactor))));
     end
     labels = {''};
     
@@ -140,7 +141,7 @@ elseif strcmp(groupingMethod, 'remaining')
         for i = 1:size(groupingValues, 1)
             condition = cellfun(@(x,y)isequal(x,groupingValues(i,:)),...
                 ctCond.(groupingFactor));
-            conditions(i,:,l) = filter & condition & group;
+            conditions(i,:,l) = filter & reshape(condition, 1, length(condition)) & group;
         end
         levelName = [remainingFactorNames; condString(l,:)];
         levelName = sprintf('%s_%s_', levelName{:});
@@ -169,7 +170,7 @@ elseif strcmp(groupingMethod, 'first')
             for i = 1:size(groupingValues, 1)
                 condition = cellfun(@(x,y)isequal(x,groupingValues(i,:)),...
                     ctCond.(groupingFactor));
-                conditions(i,:,ll) = filter & condition & group;
+                conditions(i,:,ll) = filter & reshape(condition, 1, length(condition)) & group;
             end
             levelName = [remainingFactorNames{f}; condString(l)];
             levelName = sprintf('%s_%s_', levelName{:});
@@ -206,6 +207,7 @@ groups.filter = filter;
 groups.method = groupingMethod;
 groups.factor = groupingFactor;
 groups.values = groupingValues;
+groups.ctc = groupingConditions;
 groups.conditions = conditions;
 groups.levelNames = labels;
 

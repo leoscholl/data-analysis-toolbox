@@ -2,11 +2,13 @@ function result = processSpikeData(spike, ex, groups, path, filename, actions, v
 %processSpikeData Plot spiking data with the given list of plotting functions
 
 p = inputParser;
-p.addParameter('latency', 0.02/ex.secondperunit);
+p.KeepUnmatched = true;
+p.addParameter('offset', 0.02/ex.secondperunit);
 p.addParameter('binSize', 0.02/ex.secondperunit);
 p.addParameter('normFun', []);
 p.addParameter('ignoreNonResponsive', false);
 p.addParameter('groupTuningCurves', false);
+p.addParameter('removeOutliers', false);
 if isstruct(varargin)
     p.parse(varargin);
 else
@@ -23,13 +25,16 @@ groupingValues = groups.values;
 conditions = groups.conditions;
 levelNames = groups.levelNames;
 labels = groups.labels;
-latency = p.Results.latency;
+offset = p.Results.offset;
 binSize = p.Results.binSize;
 normFun = p.Results.normFun;
 ignoreNonResponsive = strcmp('true', p.Results.ignoreNonResponsive) || ...
     (islogical(p.Results.ignoreNonResponsive) && p.Results.ignoreNonResponsive);
 groupTuningCurves = strcmp('true', p.Results.groupTuningCurves) || ...
     (islogical(p.Results.groupTuningCurves) && p.Results.groupTuningCurves);
+removeOutliers = strcmp('true', p.Results.removeOutliers) || ...
+    (islogical(p.Results.removeOutliers) && p.Results.removeOutliers);
+
 
 result = [];
 
@@ -84,17 +89,17 @@ for j = 1:length(uuid)
     for t = 1:nct
         
         % Pre-stimulus
-        t1 = ex.CondTest.CondOn(t) + latency;
+        t1 = ex.CondTest.CondOn(t) + offset;
         t0 = t1 - ex.PreICI;
         pre{t} = spikeTimes(spikes, t0, t1).*ex.secondperunit;
         
         % Peri-stimulus
-        t0 = ex.CondTest.CondOn(t) + latency;
-        t1 = ex.CondTest.CondOff(t) + latency;
+        t0 = ex.CondTest.CondOn(t) + offset;
+        t1 = ex.CondTest.CondOff(t) + offset;
         peri{t} = spikeTimes(spikes, t0, t1).*ex.secondperunit;
         
         % Post-stimulus
-        t0 = ex.CondTest.CondOff(t) + latency;
+        t0 = ex.CondTest.CondOff(t) + offset;
         t1 = t0 + ex.SufICI;
         post{t} = spikeTimes(spikes, t0, t1).*ex.secondperunit;
         
@@ -104,11 +109,30 @@ for j = 1:length(uuid)
         rasters{t} = (spikeTimes(spikes, t0, t1) - ex.PreICI).*ex.secondperunit;
         
     end
+    
+    outliers = false(nct,1);
+    conditions = groups.conditions;
+    if removeOutliers
+        spk = cellfun(@length, rasters);
+        if median(spk) == 0
+            outliers = isoutlier(spk, 'mean');
+        else
+            outliers = isoutlier(spk, 'median');
+        end
+        nct = sum(~outliers);
+        conditions = conditions(:,~outliers,:);
+        pre = pre(~outliers);
+        peri = peri(~outliers);
+        post = post(~outliers);
+        rasters = rasters(~outliers);
+    end
+    
+    unit{j}.outliers = outliers;
     unit{j}.pre = pre;
     unit{j}.peri = peri;
     unit{j}.post = post;
     unit{j}.rasters = rasters;
-    unit{j}.latency = latency;
+    unit{j}.offset = offset*ex.secondperunit;
 
     % Calculate F0 and F1 for pre- and peri-stimulus intervals
     if isfield(ex.CondTestCond, 'TemporalFreq')
@@ -142,6 +166,13 @@ for j = 1:length(uuid)
             test.dsi(1,l) = DSI;
         end
     end
+    
+    % Make a more readable title
+    title = ex.ID;
+    if contains(title, 'Laser') && isfield(ex, 'Param')
+        if isfield(ex.Param, 'Laser'); title = [title, ' ', ex.Param.Laser]; end
+        if isfield(ex.Param, 'Laser2'); title = [title, ' ', ex.Param.Laser2]; end
+    end
 
     % Plotting
     for f = 1:length(actions)
@@ -157,7 +188,7 @@ for j = 1:length(uuid)
                     factor = groupingFactor;
                 end
                 if size(conditions,3) > 1 && groupTuningCurves
-                    nf = NeuroFig(ex.ID, spike.electrodeid, uuid(j));
+                    nf = NeuroFig(title, spike.electrodeid, uuid(j));
                     data.F0 = perif0;
                     plotTuningCurve(cond, data, conditions, factor, levelNames);
                     nf.suffix = 'tc';
@@ -166,7 +197,7 @@ for j = 1:length(uuid)
                     nf.close();
                 else
                     for l = 1:size(conditions,3)
-                        nf = NeuroFig(ex.ID, spike.electrodeid, uuid(j), levelNames{l});
+                        nf = NeuroFig(title, spike.electrodeid, uuid(j), levelNames{l});
                         data.F0 = perif0;
                         data.F1 = perif1;
                         data.pre = pref0;
@@ -192,7 +223,7 @@ for j = 1:length(uuid)
                 test.map.v = zeros(length(x),size(conditions,3));
                 for l = 1:size(conditions,3)
                     
-                    nf = NeuroFig(ex.ID, spike.electrodeid, uuid(j), levelNames{l});
+                    nf = NeuroFig(title, spike.electrodeid, uuid(j), levelNames{l});
                     test.map.v(:,l) = perCondition(perif0 - pref0, conditions(:,:,l));
                     
                     % Plot
@@ -210,7 +241,7 @@ for j = 1:length(uuid)
             case 'plotRastergram'
                 for l = 1:size(conditions,3)
                     
-                    nf = NeuroFig(ex.ID, spike.electrodeid, uuid(j), levelNames{l});
+                    nf = NeuroFig(title, spike.electrodeid, uuid(j), levelNames{l});
 
                     % Group rasters
                     stimDur = nanmean(ex.CondTest.CondOff - ex.CondTest.CondOn);
@@ -232,15 +263,16 @@ for j = 1:length(uuid)
             case 'plotPsth'
                 for l = 1:size(conditions,3)
                     
-                    nf = NeuroFig(ex.ID, spike.electrodeid, uuid(j), levelNames{l});
+                    nf = NeuroFig(title, spike.electrodeid, uuid(j), levelNames{l});
                     
-                    % Collect histograms with offset
+                    % Collect histograms with fixed duration
                     stimDur = nanmean(ex.CondTest.CondOff - ex.CondTest.CondOn);
                     dur = ex.PreICI + stimDur + ex.SufICI;
                     nBins = round(dur/binSize);
                     hists = zeros(size(conditions,1),nBins);
                     for c = 1:size(conditions,1)
-                        t0 = ex.CondTest.CondOn(conditions(c,:,l)) - ex.PreICI;
+                        co = ex.CondTest.CondOn(~outliers);
+                        t0 = co(conditions(c,:,l)) - ex.PreICI;
                         t1 = t0 + dur;
                         trials = zeros(length(t0), nBins);
                         for t = 1:length(t0)
@@ -254,7 +286,7 @@ for j = 1:length(uuid)
                     centers = (edges(1:end-1) + diff(edges)/2)*ex.secondperunit;
                     events = [-ex.PreICI stimDur dur-ex.PreICI]*ex.secondperunit;
                     
-                    plotPsth(centers, hists(valid,:), events, labels(valid), defaultColor(uuid(j)))
+                    plotPsth(centers, hists(valid,:), events, labels(valid), defaultColor(uuid(j)), 'line')
                     nf.suffix = 'psth';
                     nf.dress();
                     nf.print(path, filename);
@@ -263,8 +295,8 @@ for j = 1:length(uuid)
                 
             case 'plotPolar'
                 for l = 1:size(conditions,3)
-                    nf = NeuroFig(ex.ID, spike.electrodeid, uuid(j), levelNames{l});
-                    plotPolar(groupingValues, data.f0(:,:,l));
+                    nf = NeuroFig(title, spike.electrodeid, uuid(j), levelNames{l});
+                    plotPolar(groupingValues, perif0, conditions(:,:,l));
                     nf.suffix = 'polar';
                     nf.dress();
                     nf.print(path, filename);

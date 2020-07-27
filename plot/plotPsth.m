@@ -17,6 +17,7 @@ if ~exist('markers', 'var') || isempty(markers)
 end
 
 hold on;
+minY = min([0; histograms(:)]);
 maxY = max([1; histograms(:)]);
 tickDistance = max(0.1, round((events(3)-events(1))/10, 1, 'significant')); % maximum 20 ticks
 for i = 1:size(histograms,1)
@@ -39,7 +40,8 @@ for i = 1:size(histograms,1)
         otherwise
             error('Unknown style ''%s'', please choose either ''bar'' or ''line''', style);
     end
-    axis(ax,[events(1) events(3) 0 maxY]);
+    hold on;
+    axis(ax,[events(1) events(3) minY maxY]);
     
     % XTick
     box(ax,'off');
@@ -49,7 +51,7 @@ for i = 1:size(histograms,1)
     
     % Mark stim duration
     if markers
-        v = [0 0; events(2) 0; ...
+        v = [0 minY; events(2) minY; ...
             events(2) maxY; 0 maxY];
         f = [1 2 3 4];
         patch('Faces',f,'Vertices',v,'FaceColor',[0.5 0.5 0.5],...
